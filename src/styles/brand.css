@@ -1,0 +1,293 @@
+@import './tailwind.css';
+
+:root {
+  /* Brand Colors from Logo */
+  --jubea-dark: #0a2a35;
+  --jubea-dark-light: #0f3a4a;
+  --jubea-cyan: #2db5d5;
+  --jubea-cyan-light: #3dc5e5;
+  --jubea-cyan-dark: #1a8ab4;
+  --jubea-teal: #1c5d6f;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--jubea-dark) 0%, var(--jubea-teal) 50%, var(--jubea-cyan-dark) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--jubea-cyan) 0%, var(--jubea-cyan-light) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--jubea-dark) 0%, var(--jubea-dark-light) 100%);
+}
+
+/* Custom Animations */
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px);
+  }
+  75% {
+    transform: translateY(10px) translateX(-5px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(45, 181, 213, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(45, 181, 213, 0.6);
+  }
+}
+
+.animate-wave {
+  animation: wave 6s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Custom Button Styles */
+.btn-primary {
+  background: var(--gradient-accent);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(45, 181, 213, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(45, 181, 213, 0.5);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--jubea-cyan);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  border: 2px solid var(--jubea-cyan);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--jubea-cyan);
+  transition: width 0.4s, height 0.4s, top 0.4s, left 0.4s;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.btn-secondary:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.btn-secondary:hover {
+  color: white;
+  border-color: var(--jubea-cyan);
+  transform: translateY(-2px);
+}
+
+.btn-outline-light {
+  background: transparent;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  border: 2px solid white;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-outline-light::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: white;
+  transition: width 0.4s, height 0.4s, top 0.4s, left 0.4s;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.btn-outline-light:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.btn-outline-light:hover {
+  color: var(--jubea-dark);
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+/* Card Styles */
+.card-elevated {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 20px rgba(10, 42, 53, 0.1);
+}
+
+.card-elevated:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(45, 181, 213, 0.2);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Wave Divider */
+.wave-divider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.wave-divider svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 80px;
+}
+
+/* Flowing Background */
+.flowing-bg {
+  background: var(--gradient-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.flowing-bg::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle, rgba(45, 181, 213, 0.1) 0%, transparent 70%);
+  animation: wave 15s linear infinite;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--jubea-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--jubea-cyan);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--jubea-cyan-light);
+}
+
+/* Section Spacing */
+.section {
+  padding: 5rem 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 3rem 0;
+  }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Admin sidebar nav — scrollbar hidden by default, appears on scroll/hover */
+.admin-nav {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+
+.admin-nav:hover,
+.admin-nav:focus-within {
+  scrollbar-color: rgba(45, 181, 213, 0.4) transparent;
+}
+
+.admin-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.admin-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-nav::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.admin-nav:hover::-webkit-scrollbar-thumb {
+  background: rgba(45, 181, 213, 0.4);
+}
+
+/* Selection Color */
+::selection {
+  background: var(--jubea-cyan);
+  color: white;
+}

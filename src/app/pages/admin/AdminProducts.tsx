@@ -1,0 +1,496 @@
+import { useState, useRef, useEffect } from "react";
+import { Plus, Edit2, Trash2, Search, X, Save, Upload, Images, ChevronDown, ChevronUp, Tag } from "lucide-react";
+import { supabase } from "../../../lib/supabase";
+import { AdminLangTabs } from "./AdminLangTabs";
+import type { Lang } from "../../context/ContentContext";
+
+const CATEGORIES_KEY = "beqiri_project_categories";
+
+function loadCategories(): string[] {
+  try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY) || "[]"); } catch { return []; }
+}
+function saveCategories(cats: string[]) {
+  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(cats));
+}
+
+type Project = {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  location: string;
+  duration: string;
+  images: string;
+  lang: string;
+  created_at: string;
+};
+
+type ProjectForm = {
+  title: string;
+  category: string;
+  description: string;
+  location: string;
+  duration: string;
+  images: string;
+};
+
+const emptyForm = (): ProjectForm => ({
+  title: "", category: "", description: "", location: "", duration: "", images: "",
+});
+
+const fieldStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "0.7rem 1rem",
+  background: "rgba(4, 33, 66, 0.6)",
+  border: "1px solid rgba(45, 181, 213, 0.2)",
+  borderRadius: "10px",
+  color: "#fff",
+  fontSize: "0.9rem",
+  outline: "none",
+  boxSizing: "border-box",
+  transition: "border-color 0.2s",
+};
+
+const lblStyle: React.CSSProperties = {
+  display: "block",
+  color: "#7a9ba8",
+  fontSize: "0.75rem",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.07em",
+  marginBottom: "0.4rem",
+};
+
+function SectionCard({ title, children, defaultOpen = false, headerExtra }: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+  headerExtra?: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div style={{ background: "#0d2840", border: "1px solid rgba(45,181,213,0.12)", borderRadius: "16px", marginBottom: "0.875rem", overflow: "hidden" }}>
+      <div
+        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none" }}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span style={{ flex: 1, padding: "1rem 1.25rem", color: "#fff", fontWeight: 600, fontSize: "0.9375rem" }}>{title}</span>
+        {headerExtra && <div onClick={(e) => e.stopPropagation()} style={{ marginRight: "0.75rem", flexShrink: 0 }}>{headerExtra}</div>}
+        <span style={{ paddingRight: "1.25rem", display: "flex", alignItems: "center" }}>
+          {open ? <ChevronUp size={16} color="#4a6670" /> : <ChevronDown size={16} color="#4a6670" />}
+        </span>
+      </div>
+      {open && <div style={{ padding: "0 1.25rem 1.25rem" }}>{children}</div>}
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, placeholder, multiline }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string; multiline?: boolean;
+}) {
+  const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.target.style.borderColor = "rgba(45,181,213,0.6)");
+  const blur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.target.style.borderColor = "rgba(45,181,213,0.2)");
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      <label style={lblStyle}>{label}</label>
+      {multiline ? (
+        <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={3}
+          style={{ ...fieldStyle, resize: "vertical" }} onFocus={focus} onBlur={blur} />
+      ) : (
+        <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+          style={fieldStyle} onFocus={focus} onBlur={blur} />
+      )}
+    </div>
+  );
+}
+
+export function AdminProducts() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [form, setForm] = useState<ProjectForm>(emptyForm());
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [saveMsg, setSaveMsg] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const [categories, setCategories] = useState<string[]>(loadCategories);
+  const [catInput, setCatInput] = useState("");
+  const [adminLang, setAdminLang] = useState<Lang>("en");
+
+  const fetchProjects = async () => {
+    const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+    if (!error && data) setProjects(data as Project[]);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchProjects(); }, []);
+
+  useEffect(() => {
+    setSearch("");
+    setShowForm(false);
+    setExpandedId(null);
+  }, [adminLang]);
+
+  const addCategory = () => {
+    const trimmed = catInput.trim();
+    if (!trimmed || categories.includes(trimmed)) return;
+    const updated = [...categories, trimmed];
+    setCategories(updated);
+    saveCategories(updated);
+    setCatInput("");
+  };
+
+  const removeCategory = (cat: string) => {
+    const updated = categories.filter((c) => c !== cat);
+    setCategories(updated);
+    saveCategories(updated);
+  };
+
+  const imageList = form.images ? form.images.split("|||").map((s) => s.trim()).filter(Boolean) : [];
+
+  const handleUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    const newUrls: string[] = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("project-images").upload(path, file, { upsert: false });
+      if (!error) {
+        const { data } = supabase.storage.from("project-images").getPublicUrl(path);
+        newUrls.push(data.publicUrl);
+      }
+    }
+    setUploading(false);
+    if (newUrls.length === 0) return;
+    setForm((f) => ({ ...f, images: [...imageList, ...newUrls].join("|||") }));
+  };
+
+  const removeImage = (index: number) => {
+    const updated = imageList.filter((_, i) => i !== index);
+    setForm((f) => ({ ...f, images: updated.join("|||") }));
+  };
+
+  const openAdd = () => { setEditId(null); setForm(emptyForm()); setSaveMsg(""); setShowForm(true); };
+  const openEdit = (project: Project) => {
+    setEditId(project.id);
+    setForm({ title: project.title || "", category: project.category || "", description: project.description || "", location: project.location || "", duration: project.duration || "", images: project.images || "" });
+    setSaveMsg("");
+    setShowForm(true);
+  };
+
+  const handleSave = async () => {
+    if (!form.title.trim()) { setSaveMsg("Title is required."); return; }
+    setSaving(true);
+    setSaveMsg("");
+    const payload = { title: form.title.trim(), category: form.category.trim(), description: form.description.trim(), location: form.location.trim(), duration: form.duration.trim(), images: form.images, lang: adminLang };
+    let error;
+    try {
+      if (editId !== null) {
+        ({ error } = await supabase.from("projects").upsert({ id: editId, ...payload }));
+      } else {
+        ({ error } = await supabase.from("projects").insert(payload));
+      }
+    } catch (err: unknown) {
+      setSaving(false);
+      setSaveMsg("Error: " + (err instanceof Error ? err.message : "Network error"));
+      return;
+    }
+    setSaving(false);
+    if (error) { setSaveMsg("Error: " + error.message); }
+    else {
+      setSaveMsg(editId !== null ? "Project updated!" : "Project added!");
+      await fetchProjects();
+      setTimeout(() => { setShowForm(false); setSaveMsg(""); }, 1200);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    await supabase.from("projects").delete().eq("id", id);
+    setDeleteConfirm(null);
+    fetchProjects();
+  };
+
+  const filtered = projects
+    .filter((p) => (p.lang || "en") === adminLang)
+    .filter((p) =>
+      p.title?.toLowerCase().includes(search.toLowerCase()) ||
+      p.category?.toLowerCase().includes(search.toLowerCase())
+    );
+
+  return (
+    <div>
+      {/* Language Tabs */}
+      <AdminLangTabs adminLang={adminLang} setAdminLang={setAdminLang} />
+
+      {/* Page Header — matches other editors */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem", flexWrap: "wrap", gap: "1rem" }}>
+        <div>
+          <h2 style={{ color: "#fff", fontWeight: 700, fontSize: "1.375rem", margin: 0 }}>Projects Editor</h2>
+          <p style={{ color: "#4a6670", fontSize: "0.8125rem", marginTop: "0.25rem" }}>
+            Manage your projects — add photos, categories, and project details
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: "0.625rem" }}>
+          <button
+            onClick={openAdd}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.5rem", background: "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: "none", borderRadius: "10px", color: "#fff", fontWeight: 600, fontSize: "0.9375rem", cursor: "pointer" }}
+          >
+            <Plus size={16} /> Add Project
+          </button>
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <SectionCard title="Categories" headerExtra={
+        <span style={{ background: "rgba(45,181,213,0.12)", color: "#2db5d5", fontSize: "0.7rem", fontWeight: 700, padding: "2px 10px", borderRadius: "20px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          {categories.length}
+        </span>
+      }>
+        <div style={{ paddingTop: "1rem" }}>
+          <div style={{ display: "flex", gap: "0.625rem", marginBottom: "1rem" }}>
+            <input
+              value={catInput}
+              onChange={(e) => setCatInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addCategory()}
+              placeholder="New category name..."
+              style={{ ...fieldStyle, margin: 0 }}
+              onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+            />
+            <button
+              onClick={addCategory}
+              style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "0.4rem", background: "linear-gradient(135deg, #2db5d5, #1a9ab8)", color: "#fff", border: "none", borderRadius: "10px", padding: "0 1.1rem", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer", whiteSpace: "nowrap" }}
+            >
+              <Plus size={15} /> Add
+            </button>
+          </div>
+          {categories.length === 0 ? (
+            <p style={{ color: "#4a6670", fontSize: "0.875rem", margin: 0 }}>No categories yet. Add one above.</p>
+          ) : (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {categories.map((cat) => (
+                <div key={cat} style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "20px", padding: "0.3rem 0.75rem 0.3rem 0.9rem" }}>
+                  <Tag size={11} color="#2db5d5" />
+                  <span style={{ color: "#2db5d5", fontSize: "0.8rem", fontWeight: 600 }}>{cat}</span>
+                  <button onClick={() => removeCategory(cat)} style={{ background: "none", border: "none", color: "#4a6670", cursor: "pointer", padding: "0", display: "flex", alignItems: "center" }}>
+                    <X size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </SectionCard>
+
+      {/* Projects List Section */}
+      <SectionCard
+        title={`Projects (${projects.length})`}
+        defaultOpen={true}
+        headerExtra={
+          <div style={{ position: "relative" }}>
+            <Search size={13} color="#4a6670" style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)" }} />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              onClick={(e) => e.stopPropagation()}
+              style={{ ...fieldStyle, width: "180px", paddingLeft: "2.1rem", padding: "0.4rem 0.75rem 0.4rem 2rem", fontSize: "0.8rem" }}
+            />
+          </div>
+        }
+      >
+        <div style={{ paddingTop: "1rem" }}>
+          {loading ? (
+            <p style={{ color: "#4a6670", textAlign: "center", padding: "2rem 0" }}>Loading projects...</p>
+          ) : filtered.length === 0 ? (
+            <p style={{ color: "#4a6670", textAlign: "center", padding: "2rem 0" }}>
+              {search ? "No projects match your search." : "No projects yet. Click 'Add Project' to get started."}
+            </p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+              {filtered.map((project) => {
+                const imgs = project.images ? project.images.split("|||").filter(Boolean) : [];
+                const isExpanded = expandedId === project.id;
+                return (
+                  <div key={project.id} style={{ background: "rgba(10,42,53,0.6)", border: "1px solid rgba(45,181,213,0.1)", borderRadius: "12px", overflow: "hidden" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", padding: "0.75rem 1rem" }}>
+                      <div style={{ width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#071e27", flexShrink: 0 }}>
+                        {imgs[0] ? (
+                          <img src={imgs[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Images size={16} color="#2db5d5" />
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.9375rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {project.title}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", marginTop: "0.2rem" }}>
+                          {project.category && (
+                            <span style={{ background: "rgba(45,181,213,0.12)", color: "#2db5d5", fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: "20px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                              {project.category}
+                            </span>
+                          )}
+                          {imgs.length > 0 && (
+                            <span style={{ color: "#4a6670", fontSize: "0.75rem" }}>{imgs.length} photo{imgs.length !== 1 ? "s" : ""}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", flexShrink: 0 }}>
+                        <button onClick={() => setExpandedId(isExpanded ? null : project.id)} style={{ background: "rgba(45,181,213,0.08)", border: "1px solid rgba(45,181,213,0.15)", borderRadius: "8px", color: "#2db5d5", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
+                          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </button>
+                        <button onClick={() => openEdit(project)} style={{ background: "rgba(45,181,213,0.08)", border: "1px solid rgba(45,181,213,0.15)", borderRadius: "8px", color: "#2db5d5", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
+                          <Edit2 size={14} />
+                        </button>
+                        <button onClick={() => setDeleteConfirm(project.id)} style={{ background: "rgba(229,62,62,0.08)", border: "1px solid rgba(229,62,62,0.15)", borderRadius: "8px", color: "#fc8181", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    {isExpanded && (
+                      <div style={{ borderTop: "1px solid rgba(45,181,213,0.08)", padding: "0.75rem 1rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                        {project.description && <p style={{ color: "#7a9ba8", fontSize: "0.875rem", margin: 0 }}>{project.description}</p>}
+                        <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
+                          {project.location && <span style={{ color: "#4a6670", fontSize: "0.8rem" }}>📍 {project.location}</span>}
+                          {project.duration && <span style={{ color: "#4a6670", fontSize: "0.8rem" }}>⏱ {project.duration}</span>}
+                        </div>
+                        {imgs.length > 0 && (
+                          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.25rem" }}>
+                            {imgs.map((url, i) => (
+                              <img key={i} src={url} alt="" style={{ width: "52px", height: "52px", objectFit: "cover", borderRadius: "7px", border: i === 0 ? "2px solid #2db5d5" : "1px solid rgba(45,181,213,0.15)" }} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </SectionCard>
+
+      {/* Add / Edit Modal */}
+      {showForm && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+          <div style={{ background: "#091e38", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "18px", width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto", padding: "1.75rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+              <h3 style={{ color: "#fff", fontWeight: 700, fontSize: "1.125rem", margin: 0 }}>
+                {editId !== null ? "Edit Project" : "Add Project"}
+              </h3>
+              <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", color: "#7a9ba8", cursor: "pointer", padding: "0.25rem" }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <Field label="Title *" value={form.title} onChange={(v) => setForm((f) => ({ ...f, title: v }))} placeholder="e.g. Villa Facade Renovation" />
+
+            {/* Category dropdown */}
+            <div style={{ marginBottom: "1rem" }}>
+              <label style={lblStyle}>Category</label>
+              {categories.length > 0 ? (
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+                  style={{ ...fieldStyle, appearance: "none", cursor: "pointer" }}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+                >
+                  <option value="">— Select category —</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              ) : (
+                <div style={{ padding: "0.7rem 1rem", background: "rgba(4, 33, 66, 0.6)", border: "1px solid rgba(45,181,213,0.12)", borderRadius: "10px", color: "#4a6670", fontSize: "0.875rem" }}>
+                  No categories yet — open the <strong style={{ color: "#2db5d5" }}>Categories</strong> section above to add some.
+                </div>
+              )}
+            </div>
+
+            <Field label="Description" value={form.description} onChange={(v) => setForm((f) => ({ ...f, description: v }))} placeholder="Short project description..." multiline />
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+              <Field label="Location" value={form.location} onChange={(v) => setForm((f) => ({ ...f, location: v }))} placeholder="e.g. Munich" />
+              <Field label="Duration" value={form.duration} onChange={(v) => setForm((f) => ({ ...f, duration: v }))} placeholder="e.g. 3 weeks" />
+            </div>
+
+            {/* Images */}
+            <div style={{ marginBottom: "1rem" }}>
+              <label style={lblStyle}>Images</label>
+              <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={(e) => handleUpload(e.target.files)} />
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.65rem 1.25rem", background: "rgba(45,181,213,0.08)", border: "1px dashed rgba(45,181,213,0.4)", borderRadius: "10px", color: "#2db5d5", fontSize: "0.875rem", fontWeight: 600, cursor: uploading ? "not-allowed" : "pointer", opacity: uploading ? 0.6 : 1, marginBottom: "0.75rem" }}
+              >
+                <Upload size={15} />
+                {uploading ? "Uploading..." : "Upload Images"}
+              </button>
+              {imageList.length > 0 && (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+                  {imageList.map((url, i) => (
+                    <div key={i} style={{ position: "relative", borderRadius: "8px", overflow: "hidden", aspectRatio: "1", background: "#0d2840" }}>
+                      <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      {i === 0 && <span style={{ position: "absolute", top: "4px", left: "4px", background: "rgba(45,181,213,0.9)", color: "#fff", fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Cover</span>}
+                      <button onClick={() => removeImage(i)} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: "50%", color: "#fff", cursor: "pointer", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {saveMsg && (
+              <p style={{ color: saveMsg.startsWith("Error") ? "#fc8181" : "#4ade80", fontSize: "0.875rem", marginBottom: "0.75rem" }}>{saveMsg}</p>
+            )}
+
+            <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+              <button onClick={() => setShowForm(false)} style={{ padding: "0.625rem 1.5rem", background: "transparent", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "10px", color: "#7a9ba8", cursor: "pointer", fontWeight: 600, fontSize: "0.875rem" }}>
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.5rem", background: saving ? "rgba(45,181,213,0.4)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: "none", borderRadius: "10px", color: "#fff", cursor: saving ? "not-allowed" : "pointer", fontWeight: 600, fontSize: "0.875rem" }}
+              >
+                <Save size={15} />
+                {saving ? "Saving..." : "Save Project"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm */}
+      {deleteConfirm !== null && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+          <div style={{ background: "#091e38", border: "1px solid rgba(229,62,62,0.3)", borderRadius: "16px", padding: "1.75rem", maxWidth: "360px", width: "100%", textAlign: "center" }}>
+            <div style={{ color: "#fc8181", fontSize: "2rem", marginBottom: "0.75rem" }}>🗑</div>
+            <h3 style={{ color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>Delete Project?</h3>
+            <p style={{ color: "#7a9ba8", fontSize: "0.875rem", marginBottom: "1.5rem" }}>This action cannot be undone.</p>
+            <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
+              <button onClick={() => setDeleteConfirm(null)} style={{ padding: "0.625rem 1.25rem", background: "transparent", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "10px", color: "#7a9ba8", cursor: "pointer", fontWeight: 600 }}>
+                Cancel
+              </button>
+              <button onClick={() => handleDelete(deleteConfirm)} style={{ padding: "0.625rem 1.25rem", background: "linear-gradient(135deg, #e53e3e, #fc8181)", border: "none", borderRadius: "10px", color: "#fff", cursor: "pointer", fontWeight: 600 }}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

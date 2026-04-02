@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(cat \"/Users/ariandrdo/Desktop/Heating and AC Service Website \\(3\\)/.env\")",
+      "Bash(npm run:*)",
+      "WebSearch",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(curl -s \"https://unsplash.com/s/photos/building-facade\" -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36\")",
+      "Bash(grep -oE 'photo-[0-9]{13,}-[0-9a-f]+')",
+      "Bash(curl -s \"https://unsplash.com/s/photos/construction-scaffolding\" -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36\")",
+      "Bash(curl -s \"https://api.unsplash.com/search/photos?query=building+facade&per_page=5\" -H \"Authorization: Client-ID demo\")",
+      "WebFetch(domain:github.com)",
+      "Bash(sed -i '' 's/from-\\\\[#0a2a35\\\\] via-\\\\[#0f3a4a\\\\] to-\\\\[#1c5d6f\\\\]/from-[#206eac] via-[#0a1a2e] to-[#01030e]/g' src/app/pages/About.tsx src/app/pages/Contact.tsx src/app/pages/Home.tsx src/app/pages/Products.tsx src/app/pages/Gallery.tsx src/app/pages/Services.tsx)",
+      "Bash(sed -i '' 's/from-\\\\[#0a2a35\\\\] to-\\\\[#1c5d6f\\\\]/from-[#206eac] to-[#01030e]/g' src/app/pages/About.tsx src/app/pages/Contact.tsx src/app/pages/Home.tsx src/app/pages/Products.tsx src/app/pages/Gallery.tsx src/app/pages/Services.tsx)",
+      "Bash(find /Users/ariandrdo/Desktop/BeqiriGmbh/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" -o -name \"*.css\" \\\\\\) -exec sed -i '' 's/#01030e/#242942/g; s/#01030E/#242942/g' {} +)",
+      "Bash(find /Users/ariandrdo/Desktop/BeqiriGmbh/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" -o -name \"*.css\" \\\\\\) -exec sed -i '' 's/#206eac/#004b87/g; s/#242942/#0d2b44/g' {} +)",
+      "Bash(find /Users/ariandrdo/Desktop/BeqiriGmbh/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" -o -name \"*.css\" \\\\\\) -exec sed -i '' 's/from-\\\\[#0d2b44\\\\] to-\\\\[#004b87\\\\]/from-[#0d2b44] via-[#0a1a2e] to-[#004b87]/g' {} +)"
+    ]
+  }
+}
