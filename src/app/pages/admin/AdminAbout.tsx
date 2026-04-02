@@ -154,6 +154,7 @@ export function AdminAbout() {
         <Field label="Paragraph 1" value={aboutF.storyP1} onChange={(v) => set("storyP1", v)} multiline />
         <Field label="Paragraph 2" value={aboutF.storyP2} onChange={(v) => set("storyP2", v)} multiline />
         <Field label="Paragraph 3" value={aboutF.storyP3} onChange={(v) => set("storyP3", v)} multiline />
+        <Field label="Paragraph 4 (optional)" value={aboutF.storyP4 ?? ""} onChange={(v) => set("storyP4", v)} multiline />
       </SectionCard>
 
       {/* Team Members */}

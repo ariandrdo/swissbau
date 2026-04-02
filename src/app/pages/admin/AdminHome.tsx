@@ -400,6 +400,7 @@ export function AdminHome() {
       >
         <Field label="Paragraph 1" value={homeF.storyP1} onChange={(v) => setH("storyP1", v)} multiline />
         <Field label="Paragraph 2" value={homeF.storyP2} onChange={(v) => setH("storyP2", v)} multiline />
+        <Field label="Paragraph 3" value={homeF.storyP3 ?? ""} onChange={(v) => setH("storyP3", v)} multiline />
       </SectionCard>
 
       {/* ── Stats ── */}
@@ -509,6 +510,46 @@ export function AdminHome() {
             />
           </div>
         ))}
+      </SectionCard>
+
+      {/* ── How It Works ── */}
+      <SectionCard title="How It Works Section" defaultOpen={false}>
+        <Field label="Badge Label" value={homeF.ourProcessLabel} onChange={(v) => setH("ourProcessLabel", v)} placeholder="Our Process" />
+        <Field label="Heading" value={homeF.howItWorksHeading} onChange={(v) => setH("howItWorksHeading", v)} placeholder="How It Works" />
+        <Field label="Subtitle" value={homeF.howItWorksSubtitle} onChange={(v) => setH("howItWorksSubtitle", v)} multiline placeholder="From the first consultation..." />
+        <div style={{ borderTop: "1px solid rgba(45,181,213,0.08)", paddingTop: "1rem", marginTop: "0.25rem" }}>
+          {homeF.howItWorksSteps.map((step, i) => (
+            <div key={i} style={{ paddingBottom: "1rem", marginBottom: "1rem", borderBottom: i < homeF.howItWorksSteps.length - 1 ? "1px solid rgba(45,181,213,0.08)" : "none" }}>
+              <p style={{ color: "#7a9ba8", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.75rem" }}>Step {i + 1}</p>
+              <Field label="Title" value={step.title} onChange={(v) => { const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, title: v } : s); setH("howItWorksSteps", next); }} />
+              <Field label="Description" value={step.desc} onChange={(v) => { const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, desc: v } : s); setH("howItWorksSteps", next); }} multiline />
+              <div style={{ marginBottom: "0.5rem" }}>
+                <label style={lblStyle}>Step Image</label>
+                {step.image && (
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <img src={step.image} alt="" style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(45,181,213,0.3)" }} />
+                  </div>
+                )}
+                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "8px", color: "#2db5d5", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer" }}>
+                  <Upload size={13} /> {step.image ? "Change Image" : "Upload Image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      e.target.value = "";
+                      const dataUrl = await compressImage(file);
+                      const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, image: dataUrl } : s);
+                      setH("howItWorksSteps", next);
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+          ))}
+        </div>
       </SectionCard>
 
       {/* ── Project Gallery ── */}

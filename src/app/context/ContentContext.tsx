@@ -34,6 +34,7 @@ export type SiteContent = {
     heroBtnSecondary: string;
     storyP1: string;
     storyP2: string;
+    storyP3?: string;
     stats: { value: string; label: string }[];
     showStats: boolean;
     ctaHeading: string;
@@ -57,6 +58,10 @@ export type SiteContent = {
     whyChooseLabel: string;
     whyChooseSubtitle: string;
     whyChooseFeatures: { title: string; desc: string }[];
+    ourProcessLabel: string;
+    howItWorksHeading: string;
+    howItWorksSubtitle: string;
+    howItWorksSteps: { title: string; desc: string; image: string }[];
     ourWorkLabel: string;
     projectGalleryHeading: string;
     viewAllBtn: string;
@@ -109,6 +114,7 @@ export type SiteContent = {
     storyP1: string;
     storyP2: string;
     storyP3: string;
+    storyP4?: string;
     team: { name: string; role: string; experience: string; image?: string }[];
     stats: { value: string; label: string }[];
     showAboutStats: boolean;
@@ -283,6 +289,8 @@ export const defaultContent: SiteContent = {
       "Beqiri GmbH is a trusted name in painting, plastering, and facade work across the region. With years of hands-on experience, we deliver high-quality surface solutions for private homes, apartment buildings, and commercial properties.",
     storyP2:
       "Our team of skilled craftsmen takes pride in every project — from interior plaster finishes to full exterior facade systems. We combine traditional techniques with modern materials to ensure results that are both beautiful and long-lasting.",
+    storyP3:
+      "At Beqiri GmbH, we believe that quality starts with communication. We work closely with every client — listening, planning, and executing with precision — so that the final result always exceeds expectations. Your property deserves nothing less.",
     stats: [
       { value: "10+", label: "Years of Experience" },
       { value: "500+", label: "Projects Completed" },
@@ -330,6 +338,14 @@ export const defaultContent: SiteContent = {
       { title: "100% Guarantee", desc: "We stand behind our work. Every project is completed to the highest standard — guaranteed." },
       { title: "Quality Materials", desc: "We use only premium, proven materials from trusted suppliers for lasting, professional results." },
       { title: "On-Time Delivery", desc: "We respect your schedule. Projects are completed on time, every time — with clear communication throughout." },
+    ],
+    ourProcessLabel: "Our Process",
+    howItWorksHeading: "How It Works",
+    howItWorksSubtitle: "From the first consultation to the final coat — a simple, professional process that delivers results you can see.",
+    howItWorksSteps: [
+      { title: "Free Consultation", desc: "We visit your property, assess the surfaces, and discuss your vision. You receive a transparent, detailed quote with no hidden costs.", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80&fit=crop" },
+      { title: "Surface Preparation", desc: "Our team thoroughly cleans, sands, and primes all surfaces — the foundation for a flawless, long-lasting finish.", image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80&fit=crop" },
+      { title: "Professional Finish", desc: "Expert painters and plasterers apply premium coatings with precision, leaving your property looking immaculate inside and out.", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&fit=crop" },
     ],
     ourWorkLabel: "Our Work",
     projectGalleryHeading: "Project Gallery",
@@ -472,6 +488,7 @@ export const defaultContent: SiteContent = {
       "We were founded with a simple goal: to provide honest, reliable, and professional craftsmanship to every client. From interior plaster finishes to full exterior facade systems, we bring the same level of care and precision to every project.",
     storyP3:
       "Our reputation is built on quality workmanship, fair pricing, and exceptional customer service. We use only premium materials and stand behind every job we complete — your satisfaction is guaranteed.",
+    storyP4: "",
     team: [
       { name: "Beqiri", role: "Founder & Master Craftsman", experience: "10+ years experience" },
     ],
@@ -647,6 +664,8 @@ const defaultContentDe: SiteContent = {
       "Seit 2000 ist Jubea Energy Systems für Privat- und Geschäftskunden mit erstklassigen HLK-Dienstleistungen tätig. Was als kleines Familienunternehmen begann, ist heute einer der vertrauenswürdigsten Namen der Branche.",
     storyP2:
       "Unsere Mission ist einfach: ehrliche, zuverlässige und professionelle Heizungs- und Kühldienstleistungen für jeden Haushalt und jedes Unternehmen zu erbringen.",
+    storyP3:
+      "Bei Beqiri GmbH beginnt Qualität mit Kommunikation. Wir arbeiten eng mit jedem Kunden zusammen — zuhören, planen und ausführen mit Präzision — damit das Ergebnis stets die Erwartungen übertrifft. Ihre Immobilie verdient nichts weniger.",
     stats: [
       { value: "25+", label: "Jahre Erfahrung" },
       { value: "10K+", label: "Kunden bedient" },
@@ -690,6 +709,14 @@ const defaultContentDe: SiteContent = {
       { title: "100% Garantie", desc: "Vollständige Zufriedenheit garantiert bei all unseren Arbeiten und Dienstleistungen" },
       { title: "Energieeinsparungen", desc: "Deutliche Einsparungen durch unsere Beratung – mit hochwertigen Wärmepumpen." },
       { title: "Pünktliche Lieferung", desc: "Wir respektieren Ihren Zeitplan. Projekte werden pünktlich abgeschlossen – mit klarer Kommunikation von Anfang bis Ende." },
+    ],
+    ourProcessLabel: "Unser Prozess",
+    howItWorksHeading: "So funktioniert es",
+    howItWorksSubtitle: "Von der ersten Beratung bis zum letzten Anstrich — ein einfacher, professioneller Prozess mit sichtbaren Ergebnissen.",
+    howItWorksSteps: [
+      { title: "Kostenlose Beratung", desc: "Wir besuchen Ihr Objekt, beurteilen die Oberflächen und besprechen Ihre Vorstellungen. Sie erhalten ein transparentes Angebot ohne versteckte Kosten.", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80&fit=crop" },
+      { title: "Untergrundvorbereitung", desc: "Unser Team reinigt, schleift und grundiert alle Flächen gründlich — die Grundlage für ein makelloses, langlebiges Ergebnis.", image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80&fit=crop" },
+      { title: "Professionelle Ausführung", desc: "Erfahrene Maler und Verputzer tragen hochwertige Beschichtungen präzise auf und hinterlassen Ihr Objekt makellos — innen wie außen.", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&fit=crop" },
     ],
     ourWorkLabel: "Unsere Arbeit",
     projectGalleryHeading: "Projektgalerie",
@@ -837,6 +864,7 @@ const defaultContentDe: SiteContent = {
       "Unser Gründer, James Jubea, gründete das Unternehmen mit einer einfachen Mission: der Gemeinschaft ehrliche, zuverlässige und professionelle Heizungs- und Kühldienste zu erbringen. Diese Mission leitet uns noch heute.",
     storyP3:
       "Wir haben unseren Ruf auf qualitativ hochwertige Handwerkskunst, faire Preise und außergewöhnlichen Kundenservice aufgebaut.",
+    storyP4: "",
     team: [
       { name: "John Anderson", role: "Meister-Techniker", experience: "25 Jahre Erfahrung" },
       { name: "Maria Garcia", role: "HLK-Spezialistin", experience: "15 Jahre Erfahrung" },
@@ -1016,6 +1044,8 @@ const defaultContentSq: SiteContent = {
       "Themeluar në vitin 2000, Jubea Energy Systems ka shërbyer klientët rezidencial dhe komercial me shërbime të nivelit të lartë HVAC për më shumë se dy dekada.",
     storyP2:
       "Misioni ynë është i thjeshtë: të ofrojmë shërbime të ndershme, të besueshme dhe profesionale të ngrohjes dhe ftohjes për çdo shtëpi dhe biznes.",
+    storyP3:
+      "Në Beqiri GmbH, besojmë se cilësia fillon me komunikim. Ne bashkëpunojmë ngushtë me çdo klient — dëgjojmë, planifikojmë dhe ekzekutojmë me precizion — që rezultati final të tejkalojë gjithmonë pritshmëritë. Prona juaj meriton jo më pak.",
     stats: [
       { value: "25+", label: "Vite Përvojë" },
       { value: "10K+", label: "Klientë të Shërbyer" },
@@ -1059,6 +1089,14 @@ const defaultContentSq: SiteContent = {
       { title: "100% Garanci", desc: "Kënaqësi e plotë e garantuar për të gjitha punët dhe shërbimet tona" },
       { title: "Kursim Energjie", desc: "Kursime të konsiderueshme përmes konsultimit tonë – me pompa termike cilësore." },
       { title: "Dorëzim në Kohë", desc: "Ne respektojmë orarin tuaj. Projektet përfundohen në kohë, çdo herë – me komunikim të qartë nga fillimi deri në fund." },
+    ],
+    ourProcessLabel: "Procesi ynë",
+    howItWorksHeading: "Si funksionon",
+    howItWorksSubtitle: "Nga konsultimi i parë deri te shtresa e fundit — një proces i thjeshtë dhe profesional që sjell rezultate të dukshme.",
+    howItWorksSteps: [
+      { title: "Konsultim falas", desc: "Vizitojmë pronën tuaj, vlerësojmë sipërfaqet dhe diskutojmë vizionin tuaj. Merrni një ofertë transparente pa kosto të fshehura.", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80&fit=crop" },
+      { title: "Përgatitja e sipërfaqes", desc: "Ekipi ynë pastron, zmerxhel dhe primos të gjitha sipërfaqet tërësisht — themeli për një rezultat të pagabueshëm dhe afatgjatë.", image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80&fit=crop" },
+      { title: "Përfundim profesional", desc: "Piktorë dhe suvatues me përvojë aplikojnë shtresa cilësore me precizion, duke lënë pronën tuaj të paqortueshme brenda dhe jashtë.", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&fit=crop" },
     ],
     ourWorkLabel: "Puna jonë",
     projectGalleryHeading: "Galeria e projekteve",
@@ -1206,6 +1244,7 @@ const defaultContentSq: SiteContent = {
       "Themeluesi ynë, James Jubea, e nisi kompaninë me një mision të thjeshtë: të ofrojë shërbime të ndershme, të besueshme dhe profesionale të ngrohjes dhe ftohjes për komunitetin.",
     storyP3:
       "Ne kemi ndërtuar reputacionin tonë mbi cilësinë e punimeve, çmimet e drejta dhe shërbimin e jashtëzakonshëm ndaj klientëve.",
+    storyP4: "",
     team: [
       { name: "John Anderson", role: "Teknicien Master", experience: "25 vjet përvojë" },
       { name: "Maria Garcia", role: "Specialiste HVAC", experience: "15 vjet përvojë" },
@@ -1385,6 +1424,8 @@ const defaultContentMk: SiteContent = {
       "Основана во 2000 година, Jubea Energy Systems им служи на станбени и комерцијални клиенти со врвни ХВАК услуги повеќе од две децении.",
     storyP2:
       "Нашата мисија е едноставна: да обезбедиме чесни, доверливи и професионални услуги за греење и ладење за секој дом и бизнис.",
+    storyP3:
+      "Во Beqiri GmbH, веруваме дека квалитетот започнува со комуникација. Тесно соработуваме со секој клиент — слушаме, планираме и извршуваме со прецизност — за да го надминеме секогаш очекувањата. Вашиот имот заслужува ништо помалку.",
     stats: [
       { value: "25+", label: "Години Искуство" },
       { value: "10K+", label: "Опслужени Клиенти" },
@@ -1428,6 +1469,14 @@ const defaultContentMk: SiteContent = {
       { title: "100% Гаранција", desc: "Целосно задоволство гарантирано за сите наши работи и услуги" },
       { title: "Заштеда на енергија", desc: "Значителни заштеди преку нашето советување – со висококвалитетни топлотни пумпи." },
       { title: "Навремена испорака", desc: "Го почитуваме вашиот распоред. Проектите се завршуваат навреме, секогаш – со јасна комуникација од почеток до крај." },
+    ],
+    ourProcessLabel: "Нашиот процес",
+    howItWorksHeading: "Kako тоа функционира",
+    howItWorksSubtitle: "Од prvата консултација до последниот слој — едноставен, професионален процес кој дава видливи резултати.",
+    howItWorksSteps: [
+      { title: "Бесплатна консултација", desc: "Ја посетуваме вашата имотина, ги оцениме површините и го разговараме вашиот концепт. Добивате транспарентна понуда без скриени трошоци.", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80&fit=crop" },
+      { title: "Подготовка на површината", desc: "Нашиот тим темелно чисти, брусе и прајмира сите површини — основата за беспрекорен и трајн завршеток.", image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80&fit=crop" },
+      { title: "Професионален завршеток", desc: "Искусни молери и штукатери нанесуваат премиум облоги со прецизност, оставајќи ја вашата имотина беспрекорна — внатре и надвор.", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&fit=crop" },
     ],
     ourWorkLabel: "Нашата работа",
     projectGalleryHeading: "Галерија на проекти",
@@ -1575,6 +1624,7 @@ const defaultContentMk: SiteContent = {
       "Нашиот основач, James Jubea, ја основаше компанијата со едноставна мисија: да обезбеди чесни, доверливи и професионални услуги за греење и ладење на заедницата.",
     storyP3:
       "Го изградивме нашиот углед на квалитетна изработка, фер цени и извонреден услуга за клиентите.",
+    storyP4: "",
     team: [
       { name: "John Anderson", role: "Главен Техничар", experience: "25 години искуство" },
       { name: "Maria Garcia", role: "ХВАК Специјалист", experience: "15 години искуство" },
@@ -1726,6 +1776,7 @@ function mergeContent(parsed: Partial<SiteContent>, def: SiteContent = defaultCo
     home: {
       ...def.home,
       ...parsed.home,
+      storyP3: parsed.home?.storyP3 || def.home.storyP3,
       stats: parsed.home?.stats ?? def.home.stats,
       showStats: parsed.home?.showStats ?? def.home.showStats,
       showLearnMoreBtn: parsed.home?.showLearnMoreBtn ?? def.home.showLearnMoreBtn,
@@ -1738,6 +1789,7 @@ function mergeContent(parsed: Partial<SiteContent>, def: SiteContent = defaultCo
       })(),
       featuredProducts: parsed.home?.featuredProducts ?? def.home.featuredProducts,
       whyChooseFeatures: parsed.home?.whyChooseFeatures ?? def.home.whyChooseFeatures,
+      howItWorksSteps: parsed.home?.howItWorksSteps ?? def.home.howItWorksSteps,
       homeGallery: (() => {
         const g = parsed.home?.homeGallery;
         if (!g || g.length === 0) return def.home.homeGallery;
@@ -1804,6 +1856,7 @@ type StoredMultiLang = {
   v?: number;
   langs: Partial<Record<Lang, Partial<SiteContent>>>;
   currentLang: Lang;
+  savedAt?: string;
 };
 
 function clearOldStorage() {
@@ -1811,7 +1864,7 @@ function clearOldStorage() {
   try { localStorage.removeItem(LEGACY_KEY); } catch { /* ignore */ }
 }
 
-function loadMultiLang(): { langs: Record<Lang, SiteContent>; currentLang: Lang } {
+function loadMultiLang(): { langs: Record<Lang, SiteContent>; currentLang: Lang; savedAt: string | null } {
   // Try new multilang key first
   try {
     const stored = localStorage.getItem(MULTILANG_KEY);
@@ -1820,7 +1873,7 @@ function loadMultiLang(): { langs: Record<Lang, SiteContent>; currentLang: Lang 
       // If version is outdated, clear and use fresh defaults
       if (!parsed.v || parsed.v < STORAGE_VERSION) {
         clearOldStorage();
-        return { langs: { ...defaultMultiLangContent }, currentLang: "en" };
+        return { langs: { ...defaultMultiLangContent }, currentLang: "en", savedAt: null };
       }
       const langs: Record<Lang, SiteContent> = {
         en: mergeContent(parsed.langs?.en ?? {}, defaultMultiLangContent.en),
@@ -1828,7 +1881,7 @@ function loadMultiLang(): { langs: Record<Lang, SiteContent>; currentLang: Lang 
         sq: mergeContent(parsed.langs?.sq ?? {}, defaultMultiLangContent.sq),
         mk: mergeContent(parsed.langs?.mk ?? {}, defaultMultiLangContent.mk),
       };
-      return { langs, currentLang: "en" };
+      return { langs, currentLang: "en", savedAt: parsed.savedAt ?? null };
     }
   } catch {
     clearOldStorage();
@@ -1839,12 +1892,13 @@ function loadMultiLang(): { langs: Record<Lang, SiteContent>; currentLang: Lang 
   return {
     langs: { ...defaultMultiLangContent },
     currentLang: "en",
+    savedAt: null,
   };
 }
 
-function saveMultiLang(langs: Record<Lang, SiteContent>, currentLang: Lang) {
+function saveMultiLang(langs: Record<Lang, SiteContent>, currentLang: Lang, savedAt?: string) {
   try {
-    localStorage.setItem(MULTILANG_KEY, JSON.stringify({ v: STORAGE_VERSION, langs, currentLang }));
+    localStorage.setItem(MULTILANG_KEY, JSON.stringify({ v: STORAGE_VERSION, langs, currentLang, savedAt: savedAt ?? new Date().toISOString() }));
   } catch {
     // ignore
   }
@@ -1854,6 +1908,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const initial = loadMultiLang();
   const [langs, setLangs] = useState<Record<Lang, SiteContent>>(initial.langs);
   const [currentLang, setCurrentLang] = useState<Lang>(initial.currentLang);
+  const localSavedAtRef = useRef<string | null>(initial.savedAt);
 
   const content = langs[currentLang];
 
@@ -1866,34 +1921,41 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const scheduleSave = (nextLangs: Record<Lang, SiteContent>, nextCurrentLang: Lang) => {
     pendingLangsRef.current = nextLangs;
     pendingLangRef.current = nextCurrentLang;
+    const now = new Date().toISOString();
+    localSavedAtRef.current = now;
 
     // localStorage: debounce 300ms
     if (lsTimerRef.current) clearTimeout(lsTimerRef.current);
     lsTimerRef.current = setTimeout(() => {
-      saveMultiLang(pendingLangsRef.current, pendingLangRef.current);
+      saveMultiLang(pendingLangsRef.current, pendingLangRef.current, localSavedAtRef.current ?? undefined);
     }, 300);
 
     // Supabase: debounce 1500ms
     if (sbTimerRef.current) clearTimeout(sbTimerRef.current);
     sbTimerRef.current = setTimeout(() => {
+      const ts = localSavedAtRef.current ?? new Date().toISOString();
       supabase
         .from("site_content")
-        .upsert({ id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current }, updated_at: new Date().toISOString() })
+        .upsert({ id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current, savedAt: ts }, updated_at: ts })
         .then(({ error }) => { if (error) console.error("Supabase save error:", error); });
     }, 1500);
   };
 
-  // Sync from Supabase on mount
+  // Sync from Supabase on mount — only apply if Supabase data is newer than local data
   useEffect(() => {
     supabase
       .from("site_content")
-      .select("data")
+      .select("data, updated_at")
       .eq("id", "multilang")
       .single()
       .then(({ data, error }) => {
         if (!error && data?.data) {
           const stored = data.data as StoredMultiLang;
           if (!stored.v || stored.v < STORAGE_VERSION) return;
+          // Skip if local data is newer or same age as Supabase data
+          const supabaseTs = (data as { updated_at?: string }).updated_at ?? stored.savedAt;
+          const localTs = localSavedAtRef.current;
+          if (localTs && supabaseTs && supabaseTs <= localTs) return;
           const merged: Record<Lang, SiteContent> = {
             en: mergeContent(stored.langs?.en ?? {}, defaultMultiLangContent.en),
             de: mergeContent(stored.langs?.de ?? {}, defaultMultiLangContent.de),
@@ -1901,7 +1963,8 @@ export function ContentProvider({ children }: { children: ReactNode }) {
             mk: mergeContent(stored.langs?.mk ?? {}, defaultMultiLangContent.mk),
           };
           setLangs(merged);
-          saveMultiLang(merged, currentLang);
+          localSavedAtRef.current = supabaseTs ?? null;
+          saveMultiLang(merged, currentLang, supabaseTs);
         }
       });
   }, []);

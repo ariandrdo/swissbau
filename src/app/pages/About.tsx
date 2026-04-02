@@ -89,6 +89,17 @@ export function About() {
               >
                 {a.storyP3}
               </motion.p>
+              {a.storyP4 && (
+              <motion.p
+                initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
+                whileInView={isMobile ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.25 }}
+                className="text-lg text-gray-600"
+              >
+                {a.storyP4}
+              </motion.p>
+              )}
             </div>
             {/* Image shown only on desktop (right column) */}
             <div className="hidden lg:flex self-stretch">

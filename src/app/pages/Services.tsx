@@ -99,6 +99,15 @@ export function Services() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="group grid lg:grid-cols-2 border-b border-gray-100 last:border-b-0 py-16 gap-12 items-center"
             >
+              {/* Image side — always first on mobile */}
+              <div className={`relative overflow-hidden rounded-3xl h-[420px] order-first ${index % 2 === 1 ? "lg:order-1" : "lg:order-last"}`}>
+                <ImageWithFallback
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+
               {/* Text side */}
               <div className={index % 2 === 1 ? "lg:order-2" : ""}>
                 <h2 className="text-4xl lg:text-5xl font-bold text-[#042142] mb-5 leading-tight">
@@ -124,15 +133,6 @@ export function Services() {
                   {s.requestServiceBtn}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </div>
-
-              {/* Image side */}
-              <div className={`relative overflow-hidden rounded-3xl h-[420px] ${index % 2 === 1 ? "lg:order-1" : ""}`}>
-                <ImageWithFallback
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
               </div>
             </motion.div>
           ))}

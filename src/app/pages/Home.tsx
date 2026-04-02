@@ -129,6 +129,17 @@ export function Home() {
               >
                 {h.storyP2}
               </motion.p>
+              {h.storyP3 && (
+              <motion.p
+                initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
+                whileInView={isMobile ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+                className="text-lg text-gray-600 mb-8 leading-relaxed"
+              >
+                {h.storyP3}
+              </motion.p>
+              )}
               {h.showLearnMoreBtn !== false && (
               <motion.div
                 initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
@@ -395,7 +406,7 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block bg-white/10 text-white font-semibold text-sm px-5 py-1.5 rounded-full mb-5">
-              {h.ourProcessLabel ?? "Our Process"}
+              {h.ourProcessLabel}
             </span>
             <motion.h2
               initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 20 }}
@@ -404,10 +415,10 @@ export function Home() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="text-4xl lg:text-5xl font-bold text-white mb-4"
             >
-              {h.howItWorksHeading ?? "How It Works"}
+              {h.howItWorksHeading}
             </motion.h2>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-              {h.howItWorksSubtitle ?? "From the first consultation to the final coat — a simple, professional process that delivers results you can see."}
+              {h.howItWorksSubtitle}
             </p>
           </div>
 
@@ -417,11 +428,7 @@ export function Home() {
             <div className="hidden lg:block absolute top-16 left-[calc(16.666%)] right-[calc(16.666%)] h-px bg-white/15" />
 
             <div className="grid md:grid-cols-3 gap-8">
-              {(h.howItWorksSteps ?? [
-                { title: "Free Consultation", desc: "We visit your property, assess the surfaces, and discuss your vision. You receive a transparent, detailed quote with no hidden costs.", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80&fit=crop" },
-                { title: "Surface Preparation", desc: "Our team thoroughly cleans, sands, and primes all surfaces — the foundation for a flawless, long-lasting finish.", image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80&fit=crop" },
-                { title: "Professional Finish", desc: "Expert painters and plasterers apply premium coatings with precision, leaving your property looking immaculate inside and out.", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&fit=crop" },
-              ]).map((step: { title: string; desc: string; image: string }, i: number) => (
+              {h.howItWorksSteps.map((step, i) => (
                 <motion.div
                   key={i}
                   initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 28 }}
