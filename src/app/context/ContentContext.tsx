@@ -1925,33 +1925,28 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   };
 
   const updateContent = (updater: (prev: SiteContent) => SiteContent) => {
-    setLangs((prev) => {
-      const next = { ...prev, [currentLang]: updater(prev[currentLang]) };
-      pendingLangsRef.current = next;
-      return next;
-    });
+    const next = { ...pendingLangsRef.current, [currentLang]: updater(pendingLangsRef.current[currentLang]) };
+    pendingLangsRef.current = next;
+    setLangs(next);
   };
 
   const updateLangContent = (lang: Lang, updater: (prev: SiteContent) => SiteContent) => {
-    setLangs((prev) => {
-      const next = { ...prev, [lang]: updater(prev[lang]) };
-      pendingLangsRef.current = next;
-      return next;
-    });
+    const next = { ...pendingLangsRef.current, [lang]: updater(pendingLangsRef.current[lang]) };
+    pendingLangsRef.current = next;
+    setLangs(next);
   };
 
   // Update all languages in one shot — avoids N separate state updates when propagating
   const updateAllLangs = (updater: (lang: Lang, prev: SiteContent) => SiteContent) => {
-    setLangs((prev) => {
-      const next: Record<Lang, SiteContent> = {
-        en: updater("en", prev.en),
-        de: updater("de", prev.de),
-        sq: updater("sq", prev.sq),
-        mk: updater("mk", prev.mk),
-      };
-      pendingLangsRef.current = next;
-      return next;
-    });
+    const prev = pendingLangsRef.current;
+    const next: Record<Lang, SiteContent> = {
+      en: updater("en", prev.en),
+      de: updater("de", prev.de),
+      sq: updater("sq", prev.sq),
+      mk: updater("mk", prev.mk),
+    };
+    pendingLangsRef.current = next;
+    setLangs(next);
   };
 
   const resetContent = () => {
