@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, Trash2, GripVertical, Upload, X, ChevronUp, ChevronDown } from "lucide-react";
-import { useContent } from "../../context/ContentContext";
+import { Plus, Trash2, GripVertical, Upload, X, ChevronUp, ChevronDown, RotateCcw } from "lucide-react";
+import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
 import { AdminLangTabs } from "./AdminLangTabs";
 import { translateSection } from "../../utils/translate";
@@ -66,7 +66,7 @@ function SectionCard({
 }
 
 export function AdminHeader() {
-  const { langs, updateLangContent, updateAllLangs, saveNow } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [headerF, setHeaderF] = useState({ ...langs[adminLang].header });
   const [saved, setSaved] = useState(false);
@@ -75,7 +75,7 @@ export function AdminHeader() {
   useEffect(() => {
     setHeaderF({ ...langs[adminLang].header });
     setSaved(false);
-  }, [adminLang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setH = (field: string, value: unknown) =>
     setHeaderF((prev) => ({ ...prev, [field]: value }));
@@ -113,6 +113,14 @@ export function AdminHeader() {
     setTimeout(() => setSaved(false), 2500);
   };
 
+  const handleReset = async () => {
+    const def = defaultMultiLangContent[adminLang].header;
+    setHeaderF({ ...def });
+    updateLangContent(adminLang, (prev) => ({ ...prev, header: def }));
+    await saveNow();
+    setSaved(false);
+  };
+
   return (
     <div>
       {/* Language Tabs */}
@@ -147,25 +155,32 @@ export function AdminHeader() {
             Manage the site header — logo, navigation menu, and phone number
           </p>
         </div>
-        <button
-          onClick={handleSave}
-          style={{
-            padding: "0.625rem 1.5rem",
-            background: saved
-              ? "linear-gradient(135deg, #22c55e, #16a34a)"
-              : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
-            border: "none",
-            borderRadius: "10px",
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: "0.9rem",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-            boxShadow: "0 4px 14px rgba(45, 181, 213, 0.3)",
-          }}
-        >
-          {saved ? "✓ Saved!" : "Save Changes"}
-        </button>
+        <div style={{ display: "flex", gap: "0.625rem" }}>
+          <button onClick={handleReset}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(45,181,213,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.4)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
+          >
+            <RotateCcw size={14} /> Reset to Default
+          </button>
+          <button
+            onClick={handleSave}
+            style={{
+              display: "flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.625rem 1.5rem",
+              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+              border: saved ? "1px solid rgba(74,222,128,0.4)" : "none",
+              borderRadius: "10px",
+              color: saved ? "#4ade80" : "#fff",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+          >
+            {saved ? "✓ Saved!" : "Save Changes"}
+          </button>
+        </div>
       </div>
 
       {/* Logo Upload */}
