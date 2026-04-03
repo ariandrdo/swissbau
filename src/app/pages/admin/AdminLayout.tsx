@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
 export function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { content } = useContent();
+  const { content, saveError } = useContent();
   const logo = content.header.logo;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
@@ -405,6 +405,13 @@ export function AdminLayout() {
             <span style={{ color: "#7a9ba8", fontSize: "0.8125rem" }}>Online</span>
           </div>
         </header>
+
+        {/* Save error banner */}
+        {saveError && (
+          <div style={{ background: "rgba(212,24,61,0.15)", border: "1px solid rgba(212,24,61,0.4)", color: "#ff6b8a", padding: "0.75rem 1.25rem", fontSize: "0.875rem", fontWeight: 500 }}>
+            ⚠️ {saveError}
+          </div>
+        )}
 
         {/* Page content */}
         <main style={{ flex: 1, padding: isMobile ? "1rem" : "1.75rem" }}>

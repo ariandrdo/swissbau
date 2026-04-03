@@ -1847,6 +1847,7 @@ type ContentContextType = {
   content: SiteContent;
   langs: Record<Lang, SiteContent>;
   isLoaded: boolean;
+  saveError: string | null;
   currentLang: Lang;
   setLang: (lang: Lang) => void;
   updateContent: (updater: (prev: SiteContent) => SiteContent) => void;
@@ -1870,6 +1871,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const [langs, setLangs] = useState<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
   const [currentLang, setCurrentLang] = useState<Lang>("en");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const content = langs[currentLang];
 
@@ -1888,7 +1890,14 @@ export function ContentProvider({ children }: { children: ReactNode }) {
           { id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current } },
           { onConflict: "id" }
         )
-        .then(({ error }) => { if (error) console.error("Supabase save error:", error); });
+        .then(({ error }) => {
+          if (error) {
+            console.error("Supabase save error:", error);
+            setSaveError("Save failed: " + error.message + ". Your changes may not persist after refresh.");
+          } else {
+            setSaveError(null);
+          }
+        });
     }, 500);
   };
 
@@ -1965,7 +1974,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ContentContext.Provider value={{ content, langs, isLoaded, currentLang, setLang, updateContent, updateLangContent, updateAllLangs, resetContent }}>
+    <ContentContext.Provider value={{ content, langs, isLoaded, saveError, currentLang, setLang, updateContent, updateLangContent, updateAllLangs, resetContent }}>
       {children}
     </ContentContext.Provider>
   );

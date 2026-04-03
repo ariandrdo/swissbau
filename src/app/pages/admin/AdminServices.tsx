@@ -156,7 +156,7 @@ function ServiceCard({
 
   const handleImageUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    const dataUrl = await compressImage(file, 1200);
+    const dataUrl = await compressImage(file, 600, 0.72);
     onChange({ ...svc, image: dataUrl });
   };
 
