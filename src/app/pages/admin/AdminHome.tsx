@@ -130,7 +130,7 @@ function Field({
 // ── main component ────────────────────────────────────────────────────────────
 
 export function AdminHome() {
-  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
 
   const langContent = langs[adminLang];
@@ -187,12 +187,13 @@ export function AdminHome() {
   const setH = (key: keyof typeof homeF, value: unknown) =>
     setHomeF((prev) => ({ ...prev, [key]: value }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (adminLang === "en") {
       updateLangContent("en", (prev) => ({ ...prev, global: globalF, home: homeF }));
     } else {
       updateLangContent(adminLang, (prev) => ({ ...prev, global: globalF, home: homeF }));
     }
+    await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

@@ -66,7 +66,7 @@ function SectionCard({
 }
 
 export function AdminFooter() {
-  const { langs, updateLangContent, updateAllLangs } = useContent();
+  const { langs, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [footerF, setFooterF] = useState({ ...langs[adminLang].footer });
   const [saved, setSaved] = useState(false);
@@ -110,12 +110,13 @@ export function AdminFooter() {
   const removeService = (index: number) =>
     setF("services", footerF.services.filter((_, i) => i !== index));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (adminLang === "en") {
       updateLangContent("en", (prev) => ({ ...prev, footer: footerF }));
     } else {
       updateLangContent(adminLang, (prev) => ({ ...prev, footer: footerF }));
     }
+    await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

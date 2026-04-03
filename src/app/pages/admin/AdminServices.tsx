@@ -375,7 +375,7 @@ function ServiceCard({
 // ── AdminServices ──────────────────────────────────────────────────────────────
 
 export function AdminServices() {
-  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
 
   const langServices = langs[adminLang].services;
@@ -452,13 +452,14 @@ export function AdminServices() {
     setSaved(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedServices = { ...langs[adminLang].services, ...pageFields, detailedServices: services };
     if (adminLang === "en") {
       updateLangContent("en", (prev) => ({ ...prev, services: updatedServices }));
     } else {
       updateLangContent(adminLang, (prev) => ({ ...prev, services: updatedServices }));
     }
+    await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

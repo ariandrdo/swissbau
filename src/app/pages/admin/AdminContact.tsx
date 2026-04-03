@@ -126,7 +126,7 @@ function ServiceAreaPicker({ selected, onChange }: { selected: string[]; onChang
 // ── main component ────────────────────────────────────────────────────────────
 
 export function AdminContact() {
-  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [contactF, setContactF] = useState({ ...langs[adminLang].contact });
   const [saved, setSaved] = useState(false);
@@ -139,12 +139,13 @@ export function AdminContact() {
   const set = (key: keyof typeof contactF, value: unknown) =>
     setContactF((prev) => ({ ...prev, [key]: value }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (adminLang === "en") {
       updateLangContent("en", (prev) => ({ ...prev, contact: contactF }));
     } else {
       updateLangContent(adminLang, (prev) => ({ ...prev, contact: contactF }));
     }
+    await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

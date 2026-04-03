@@ -66,7 +66,7 @@ function SectionCard({
 }
 
 export function AdminHeader() {
-  const { langs, updateLangContent, updateAllLangs } = useContent();
+  const { langs, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [headerF, setHeaderF] = useState({ ...langs[adminLang].header });
   const [saved, setSaved] = useState(false);
@@ -102,12 +102,13 @@ export function AdminHeader() {
   const removeNavLink = (index: number) =>
     setH("navLinks", headerF.navLinks.filter((_, i) => i !== index));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (adminLang === "en") {
       updateLangContent("en", (prev) => ({ ...prev, header: headerF }));
     } else {
       updateLangContent(adminLang, (prev) => ({ ...prev, header: headerF }));
     }
+    await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

@@ -56,7 +56,7 @@ function Field({ label, value, onChange, multiline = false, placeholder }: { lab
 }
 
 export function AdminAbout() {
-  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [aboutF, setAboutF] = useState({ ...langs[adminLang].about });
   const [saved, setSaved] = useState(false);
@@ -86,12 +86,13 @@ export function AdminAbout() {
   const set = (key: keyof typeof aboutF, value: unknown) =>
     setAboutF((prev) => ({ ...prev, [key]: value }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (adminLang === "en") {
       updateLangContent("en", (prev) => ({ ...prev, about: aboutF }));
     } else {
       updateLangContent(adminLang, (prev) => ({ ...prev, about: aboutF }));
     }
+    await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

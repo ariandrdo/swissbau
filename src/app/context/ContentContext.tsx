@@ -1853,6 +1853,7 @@ type ContentContextType = {
   updateContent: (updater: (prev: SiteContent) => SiteContent) => void;
   updateLangContent: (lang: Lang, updater: (prev: SiteContent) => SiteContent) => void;
   updateAllLangs: (updater: (lang: Lang, prev: SiteContent) => SiteContent) => void;
+  saveNow: () => Promise<void>;
   resetContent: () => void;
 };
 
@@ -1875,30 +1876,22 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   const content = langs[currentLang];
 
-  const sbTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingLangsRef = useRef<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
   const pendingLangRef = useRef<Lang>("en");
 
-  const scheduleSave = (nextLangs: Record<Lang, SiteContent>, nextCurrentLang: Lang) => {
-    pendingLangsRef.current = nextLangs;
-    pendingLangRef.current = nextCurrentLang;
-    if (sbTimerRef.current) clearTimeout(sbTimerRef.current);
-    sbTimerRef.current = setTimeout(() => {
-      supabase
-        .from("site_content")
-        .upsert(
-          { id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current } },
-          { onConflict: "id" }
-        )
-        .then(({ error }) => {
-          if (error) {
-            console.error("Supabase save error:", error);
-            setSaveError("Save failed: " + error.message + ". Your changes may not persist after refresh.");
-          } else {
-            setSaveError(null);
-          }
-        });
-    }, 500);
+  const saveNow = async (): Promise<void> => {
+    const { error } = await supabase
+      .from("site_content")
+      .upsert(
+        { id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current } },
+        { onConflict: "id" }
+      );
+    if (error) {
+      console.error("Supabase save error:", error);
+      setSaveError("Save failed: " + error.message);
+    } else {
+      setSaveError(null);
+    }
   };
 
   // Always load from Supabase on mount — single source of truth
@@ -1934,7 +1927,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const updateContent = (updater: (prev: SiteContent) => SiteContent) => {
     setLangs((prev) => {
       const next = { ...prev, [currentLang]: updater(prev[currentLang]) };
-      scheduleSave(next, currentLang);
+      pendingLangsRef.current = next;
       return next;
     });
   };
@@ -1942,7 +1935,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const updateLangContent = (lang: Lang, updater: (prev: SiteContent) => SiteContent) => {
     setLangs((prev) => {
       const next = { ...prev, [lang]: updater(prev[lang]) };
-      scheduleSave(next, currentLang);
+      pendingLangsRef.current = next;
       return next;
     });
   };
@@ -1956,7 +1949,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         sq: updater("sq", prev.sq),
         mk: updater("mk", prev.mk),
       };
-      scheduleSave(next, currentLang);
+      pendingLangsRef.current = next;
       return next;
     });
   };
@@ -1974,7 +1967,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ContentContext.Provider value={{ content, langs, isLoaded, saveError, currentLang, setLang, updateContent, updateLangContent, updateAllLangs, resetContent }}>
+    <ContentContext.Provider value={{ content, langs, isLoaded, saveError, currentLang, setLang, updateContent, updateLangContent, updateAllLangs, saveNow, resetContent }}>
       {children}
     </ContentContext.Provider>
   );
