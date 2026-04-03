@@ -697,6 +697,9 @@ const defaultContentDe: SiteContent = {
     aboutLabel: "Über uns",
     ourStoryHeading: "Unsere Geschichte",
     ourStorySubtitle: "Über zwei Jahrzehnte vertrauenswürdige HLK-Dienstleistungen",
+    showStats: true,
+    showLearnMoreBtn: true,
+    viewAllProductsBtn: "Alle Projekte ansehen",
     learnMoreBtn: "Mehr erfahren",
     whatWeOfferLabel: "Was wir anbieten",
     ourServicesHeading: "Unsere Dienstleistungen",
@@ -1077,6 +1080,9 @@ const defaultContentSq: SiteContent = {
     aboutLabel: "Rreth nesh",
     ourStoryHeading: "Historia jonë",
     ourStorySubtitle: "Më shumë se dy dekada shërbim HVAC i besuar për shtëpi dhe biznese",
+    showStats: true,
+    showLearnMoreBtn: true,
+    viewAllProductsBtn: "Shiko të gjitha projektet",
     learnMoreBtn: "Mëso më shumë",
     whatWeOfferLabel: "Çfarë ofrojmë",
     ourServicesHeading: "Shërbimet tona",
@@ -1457,6 +1463,9 @@ const defaultContentMk: SiteContent = {
     aboutLabel: "За нас",
     ourStoryHeading: "Нашата приказна",
     ourStorySubtitle: "Повеќе од две децении доверлив ХВАК сервис за домови и бизниси",
+    showStats: true,
+    showLearnMoreBtn: true,
+    viewAllProductsBtn: "Прегледај ги сите проекти",
     learnMoreBtn: "Дознај повеќе",
     whatWeOfferLabel: "Што нудиме",
     ourServicesHeading: "Нашите услуги",
@@ -1837,6 +1846,7 @@ function mergeContent(parsed: Partial<SiteContent>, def: SiteContent = defaultCo
 type ContentContextType = {
   content: SiteContent;
   langs: Record<Lang, SiteContent>;
+  isLoaded: boolean;
   currentLang: Lang;
   setLang: (lang: Lang) => void;
   updateContent: (updater: (prev: SiteContent) => SiteContent) => void;
@@ -1847,8 +1857,6 @@ type ContentContextType = {
 
 const ContentContext = createContext<ContentContextType | null>(null);
 
-const MULTILANG_KEY = "jubea_multilang_content";
-const LEGACY_KEY = "jubea_site_content";
 // Bump this whenever new required fields are added to SiteContent
 const STORAGE_VERSION = 7;
 
@@ -1856,122 +1864,62 @@ type StoredMultiLang = {
   v?: number;
   langs: Partial<Record<Lang, Partial<SiteContent>>>;
   currentLang: Lang;
-  savedAt?: string;
 };
 
-function clearOldStorage() {
-  try { localStorage.removeItem(MULTILANG_KEY); } catch { /* ignore */ }
-  try { localStorage.removeItem(LEGACY_KEY); } catch { /* ignore */ }
-}
-
-function loadMultiLang(): { langs: Record<Lang, SiteContent>; currentLang: Lang; savedAt: string | null } {
-  // Try new multilang key first
-  try {
-    const stored = localStorage.getItem(MULTILANG_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored) as StoredMultiLang;
-      // If version is outdated, clear and use fresh defaults
-      if (!parsed.v || parsed.v < STORAGE_VERSION) {
-        clearOldStorage();
-        return { langs: { ...defaultMultiLangContent }, currentLang: "en", savedAt: null };
-      }
-      const langs: Record<Lang, SiteContent> = {
-        en: mergeContent(parsed.langs?.en ?? {}, defaultMultiLangContent.en),
-        de: mergeContent(parsed.langs?.de ?? {}, defaultMultiLangContent.de),
-        sq: mergeContent(parsed.langs?.sq ?? {}, defaultMultiLangContent.sq),
-        mk: mergeContent(parsed.langs?.mk ?? {}, defaultMultiLangContent.mk),
-      };
-      return { langs, currentLang: "en", savedAt: parsed.savedAt ?? null };
-    }
-  } catch {
-    clearOldStorage();
-  }
-
-  // Fallback: clear any old single-lang key and start fresh
-  clearOldStorage();
-  return {
-    langs: { ...defaultMultiLangContent },
-    currentLang: "en",
-    savedAt: null,
-  };
-}
-
-function saveMultiLang(langs: Record<Lang, SiteContent>, currentLang: Lang, savedAt?: string) {
-  try {
-    localStorage.setItem(MULTILANG_KEY, JSON.stringify({ v: STORAGE_VERSION, langs, currentLang, savedAt: savedAt ?? new Date().toISOString() }));
-  } catch {
-    // ignore
-  }
-}
-
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const initial = loadMultiLang();
-  const [langs, setLangs] = useState<Record<Lang, SiteContent>>(initial.langs);
-  const [currentLang, setCurrentLang] = useState<Lang>(initial.currentLang);
-  const localSavedAtRef = useRef<string | null>(initial.savedAt);
+  const [langs, setLangs] = useState<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
+  const [currentLang, setCurrentLang] = useState<Lang>("en");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const content = langs[currentLang];
 
-  // Debounce refs — avoid hammering localStorage and Supabase on rapid changes
-  const lsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sbTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingLangsRef = useRef<Record<Lang, SiteContent>>(langs);
-  const pendingLangRef = useRef<Lang>(currentLang);
+  const pendingLangsRef = useRef<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
+  const pendingLangRef = useRef<Lang>("en");
 
   const scheduleSave = (nextLangs: Record<Lang, SiteContent>, nextCurrentLang: Lang) => {
     pendingLangsRef.current = nextLangs;
     pendingLangRef.current = nextCurrentLang;
-    const now = new Date().toISOString();
-    localSavedAtRef.current = now;
-
-    // localStorage: debounce 300ms
-    if (lsTimerRef.current) clearTimeout(lsTimerRef.current);
-    lsTimerRef.current = setTimeout(() => {
-      saveMultiLang(pendingLangsRef.current, pendingLangRef.current, localSavedAtRef.current ?? undefined);
-    }, 300);
-
-    // Supabase: debounce 1500ms
     if (sbTimerRef.current) clearTimeout(sbTimerRef.current);
     sbTimerRef.current = setTimeout(() => {
-      const ts = localSavedAtRef.current ?? new Date().toISOString();
       supabase
         .from("site_content")
-        .upsert({ id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current, savedAt: ts }, updated_at: ts })
+        .upsert(
+          { id: "multilang", data: { v: STORAGE_VERSION, langs: pendingLangsRef.current, currentLang: pendingLangRef.current } },
+          { onConflict: "id" }
+        )
         .then(({ error }) => { if (error) console.error("Supabase save error:", error); });
-    }, 1500);
+    }, 500);
   };
 
-  // Sync from Supabase on mount — only apply if Supabase data is newer than local data
+  // Always load from Supabase on mount — single source of truth
   useEffect(() => {
     supabase
       .from("site_content")
-      .select("data, updated_at")
+      .select("data")
       .eq("id", "multilang")
       .single()
       .then(({ data, error }) => {
         if (!error && data?.data) {
           const stored = data.data as StoredMultiLang;
-          if (!stored.v || stored.v < STORAGE_VERSION) return;
-          // Skip if local data is newer or same age as Supabase data
-          const supabaseTs = (data as { updated_at?: string }).updated_at ?? stored.savedAt;
-          const localTs = localSavedAtRef.current;
-          if (localTs && supabaseTs && supabaseTs <= localTs) return;
-          const merged: Record<Lang, SiteContent> = {
-            en: mergeContent(stored.langs?.en ?? {}, defaultMultiLangContent.en),
-            de: mergeContent(stored.langs?.de ?? {}, defaultMultiLangContent.de),
-            sq: mergeContent(stored.langs?.sq ?? {}, defaultMultiLangContent.sq),
-            mk: mergeContent(stored.langs?.mk ?? {}, defaultMultiLangContent.mk),
-          };
-          setLangs(merged);
-          localSavedAtRef.current = supabaseTs ?? null;
-          saveMultiLang(merged, currentLang, supabaseTs);
+          if (stored.v && stored.v >= STORAGE_VERSION) {
+            const merged: Record<Lang, SiteContent> = {
+              en: mergeContent(stored.langs?.en ?? {}, defaultMultiLangContent.en),
+              de: mergeContent(stored.langs?.de ?? {}, defaultMultiLangContent.de),
+              sq: mergeContent(stored.langs?.sq ?? {}, defaultMultiLangContent.sq),
+              mk: mergeContent(stored.langs?.mk ?? {}, defaultMultiLangContent.mk),
+            };
+            setLangs(merged);
+            pendingLangsRef.current = merged;
+          }
         }
+        setIsLoaded(true);
       });
   }, []);
 
   const setLang = (lang: Lang) => {
     setCurrentLang(lang);
-    scheduleSave(langs, lang);
+    pendingLangRef.current = lang;
   };
 
   const updateContent = (updater: (prev: SiteContent) => SiteContent) => {
@@ -2008,15 +1956,16 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     const fresh = { ...defaultMultiLangContent };
     setLangs(fresh);
     setCurrentLang("en");
-    saveMultiLang(fresh, "en");
+    pendingLangsRef.current = fresh;
+    pendingLangRef.current = "en";
     supabase
       .from("site_content")
-      .upsert({ id: "multilang", data: { v: STORAGE_VERSION, langs: fresh, currentLang: "en" }, updated_at: new Date().toISOString() })
+      .upsert({ id: "multilang", data: { v: STORAGE_VERSION, langs: fresh, currentLang: "en" } }, { onConflict: "id" })
       .then(({ error }) => { if (error) console.error("Supabase reset error:", error); });
   };
 
   return (
-    <ContentContext.Provider value={{ content, langs, currentLang, setLang, updateContent, updateLangContent, updateAllLangs, resetContent }}>
+    <ContentContext.Provider value={{ content, langs, isLoaded, currentLang, setLang, updateContent, updateLangContent, updateAllLangs, resetContent }}>
       {children}
     </ContentContext.Provider>
   );

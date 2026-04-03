@@ -375,7 +375,7 @@ function ServiceCard({
 // ── AdminServices ──────────────────────────────────────────────────────────────
 
 export function AdminServices() {
-  const { langs, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
 
   const langServices = langs[adminLang].services;
@@ -429,7 +429,7 @@ export function AdminServices() {
     });
     setServices(s.detailedServices);
     setSaved(false);
-  }, [adminLang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setField = (key: keyof typeof pageFields, value: string) =>
     setPageFields((prev) => ({ ...prev, [key]: value }));

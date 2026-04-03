@@ -130,7 +130,7 @@ function Field({
 // ── main component ────────────────────────────────────────────────────────────
 
 export function AdminHome() {
-  const { langs, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
 
   const langContent = langs[adminLang];
@@ -139,12 +139,12 @@ export function AdminHome() {
   const [homeF, setHomeF] = useState({ ...langContent.home });
   const [saved, setSaved] = useState(false);
 
-  // Reset local form state when language tab changes
+  // Reset local form state when language tab changes or Supabase data finishes loading
   useEffect(() => {
     setGlobalF({ ...langs[adminLang].global });
     setHomeF({ ...langs[adminLang].home });
     setSaved(false);
-  }, [adminLang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
   const heroImageInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 

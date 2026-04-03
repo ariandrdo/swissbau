@@ -126,7 +126,7 @@ function ServiceAreaPicker({ selected, onChange }: { selected: string[]; onChang
 // ── main component ────────────────────────────────────────────────────────────
 
 export function AdminContact() {
-  const { langs, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [contactF, setContactF] = useState({ ...langs[adminLang].contact });
   const [saved, setSaved] = useState(false);
@@ -134,7 +134,7 @@ export function AdminContact() {
   useEffect(() => {
     setContactF({ ...langs[adminLang].contact });
     setSaved(false);
-  }, [adminLang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const set = (key: keyof typeof contactF, value: unknown) =>
     setContactF((prev) => ({ ...prev, [key]: value }));

@@ -56,7 +56,7 @@ function Field({ label, value, onChange, multiline = false, placeholder }: { lab
 }
 
 export function AdminAbout() {
-  const { langs, updateLangContent, updateAllLangs } = useContent();
+  const { langs, isLoaded, updateLangContent, updateAllLangs } = useContent();
   const [adminLang, setAdminLang] = useState<Lang>("en");
   const [aboutF, setAboutF] = useState({ ...langs[adminLang].about });
   const [saved, setSaved] = useState(false);
@@ -67,7 +67,7 @@ export function AdminAbout() {
   useEffect(() => {
     setAboutF({ ...langs[adminLang].about });
     setSaved(false);
-  }, [adminLang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleTeamImageUpload = (file: File) => {
     if (!file.type.startsWith("image/")) return;
