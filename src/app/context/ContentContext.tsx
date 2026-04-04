@@ -282,7 +282,7 @@ export const defaultContent: SiteContent = {
     heroTitle2: "Flawless Finish",
     heroSubtitle:
       "Professional painting, plaster works, and facade solutions for residential and commercial properties. Built on precision, delivered with pride.",
-    heroImage: "/background.jpg",
+    heroImage: "",
     heroBtnPrimary: "Our Services",
     heroBtnSecondary: "Get Free Quote",
     storyP1:
@@ -657,7 +657,7 @@ const defaultContentDe: SiteContent = {
     heroTitle2: "Unsere Mission",
     heroSubtitle:
       "Erleben Sie das perfekte Raumklima mit Jubea Energy Systems. Premium HVAC-Lösungen für Häuser und Unternehmen.",
-    heroImage: "/background.jpg",
+    heroImage: "",
     heroBtnPrimary: "Produkte ansehen",
     heroBtnSecondary: "Kostenloses Angebot",
     storyP1:
@@ -1040,7 +1040,7 @@ const defaultContentSq: SiteContent = {
     heroTitle2: "Misioni ynë",
     heroSubtitle:
       "Përjetoni klimën e përsosur të brendshme me Jubea Energy Systems. Zgjidhje premium HVAC për shtëpi dhe biznese.",
-    heroImage: "/background.jpg",
+    heroImage: "",
     heroBtnPrimary: "Shiko Produktet",
     heroBtnSecondary: "Merr Ofertë Falas",
     storyP1:
@@ -1423,7 +1423,7 @@ const defaultContentMk: SiteContent = {
     heroTitle2: "Нашата мисија",
     heroSubtitle:
       "Доживејте го совршената внатрешна клима со Jubea Energy Systems. Премиум ХВАК решенија за домови и бизниси.",
-    heroImage: "/background.jpg",
+    heroImage: "",
     heroBtnPrimary: "Види Производи",
     heroBtnSecondary: "Добиј Бесплатна Проценка",
     storyP1:
@@ -1891,14 +1891,14 @@ function saveToSession(langs: Record<Lang, SiteContent>) {
 }
 
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const [langs, setLangs] = useState<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
+  const [langs, setLangs] = useState<Record<Lang, SiteContent>>(() => loadFromSession() ?? { ...defaultMultiLangContent });
   const [currentLang, setCurrentLang] = useState<Lang>("en");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(() => loadFromSession() !== null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const content = langs[currentLang];
 
-  const pendingLangsRef = useRef<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
+  const pendingLangsRef = useRef<Record<Lang, SiteContent>>(loadFromSession() ?? { ...defaultMultiLangContent });
   const pendingLangRef = useRef<Lang>("en");
 
   const saveNow = async (): Promise<void> => {

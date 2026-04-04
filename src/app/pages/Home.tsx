@@ -14,7 +14,7 @@ import { useIsMobile } from "../hooks/useIsMobile";
 const spring = { type: "spring", stiffness: 400, damping: 17 } as const;
 
 export function Home() {
-  const { content, isLoaded } = useContent();
+  const { content } = useContent();
   const isMobile = useIsMobile();
   const h = content.home;
   return (
@@ -22,11 +22,12 @@ export function Home() {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden" style={{ background: "#071620" }}>
         <div className="absolute inset-0" style={{ overflow: "hidden" }}>
-          {isLoaded && (
+          {h.heroImage && (
             <img
               src={h.heroImage}
               alt="Building facade"
               className="absolute inset-0 w-full h-full object-cover"
+              style={{ animation: "fadeIn 0.6s ease-in" }}
             />
           )}
           {/* Dark overlay — no color tint */}
