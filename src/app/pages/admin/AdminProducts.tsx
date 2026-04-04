@@ -6,13 +6,13 @@ import { uploadImage } from "../../utils/uploadImage";
 import { useContent, type Lang } from "../../context/ContentContext";
 import { translateSection } from "../../utils/translate";
 
-const CATEGORIES_KEY = "beqiri_project_categories";
+const CATEGORIES_KEY = (lang: string) => `beqiri_project_categories_${lang}`;
 
-function loadCategories(): string[] {
-  try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY) || "[]"); } catch { return []; }
+function loadCategories(lang: string): string[] {
+  try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY(lang)) || "[]"); } catch { return []; }
 }
-function saveCategories(cats: string[]) {
-  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(cats));
+function saveCategories(lang: string, cats: string[]) {
+  localStorage.setItem(CATEGORIES_KEY(lang), JSON.stringify(cats));
 }
 
 type Project = {
@@ -24,6 +24,7 @@ type Project = {
   duration: string;
   images: string;
   lang: string;
+  group_id: number | null;
   created_at: string;
 };
 
@@ -121,7 +122,7 @@ export function AdminProducts() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const [categories, setCategories] = useState<string[]>(loadCategories);
+  const [categories, setCategories] = useState<string[]>(() => loadCategories("en"));
   const [catInput, setCatInput] = useState("");
   const [adminLang, setAdminLang] = useState<Lang>("en");
 
@@ -150,6 +151,7 @@ export function AdminProducts() {
   };
 
   const handleAutoTranslate = async () => {
+    // Translate hero fields
     const heroOnly = {
       heroTitle1: langs["en"].products.heroTitle1,
       heroTitle2: langs["en"].products.heroTitle2,
@@ -161,6 +163,16 @@ export function AdminProducts() {
       ...prev,
       products: { ...prev.products, ...translated },
     }));
+
+    // Translate categories from English
+    const enCats = loadCategories("en");
+    if (enCats.length > 0) {
+      const catObj = Object.fromEntries(enCats.map((c, i) => [`c${i}`, c]));
+      const translatedCatObj = await translateSection(catObj, adminLang) as Record<string, string>;
+      const translatedCats = enCats.map((_, i) => translatedCatObj[`c${i}`] || enCats[i]);
+      setCategories(translatedCats);
+      saveCategories(adminLang, translatedCats);
+    }
   };
 
   const fetchProjects = async () => {
@@ -175,6 +187,8 @@ export function AdminProducts() {
     setSearch("");
     setShowForm(false);
     setExpandedId(null);
+    setCategories(loadCategories(adminLang));
+    setCatInput("");
   }, [adminLang]);
 
   const addCategory = () => {
@@ -182,14 +196,14 @@ export function AdminProducts() {
     if (!trimmed || categories.includes(trimmed)) return;
     const updated = [...categories, trimmed];
     setCategories(updated);
-    saveCategories(updated);
+    saveCategories(adminLang, updated);
     setCatInput("");
   };
 
   const removeCategory = (cat: string) => {
     const updated = categories.filter((c) => c !== cat);
     setCategories(updated);
-    saveCategories(updated);
+    saveCategories(adminLang, updated);
   };
 
   const imageList = form.images ? form.images.split("|||").map((s) => s.trim()).filter(Boolean) : [];
@@ -228,30 +242,68 @@ export function AdminProducts() {
     if (!form.title.trim()) { setSaveMsg("Title is required."); return; }
     setSaving(true);
     setSaveMsg("");
-    const payload = { title: form.title.trim(), category: form.category.trim(), description: form.description.trim(), location: form.location.trim(), duration: form.duration.trim(), images: form.images, lang: adminLang };
-    let error;
-    try {
-      if (editId !== null) {
-        ({ error } = await supabase.from("projects").upsert({ id: editId, ...payload }));
-      } else {
-        ({ error } = await supabase.from("projects").insert(payload));
+    const textFields = {
+      title: form.title.trim(),
+      category: form.category.trim(),
+      description: form.description.trim(),
+      location: form.location.trim(),
+      duration: form.duration.trim(),
+    };
+    const payload = { ...textFields, images: form.images, lang: adminLang };
+
+    if (editId !== null) {
+      // Update this row
+      const { error } = await supabase.from("projects").upsert({ id: editId, ...payload });
+      if (error) { setSaving(false); setSaveMsg("Error: " + error.message); return; }
+
+      // If editing English, re-translate and update all linked translations
+      if (adminLang === "en") {
+        setSaveMsg("Updating translations...");
+        const { data: linked } = await supabase.from("projects").select("id, lang").eq("group_id", editId);
+        for (const row of linked || []) {
+          try {
+            const translated = await translateSection(textFields, row.lang) as typeof textFields;
+            await supabase.from("projects").upsert({ id: row.id, ...payload, ...translated, lang: row.lang, group_id: editId });
+          } catch (err) {
+            console.error(`Failed to update ${row.lang} translation:`, err);
+          }
+        }
       }
-    } catch (err: unknown) {
-      setSaving(false);
-      setSaveMsg("Error: " + (err instanceof Error ? err.message : "Network error"));
-      return;
+    } else {
+      // Insert new English project, get its ID to use as group_id
+      const { data: inserted, error } = await supabase.from("projects").insert({ ...payload, group_id: null }).select("id").single();
+      if (error || !inserted) { setSaving(false); setSaveMsg("Error: " + (error?.message ?? "Insert failed")); return; }
+
+      const groupId = inserted.id;
+      // Set group_id on the English row to its own id
+      await supabase.from("projects").update({ group_id: groupId }).eq("id", groupId);
+
+      // Auto-translate and insert for other languages
+      if (adminLang === "en") {
+        setSaveMsg("Translating to other languages...");
+        for (const lang of ["de", "sq", "mk"] as Lang[]) {
+          try {
+            const translated = await translateSection(textFields, lang) as typeof textFields;
+            await supabase.from("projects").insert({ ...payload, ...translated, lang, group_id: groupId });
+          } catch (err) {
+            console.error(`Failed to translate to ${lang}:`, err);
+          }
+        }
+      }
     }
+
     setSaving(false);
-    if (error) { setSaveMsg("Error: " + error.message); }
-    else {
-      setSaveMsg(editId !== null ? "Project updated!" : "Project added!");
-      await fetchProjects();
-      setTimeout(() => { setShowForm(false); setSaveMsg(""); }, 1200);
-    }
+    setSaveMsg(editId !== null ? "Project updated!" : "Project added!");
+    await fetchProjects();
+    setTimeout(() => { setShowForm(false); setSaveMsg(""); }, 1200);
   };
 
   const handleDelete = async (id: number) => {
     await supabase.from("projects").delete().eq("id", id);
+    // If deleting from English, also delete all linked translations
+    if (adminLang === "en") {
+      await supabase.from("projects").delete().eq("group_id", id);
+    }
     setDeleteConfirm(null);
     fetchProjects();
   };
@@ -342,7 +394,7 @@ export function AdminProducts() {
 
       {/* Projects List Section */}
       <SectionCard
-        title={`Projects (${projects.length})`}
+        title="Projects"
         defaultOpen={true}
         headerExtra={
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
