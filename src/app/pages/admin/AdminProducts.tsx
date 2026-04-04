@@ -2,7 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Plus, Edit2, Trash2, Search, X, Save, Upload, Images, ChevronDown, ChevronUp, Tag } from "lucide-react";
 import { supabase } from "../../../lib/supabase";
 import { AdminLangTabs } from "./AdminLangTabs";
-import type { Lang } from "../../context/ContentContext";
+import { uploadImage } from "../../utils/uploadImage";
+import { useContent, type Lang } from "../../context/ContentContext";
+import { translateSection } from "../../utils/translate";
 
 const CATEGORIES_KEY = "beqiri_project_categories";
 
@@ -105,6 +107,7 @@ function Field({ label, value, onChange, placeholder, multiline }: {
 }
 
 export function AdminProducts() {
+  const { langs, isLoaded, updateLangContent, saveNow } = useContent();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -121,6 +124,44 @@ export function AdminProducts() {
   const [categories, setCategories] = useState<string[]>(loadCategories);
   const [catInput, setCatInput] = useState("");
   const [adminLang, setAdminLang] = useState<Lang>("en");
+
+  // Hero section state
+  const [heroF, setHeroF] = useState({ ...langs[adminLang].products });
+  const [heroSaved, setHeroSaved] = useState(false);
+
+  useEffect(() => {
+    setHeroF({ ...langs[adminLang].products });
+  }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const setHero = (key: keyof typeof heroF, value: string) =>
+    setHeroF((prev) => ({ ...prev, [key]: value }));
+
+  const handleHeroSave = async () => {
+    updateLangContent(adminLang, (prev) => ({ ...prev, products: heroF }));
+    await saveNow();
+    setHeroSaved(true);
+    setTimeout(() => setHeroSaved(false), 2500);
+  };
+
+  const handleCopyFromEn = () => {
+    const en = langs["en"].products;
+    setHeroF({ ...en });
+    updateLangContent(adminLang, (prev) => ({ ...prev, products: en }));
+  };
+
+  const handleAutoTranslate = async () => {
+    const heroOnly = {
+      heroTitle1: langs["en"].products.heroTitle1,
+      heroTitle2: langs["en"].products.heroTitle2,
+      heroSubtitle: langs["en"].products.heroSubtitle,
+    };
+    const translated = await translateSection(heroOnly, adminLang) as typeof heroOnly;
+    setHeroF((prev) => ({ ...prev, ...translated }));
+    updateLangContent(adminLang, (prev) => ({
+      ...prev,
+      products: { ...prev.products, ...translated },
+    }));
+  };
 
   const fetchProjects = async () => {
     const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
@@ -158,12 +199,11 @@ export function AdminProducts() {
     setUploading(true);
     const newUrls: string[] = [];
     for (const file of Array.from(files)) {
-      const ext = file.name.split(".").pop();
-      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error } = await supabase.storage.from("project-images").upload(path, file, { upsert: false });
-      if (!error) {
-        const { data } = supabase.storage.from("project-images").getPublicUrl(path);
-        newUrls.push(data.publicUrl);
+      try {
+        const url = await uploadImage(file, "projects", 1200, 0.78);
+        newUrls.push(url);
+      } catch (err) {
+        console.error("Image upload failed:", err);
       }
     }
     setUploading(false);
@@ -226,25 +266,37 @@ export function AdminProducts() {
   return (
     <div>
       {/* Language Tabs */}
-      <AdminLangTabs adminLang={adminLang} setAdminLang={setAdminLang} />
+      <AdminLangTabs
+        adminLang={adminLang}
+        setAdminLang={setAdminLang}
+        onCopyFromEn={adminLang !== "en" ? handleCopyFromEn : undefined}
+        onTranslate={adminLang !== "en" ? handleAutoTranslate : undefined}
+      />
 
-      {/* Page Header — matches other editors */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem", flexWrap: "wrap", gap: "1rem" }}>
+      {/* Page Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
         <div>
-          <h2 style={{ color: "#fff", fontWeight: 700, fontSize: "1.375rem", margin: 0 }}>Projects Editor</h2>
-          <p style={{ color: "#4a6670", fontSize: "0.8125rem", marginTop: "0.25rem" }}>
-            Manage your projects — add photos, categories, and project details
-          </p>
+          <h2 style={{ color: "#fff", fontSize: "1.5rem", fontWeight: 700, margin: 0 }}>Projects Editor</h2>
+          <p style={{ color: "#7a9ba8", fontSize: "0.875rem", marginTop: "0.25rem" }}>Manage your projects — add photos, categories, and project details</p>
         </div>
         <div style={{ display: "flex", gap: "0.625rem" }}>
           <button
-            onClick={openAdd}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.5rem", background: "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: "none", borderRadius: "10px", color: "#fff", fontWeight: 600, fontSize: "0.9375rem", cursor: "pointer" }}
+            onClick={handleHeroSave}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.25rem", borderRadius: "10px", background: heroSaved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: heroSaved ? "1px solid rgba(74,222,128,0.4)" : "none", color: heroSaved ? "#4ade80" : "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}
           >
-            <Plus size={16} /> Add Project
+            <Save size={14} /> {heroSaved ? "Saved!" : "Save Changes"}
           </button>
         </div>
       </div>
+
+      {/* Hero Section */}
+      <SectionCard title="Hero Section" defaultOpen={false}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 1rem" }}>
+          <Field label="Title (plain)" value={heroF.heroTitle1} onChange={(v) => setHero("heroTitle1", v)} placeholder="e.g. Our" />
+          <Field label="Title (highlighted)" value={heroF.heroTitle2} onChange={(v) => setHero("heroTitle2", v)} placeholder="e.g. Projects" />
+        </div>
+        <Field label="Subtitle" value={heroF.heroSubtitle} onChange={(v) => setHero("heroSubtitle", v)} multiline />
+      </SectionCard>
 
       {/* Categories Section */}
       <SectionCard title="Categories" headerExtra={
@@ -293,15 +345,23 @@ export function AdminProducts() {
         title={`Projects (${projects.length})`}
         defaultOpen={true}
         headerExtra={
-          <div style={{ position: "relative" }}>
-            <Search size={13} color="#4a6670" style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)" }} />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search..."
-              onClick={(e) => e.stopPropagation()}
-              style={{ ...fieldStyle, width: "180px", paddingLeft: "2.1rem", padding: "0.4rem 0.75rem 0.4rem 2rem", fontSize: "0.8rem" }}
-            />
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div style={{ position: "relative" }}>
+              <Search size={13} color="#4a6670" style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)" }} />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search..."
+                onClick={(e) => e.stopPropagation()}
+                style={{ ...fieldStyle, width: "180px", paddingLeft: "2.1rem", padding: "0.4rem 0.75rem 0.4rem 2rem", fontSize: "0.8rem" }}
+              />
+            </div>
+            <button
+              onClick={openAdd}
+              style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.4rem 0.9rem", borderRadius: "8px", background: "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: "none", color: "#fff", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+            >
+              <Plus size={13} /> Add Project
+            </button>
           </div>
         }
       >

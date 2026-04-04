@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Save, RotateCcw, ChevronDown, ChevronUp, Plus, Trash2, Upload } from "lucide-react";
+import { uploadImage } from "../../utils/uploadImage";
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
 import { AdminLangTabs } from "./AdminLangTabs";
@@ -69,18 +70,18 @@ export function AdminAbout() {
     setSaved(false);
   }, [adminLang, isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleTeamImageUpload = (file: File) => {
+  const handleTeamImageUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
+    try {
+      const url = await uploadImage(file, "team", 600, 0.85);
       if (teamImgIdx !== null) {
-        const next = aboutF.team.map((m, j) => j === teamImgIdx ? { ...m, image: dataUrl } : m);
+        const next = aboutF.team.map((m, j) => j === teamImgIdx ? { ...m, image: url } : m);
         set("team", next);
       }
       setTeamImgIdx(null);
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      alert("Photo upload failed: " + (err instanceof Error ? err.message : "Unknown error"));
+    }
   };
 
   const set = (key: keyof typeof aboutF, value: unknown) =>

@@ -3,7 +3,7 @@ import { Save, RotateCcw, ChevronDown, ChevronUp, Upload, Plus, Trash2 } from "l
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
 import { translateSection } from "../../utils/translate";
-import { compressImage } from "../../utils/compressImage";
+import { uploadImage } from "../../utils/uploadImage";
 import { supabase } from "../../../lib/supabase";
 import { AdminLangTabs } from "./AdminLangTabs";
 
@@ -162,23 +162,35 @@ export function AdminHome() {
     if (!files) return;
     Array.from(files).forEach(async (file) => {
       if (!file.type.startsWith("image/")) return;
-      const url = await compressImage(file);
-      const name = file.name.replace(/\.[^.]+$/, "");
-      const { data, error } = await supabase.from("gallery_images").insert({ url, name }).select().single();
-      if (!error && data) setGalleryImages((prev) => [...prev, data as GalleryImage]);
+      try {
+        const url = await uploadImage(file, "gallery");
+        const name = file.name.replace(/\.[^.]+$/, "");
+        const { data, error } = await supabase.from("gallery_images").insert({ url, name }).select().single();
+        if (!error && data) setGalleryImages((prev) => [...prev, data as GalleryImage]);
+      } catch (e) {
+        alert("Gallery upload failed: " + (e instanceof Error ? e.message : "Unknown error"));
+      }
     });
   };
 
   const handleLogoUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    const dataUrl = await compressImage(file, 400, 0.85);
-    setGlobalF((prev) => ({ ...prev, logo: dataUrl }));
+    try {
+      const url = await uploadImage(file, "logos", 400, 0.85);
+      setGlobalF((prev) => ({ ...prev, logo: url }));
+    } catch (e) {
+      alert("Logo upload failed: " + (e instanceof Error ? e.message : "Unknown error"));
+    }
   };
 
   const handleHeroImageUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    const dataUrl = await compressImage(file, 1920, 0.78);
-    setHomeF((prev) => ({ ...prev, heroImage: dataUrl }));
+    try {
+      const url = await uploadImage(file, "hero", 1920, 0.78);
+      setHomeF((prev) => ({ ...prev, heroImage: url }));
+    } catch (e) {
+      alert("Hero image upload failed: " + (e instanceof Error ? e.message : "Unknown error"));
+    }
   };
 
   const setG = (key: keyof typeof globalF, value: string) =>
@@ -541,9 +553,13 @@ export function AdminHome() {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       e.target.value = "";
-                      const dataUrl = await compressImage(file);
-                      const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, image: dataUrl } : s);
-                      setH("howItWorksSteps", next);
+                      try {
+                        const url = await uploadImage(file, "how-it-works");
+                        const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, image: url } : s);
+                        setH("howItWorksSteps", next);
+                      } catch (err) {
+                        alert("Upload failed: " + (err instanceof Error ? err.message : "Unknown error"));
+                      }
                     }}
                   />
                 </label>
@@ -714,9 +730,13 @@ export function AdminHome() {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       e.target.value = "";
-                      const dataUrl = await compressImage(file);
-                      const next = homeF.featuredProducts.map((p, j) => j === i ? { ...p, image: dataUrl } : p);
-                      setH("featuredProducts", next);
+                      try {
+                        const url = await uploadImage(file, "products");
+                        const next = homeF.featuredProducts.map((p, j) => j === i ? { ...p, image: url } : p);
+                        setH("featuredProducts", next);
+                      } catch (err) {
+                        alert("Upload failed: " + (err instanceof Error ? err.message : "Unknown error"));
+                      }
                     }}
                   />
                 </label>

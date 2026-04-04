@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, Trash2, GripVertical, Upload, X, ChevronUp, ChevronDown, RotateCcw } from "lucide-react";
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
+import { uploadImage } from "../../utils/uploadImage";
 import type { Lang } from "../../context/ContentContext";
 import { AdminLangTabs } from "./AdminLangTabs";
 import { translateSection } from "../../utils/translate";
@@ -80,13 +81,15 @@ export function AdminFooter() {
   const setF = (field: string, value: unknown) =>
     setFooterF((prev) => ({ ...prev, [field]: value }));
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setF("logo", ev.target?.result as string);
-    reader.readAsDataURL(file);
+    if (!file || !file.type.startsWith("image/")) return;
+    try {
+      const url = await uploadImage(file, "logos", 400, 0.85);
+      setF("logo", url);
+    } catch (err) {
+      alert("Logo upload failed: " + (err instanceof Error ? err.message : "Unknown error"));
+    }
   };
 
   // Quick Links

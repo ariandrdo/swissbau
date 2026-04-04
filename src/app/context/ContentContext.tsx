@@ -1861,12 +1861,34 @@ const ContentContext = createContext<ContentContextType | null>(null);
 
 // Bump this whenever new required fields are added to SiteContent
 const STORAGE_VERSION = 7;
+const SESSION_KEY = "beqiri_content_v7";
 
 type StoredMultiLang = {
   v?: number;
   langs: Partial<Record<Lang, Partial<SiteContent>>>;
   currentLang: Lang;
 };
+
+function loadFromSession(): Record<Lang, SiteContent> | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as StoredMultiLang;
+    if (!parsed.v || parsed.v < STORAGE_VERSION) return null;
+    return {
+      en: mergeContent(parsed.langs?.en ?? {}, defaultMultiLangContent.en),
+      de: mergeContent(parsed.langs?.de ?? {}, defaultMultiLangContent.de),
+      sq: mergeContent(parsed.langs?.sq ?? {}, defaultMultiLangContent.sq),
+      mk: mergeContent(parsed.langs?.mk ?? {}, defaultMultiLangContent.mk),
+    };
+  } catch { return null; }
+}
+
+function saveToSession(langs: Record<Lang, SiteContent>) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ v: STORAGE_VERSION, langs }));
+  } catch { /* ignore quota */ }
+}
 
 export function ContentProvider({ children }: { children: ReactNode }) {
   const [langs, setLangs] = useState<Record<Lang, SiteContent>>({ ...defaultMultiLangContent });
@@ -1891,32 +1913,66 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       setSaveError("Save failed: " + error.message);
     } else {
       setSaveError(null);
+      // Update session cache so next page load skips Supabase fetch
+      saveToSession(pendingLangsRef.current);
     }
   };
 
-  // Always load from Supabase on mount — single source of truth
+  // Load from sessionStorage first (no network), then Supabase in background to refresh
   useEffect(() => {
-    supabase
-      .from("site_content")
-      .select("data")
-      .eq("id", "multilang")
-      .single()
-      .then(({ data, error }) => {
-        if (!error && data?.data) {
-          const stored = data.data as StoredMultiLang;
-          if (stored.v && stored.v >= STORAGE_VERSION) {
-            const merged: Record<Lang, SiteContent> = {
-              en: mergeContent(stored.langs?.en ?? {}, defaultMultiLangContent.en),
-              de: mergeContent(stored.langs?.de ?? {}, defaultMultiLangContent.de),
-              sq: mergeContent(stored.langs?.sq ?? {}, defaultMultiLangContent.sq),
-              mk: mergeContent(stored.langs?.mk ?? {}, defaultMultiLangContent.mk),
-            };
-            setLangs(merged);
-            pendingLangsRef.current = merged;
+    const cached = loadFromSession();
+    if (cached) {
+      // Use cached data immediately — no loading spinner
+      setLangs(cached);
+      pendingLangsRef.current = cached;
+      setIsLoaded(true);
+      // Still fetch from Supabase in background to pick up changes from other devices/sessions
+      supabase
+        .from("site_content")
+        .select("data")
+        .eq("id", "multilang")
+        .single()
+        .then(({ data, error }) => {
+          if (!error && data?.data) {
+            const stored = data.data as StoredMultiLang;
+            if (stored.v && stored.v >= STORAGE_VERSION) {
+              const merged: Record<Lang, SiteContent> = {
+                en: mergeContent(stored.langs?.en ?? {}, defaultMultiLangContent.en),
+                de: mergeContent(stored.langs?.de ?? {}, defaultMultiLangContent.de),
+                sq: mergeContent(stored.langs?.sq ?? {}, defaultMultiLangContent.sq),
+                mk: mergeContent(stored.langs?.mk ?? {}, defaultMultiLangContent.mk),
+              };
+              setLangs(merged);
+              pendingLangsRef.current = merged;
+              saveToSession(merged);
+            }
           }
-        }
-        setIsLoaded(true);
-      });
+        });
+    } else {
+      // No cache — must fetch from Supabase
+      supabase
+        .from("site_content")
+        .select("data")
+        .eq("id", "multilang")
+        .single()
+        .then(({ data, error }) => {
+          if (!error && data?.data) {
+            const stored = data.data as StoredMultiLang;
+            if (stored.v && stored.v >= STORAGE_VERSION) {
+              const merged: Record<Lang, SiteContent> = {
+                en: mergeContent(stored.langs?.en ?? {}, defaultMultiLangContent.en),
+                de: mergeContent(stored.langs?.de ?? {}, defaultMultiLangContent.de),
+                sq: mergeContent(stored.langs?.sq ?? {}, defaultMultiLangContent.sq),
+                mk: mergeContent(stored.langs?.mk ?? {}, defaultMultiLangContent.mk),
+              };
+              setLangs(merged);
+              pendingLangsRef.current = merged;
+              saveToSession(merged);
+            }
+          }
+          setIsLoaded(true);
+        });
+    }
   }, []);
 
   const setLang = (lang: Lang) => {

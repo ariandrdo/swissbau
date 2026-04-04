@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Wind, Flame, Wrench, Calendar, Zap, Shield, Clock, Home, Building2, ThermometerSun, Users, Phone, Award, Package, Settings, Trash2, ChevronDown, ChevronUp, RotateCcw, Save, Plus, X, Upload } from "lucide-react";
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
-import { compressImage } from "../../utils/compressImage";
+import { uploadImage } from "../../utils/uploadImage";
 import { AdminLangTabs } from "./AdminLangTabs";
 import { translateSection } from "../../utils/translate";
 
@@ -156,8 +156,12 @@ function ServiceCard({
 
   const handleImageUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    const dataUrl = await compressImage(file, 600, 0.72);
-    onChange({ ...svc, image: dataUrl });
+    try {
+      const url = await uploadImage(file, "services", 600, 0.72);
+      onChange({ ...svc, image: url });
+    } catch (e) {
+      alert("Image upload failed: " + (e instanceof Error ? e.message : "Unknown error"));
+    }
   };
 
   const addService = () => {
