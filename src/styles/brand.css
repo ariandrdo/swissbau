@@ -2,12 +2,12 @@
 
 :root {
   /* Brand Colors from Logo */
-  --jubea-dark: #0a2a35;
-  --jubea-dark-light: #0f3a4a;
-  --jubea-cyan: #2db5d5;
-  --jubea-cyan-light: #3dc5e5;
-  --jubea-cyan-dark: #1a8ab4;
-  --jubea-teal: #1c5d6f;
+  --jubea-dark: #111111;
+  --jubea-dark-light: #1a1a1a;
+  --jubea-cyan: #d91422;
+  --jubea-cyan-light: #e8202f;
+  --jubea-cyan-dark: #a50f1a;
+  --jubea-teal: #8b0c15;
   
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, var(--jubea-dark) 0%, var(--jubea-teal) 50%, var(--jubea-cyan-dark) 100%);
@@ -39,10 +39,10 @@
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(45, 181, 213, 0.3);
+    box-shadow: 0 0 20px rgba(217, 20, 34, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(45, 181, 213, 0.6);
+    box-shadow: 0 0 40px rgba(217, 20, 34, 0.6);
   }
 }
 
@@ -66,7 +66,7 @@
   border-radius: 50px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(45, 181, 213, 0.3);
+  box-shadow: 0 10px 30px rgba(217, 20, 34, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -88,7 +88,7 @@
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(45, 181, 213, 0.5);
+  box-shadow: 0 15px 40px rgba(217, 20, 34, 0.5);
 }
 
 .btn-secondary {
@@ -171,12 +171,12 @@
   border-radius: 24px;
   overflow: hidden;
   transition: all 0.4s ease;
-  box-shadow: 0 4px 20px rgba(10, 42, 53, 0.1);
+  box-shadow: 0 4px 20px rgba(17, 17, 17, 0.1);
 }
 
 .card-elevated:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 50px rgba(45, 181, 213, 0.2);
+  box-shadow: 0 20px 50px rgba(217, 20, 34, 0.2);
 }
 
 /* Gradient Text */
@@ -218,7 +218,7 @@
   height: 200%;
   top: -50%;
   left: -50%;
-  background: radial-gradient(circle, rgba(45, 181, 213, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(217, 20, 34, 0.1) 0%, transparent 70%);
   animation: wave 15s linear infinite;
 }
 
@@ -265,7 +265,7 @@ html {
 
 .admin-nav:hover,
 .admin-nav:focus-within {
-  scrollbar-color: rgba(45, 181, 213, 0.4) transparent;
+  scrollbar-color: rgba(217, 20, 34, 0.4) transparent;
 }
 
 .admin-nav::-webkit-scrollbar {
@@ -283,7 +283,7 @@ html {
 }
 
 .admin-nav:hover::-webkit-scrollbar-thumb {
-  background: rgba(45, 181, 213, 0.4);
+  background: rgba(217, 20, 34, 0.4);
 }
 
 /* Selection Color */

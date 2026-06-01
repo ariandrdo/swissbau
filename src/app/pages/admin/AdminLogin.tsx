@@ -32,7 +32,7 @@ export function AdminLogin() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #143348 0%, #143348 50%, #042142 100%)",
+        background: "linear-gradient(135deg, #1a1a1a 0%, #1a1a1a 50%, #111111 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -50,7 +50,7 @@ export function AdminLogin() {
           width: "400px",
           height: "400px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(45, 181, 213, 0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(217, 20, 34, 0.12) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -62,21 +62,21 @@ export function AdminLogin() {
           width: "300px",
           height: "300px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(45, 181, 213, 0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(217, 20, 34, 0.08) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
 
       <div
         style={{
-          background: "rgba(10, 42, 53, 0.85)",
+          background: "rgba(17, 17, 17, 0.85)",
           backdropFilter: "blur(24px)",
-          border: "1px solid rgba(45, 181, 213, 0.25)",
+          border: "1px solid rgba(217, 20, 34, 0.25)",
           borderRadius: "24px",
           padding: "2.5rem",
           width: "100%",
           maxWidth: "420px",
-          boxShadow: "0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(45, 181, 213, 0.05)",
+          boxShadow: "0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(217, 20, 34, 0.05)",
           position: "relative",
           zIndex: 1,
         }}
@@ -113,17 +113,17 @@ export function AdminLogin() {
                   width: "68px",
                   height: "68px",
                   borderRadius: "18px",
-                  background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                  background: "linear-gradient(135deg, #d91422, #e8202f)",
                   marginBottom: "1rem",
-                  boxShadow: "0 12px 32px rgba(45, 181, 213, 0.45)",
+                  boxShadow: "0 12px 32px rgba(217, 20, 34, 0.45)",
                 }}
               >
                 <Zap size={34} color="white" fill="white" />
               </div>
               <h1 style={{ color: "#fff", fontSize: "1.5rem", fontWeight: 700, margin: 0 }}>
-                Beqiri GmbH
+                SwissBau GmbH
               </h1>
-              <p style={{ color: "#2db5d5", fontSize: "0.875rem", marginTop: "0.25rem", margin: "0.25rem 0 0" }}>
+              <p style={{ color: "#d91422", fontSize: "0.875rem", marginTop: "0.25rem", margin: "0.25rem 0 0" }}>
                 Admin Panel
               </p>
             </>
@@ -134,7 +134,7 @@ export function AdminLogin() {
         <div
           style={{
             height: "1px",
-            background: "rgba(45, 181, 213, 0.15)",
+            background: "rgba(217, 20, 34, 0.15)",
             marginBottom: "1.75rem",
           }}
         />
@@ -164,7 +164,7 @@ export function AdminLogin() {
                   left: "1rem",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "#2db5d5",
+                  color: "#d91422",
                 }}
               />
               <input
@@ -177,7 +177,7 @@ export function AdminLogin() {
                   width: "100%",
                   padding: "0.875rem 1rem 0.875rem 2.75rem",
                   background: "rgba(15, 58, 74, 0.7)",
-                  border: "1px solid rgba(45, 181, 213, 0.25)",
+                  border: "1px solid rgba(217, 20, 34, 0.25)",
                   borderRadius: "12px",
                   color: "#fff",
                   fontSize: "0.9375rem",
@@ -185,8 +185,8 @@ export function AdminLogin() {
                   boxSizing: "border-box",
                   transition: "border-color 0.2s ease",
                 }}
-                onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.6)")}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.25)")}
+                onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.6)")}
+                onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.25)")}
               />
             </div>
           </div>
@@ -214,7 +214,7 @@ export function AdminLogin() {
                   left: "1rem",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "#2db5d5",
+                  color: "#d91422",
                 }}
               />
               <input
@@ -227,7 +227,7 @@ export function AdminLogin() {
                   width: "100%",
                   padding: "0.875rem 3rem 0.875rem 2.75rem",
                   background: "rgba(15, 58, 74, 0.7)",
-                  border: "1px solid rgba(45, 181, 213, 0.25)",
+                  border: "1px solid rgba(217, 20, 34, 0.25)",
                   borderRadius: "12px",
                   color: "#fff",
                   fontSize: "0.9375rem",
@@ -235,8 +235,8 @@ export function AdminLogin() {
                   boxSizing: "border-box",
                   transition: "border-color 0.2s ease",
                 }}
-                onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.6)")}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.25)")}
+                onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.6)")}
+                onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.25)")}
               />
               <button
                 type="button"
@@ -290,15 +290,15 @@ export function AdminLogin() {
               width: "100%",
               padding: "0.9375rem",
               background: loading
-                ? "rgba(45, 181, 213, 0.45)"
-                : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                ? "rgba(217, 20, 34, 0.45)"
+                : "linear-gradient(135deg, #d91422, #e8202f)",
               border: "none",
               borderRadius: "12px",
               color: "white",
               fontSize: "1rem",
               fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
-              boxShadow: loading ? "none" : "0 10px 30px rgba(45, 181, 213, 0.35)",
+              boxShadow: loading ? "none" : "0 10px 30px rgba(217, 20, 34, 0.35)",
               transition: "all 0.3s ease",
               letterSpacing: "0.02em",
             }}
@@ -316,7 +316,7 @@ export function AdminLogin() {
             marginBottom: 0,
           }}
         >
-          Beqiri GmbH — Admin Access Only
+          SwissBau GmbH — Admin Access Only
         </p>
       </div>
     </div>

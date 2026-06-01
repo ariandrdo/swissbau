@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Copy, Languages } from "lucide-react";
 import type { Lang } from "../../context/ContentContext";
 
-const LANGS: Lang[] = ["en", "de", "sq", "mk"];
+const LANGS: Lang[] = ["en", "de"];
 
 const LANG_FULL: Record<Lang, string> = {
   en: "English",
@@ -41,7 +41,7 @@ export function AdminLangTabs({
           display: "flex",
           gap: "0.375rem",
           background: "rgba(4, 33, 66, 0.5)",
-          border: "1px solid rgba(45, 181, 213, 0.15)",
+          border: "1px solid rgba(217, 20, 34, 0.15)",
           borderRadius: "12px",
           padding: "0.375rem",
         }}
@@ -57,7 +57,7 @@ export function AdminLangTabs({
               border: "none",
               background:
                 adminLang === lang
-                  ? "linear-gradient(135deg, #2db5d5, #3dc5e5)"
+                  ? "linear-gradient(135deg, #d91422, #e8202f)"
                   : "transparent",
               color: adminLang === lang ? "#fff" : "#7a9ba8",
               fontWeight: 600,
@@ -72,7 +72,7 @@ export function AdminLangTabs({
             onMouseEnter={(e) => {
               if (adminLang !== lang) {
                 e.currentTarget.style.color = "#fff";
-                e.currentTarget.style.background = "rgba(45,181,213,0.1)";
+                e.currentTarget.style.background = "rgba(217,20,34,0.1)";
               }
             }}
             onMouseLeave={(e) => {
@@ -101,18 +101,18 @@ export function AdminLangTabs({
                 display: "flex",
                 alignItems: "center",
                 gap: "0.4rem",
-                background: "rgba(45,181,213,0.08)",
-                border: "1px solid rgba(45,181,213,0.2)",
+                background: "rgba(217,20,34,0.08)",
+                border: "1px solid rgba(217,20,34,0.2)",
                 borderRadius: "8px",
-                color: "#2db5d5",
+                color: "#d91422",
                 fontSize: "0.75rem",
                 fontWeight: 600,
                 padding: "0.375rem 0.75rem",
                 cursor: "pointer",
                 transition: "all 0.15s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(45,181,213,0.15)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(45,181,213,0.08)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(217,20,34,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(217,20,34,0.08)"; }}
             >
               <Copy size={12} />
               Copy from English

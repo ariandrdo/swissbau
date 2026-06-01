@@ -103,7 +103,7 @@ export function AdminLayout() {
     )?.label ?? "Admin";
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "linear-gradient(135deg, #143348 0%, #143348 50%, #042142 100%)" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "linear-gradient(135deg, #1a1a1a 0%, #1a1a1a 50%, #111111 100%)" }}>
       {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div
@@ -122,7 +122,7 @@ export function AdminLayout() {
         style={{
           width: "260px",
           background: "#0d2a3e",
-          borderRight: "1px solid rgba(45, 181, 213, 0.12)",
+          borderRight: "1px solid rgba(217, 20, 34, 0.12)",
           display: "flex",
           flexDirection: "column",
           position: "fixed",
@@ -137,7 +137,7 @@ export function AdminLayout() {
         <div
           style={{
             padding: "0.25rem 1.5rem",
-            borderBottom: "1px solid rgba(45, 181, 213, 0.12)",
+            borderBottom: "1px solid rgba(217, 20, 34, 0.12)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -157,11 +157,11 @@ export function AdminLayout() {
                     width: "34px",
                     height: "34px",
                     borderRadius: "9px",
-                    background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                    background: "linear-gradient(135deg, #d91422, #e8202f)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 6px 18px rgba(45, 181, 213, 0.4)",
+                    boxShadow: "0 6px 18px rgba(217, 20, 34, 0.4)",
                     flexShrink: 0,
                   }}
                 >
@@ -171,7 +171,7 @@ export function AdminLayout() {
                   <div style={{ color: "#fff", fontWeight: 700, fontSize: "0.9375rem", lineHeight: 1.2 }}>
                     Jubea Energy
                   </div>
-                  <div style={{ color: "#2db5d5", fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                  <div style={{ color: "#d91422", fontSize: "0.7rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                     Admin Panel
                   </div>
                 </div>
@@ -233,18 +233,18 @@ export function AdminLayout() {
                   textDecoration: "none",
                   color: isActive ? "#fff" : "#7a9ba8",
                   background: isActive
-                    ? "linear-gradient(135deg, rgba(45, 181, 213, 0.18), rgba(45, 181, 213, 0.08))"
+                    ? "linear-gradient(135deg, rgba(217, 20, 34, 0.18), rgba(217, 20, 34, 0.08))"
                     : "transparent",
                   border: isActive
-                    ? "1px solid rgba(45, 181, 213, 0.28)"
+                    ? "1px solid rgba(217, 20, 34, 0.28)"
                     : "1px solid transparent",
                   fontWeight: isActive ? 600 : 400,
                   fontSize: "0.9375rem",
                   transition: "all 0.2s ease",
-                  boxShadow: isActive ? "0 2px 12px rgba(45, 181, 213, 0.12)" : "none",
+                  boxShadow: isActive ? "0 2px 12px rgba(217, 20, 34, 0.12)" : "none",
                 }}
               >
-                <Icon size={18} color={isActive ? "#2db5d5" : "currentColor"} />
+                <Icon size={18} color={isActive ? "#d91422" : "currentColor"} />
                 <span style={{ flex: 1 }}>{label}</span>
                 {label === "Messages" && unreadCount > 0 && (
                   <span style={{
@@ -268,7 +268,7 @@ export function AdminLayout() {
         </nav>
 
         {/* Admin info + Logout */}
-        <div style={{ padding: "0.75rem", borderTop: "1px solid rgba(45, 181, 213, 0.12)" }}>
+        <div style={{ padding: "0.75rem", borderTop: "1px solid rgba(217, 20, 34, 0.12)" }}>
           <div
             style={{
               display: "flex",
@@ -285,7 +285,7 @@ export function AdminLayout() {
                 width: "34px",
                 height: "34px",
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                background: "linear-gradient(135deg, #d91422, #e8202f)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -355,7 +355,7 @@ export function AdminLayout() {
           style={{
             background: "rgba(20, 51, 72, 0.95)",
             backdropFilter: "blur(12px)",
-            borderBottom: "1px solid rgba(45, 181, 213, 0.12)",
+            borderBottom: "1px solid rgba(217, 20, 34, 0.12)",
             padding: "0 1.25rem",
             height: "64px",
             display: "flex",
@@ -371,8 +371,8 @@ export function AdminLayout() {
               <button
                 onClick={() => setSidebarOpen(true)}
                 style={{
-                  background: "rgba(45, 181, 213, 0.08)",
-                  border: "1px solid rgba(45, 181, 213, 0.2)",
+                  background: "rgba(217, 20, 34, 0.08)",
+                  border: "1px solid rgba(217, 20, 34, 0.2)",
                   borderRadius: "10px",
                   color: "#a0b4bc",
                   cursor: "pointer",

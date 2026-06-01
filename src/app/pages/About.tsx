@@ -16,8 +16,8 @@ export function About() {
   return (
     <div className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] text-white py-36 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 100% 0%, rgba(45,181,213,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 0% 100%, rgba(61,197,229,0.10) 0%, transparent 70%)" }} />
+      <section className="relative bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white py-36 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 100% 0%, rgba(217,20,34,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 0% 100%, rgba(61,197,229,0.10) 0%, transparent 70%)" }} />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h1
@@ -26,7 +26,7 @@ export function About() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="text-4xl lg:text-[72px] font-bold mb-6"
           >
-            {a.heroTitle1} <span className="text-[#042142]">{a.heroTitle2}</span>
+            {a.heroTitle1} <span className="text-[#111111]">{a.heroTitle2}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -52,7 +52,7 @@ export function About() {
                 className="text-4xl lg:text-5xl font-bold mb-6 text-center lg:text-left"
               >
                 {a.ourStoryLabel.split(" ").slice(0, -1).join(" ")}{" "}
-                <span className="text-[#042142]">{a.ourStoryLabel.split(" ").slice(-1)[0]}</span>
+                <span className="text-[#111111]">{a.ourStoryLabel.split(" ").slice(-1)[0]}</span>
               </motion.h2>
               {/* Image shown only on mobile, between title and text */}
               <div className="lg:hidden mb-6 self-stretch">
@@ -125,7 +125,7 @@ export function About() {
               className="text-4xl lg:text-5xl font-bold mb-4"
             >
               {a.ourValuesHeading.split(" ").slice(0, -1).join(" ")}{" "}
-              <span className="text-[#042142]">{a.ourValuesHeading.split(" ").slice(-1)[0]}</span>
+              <span className="text-[#111111]">{a.ourValuesHeading.split(" ").slice(-1)[0]}</span>
             </motion.h2>
             <motion.p
               initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
@@ -150,7 +150,7 @@ export function About() {
                 transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
                 className="bg-white p-6 rounded-lg shadow-lg text-center"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] text-white rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white rounded-full mb-4">
                   <ValIcon className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl mb-3">{value.title}</h3>
@@ -175,7 +175,7 @@ export function About() {
               className="text-4xl lg:text-5xl font-bold mb-4"
             >
               {a.meetTeamHeading.split(" ").slice(0, -1).join(" ")}{" "}
-              <span className="text-[#042142]">{a.meetTeamHeading.split(" ").slice(-1)[0]}</span>
+              <span className="text-[#111111]">{a.meetTeamHeading.split(" ").slice(-1)[0]}</span>
             </motion.h2>
             <motion.p
               initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
@@ -198,7 +198,7 @@ export function About() {
                 transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
                 className="bg-white rounded-lg shadow-lg overflow-hidden"
               >
-                <div className="h-64 bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] flex items-center justify-center overflow-hidden">
+                <div className="h-64 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] flex items-center justify-center overflow-hidden">
                   {member.image ? (
                     <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                   ) : (
@@ -207,7 +207,7 @@ export function About() {
                 </div>
                 <div className="p-6 text-center">
                   <h3 className="text-xl mb-1">{member.name}</h3>
-                  <p className="text-[#042142] mb-2">{member.role}</p>
+                  <p className="text-[#111111] mb-2">{member.role}</p>
                   <p className="text-sm text-gray-600">{member.experience}</p>
                 </div>
               </motion.div>
@@ -228,7 +228,7 @@ export function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
               >
-                <div className="text-4xl lg:text-5xl text-[#042142] mb-2">{stat.value}</div>
+                <div className="text-4xl lg:text-5xl text-[#111111] mb-2">{stat.value}</div>
                 <div className="text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
@@ -237,7 +237,7 @@ export function About() {
       </section>}
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] text-white py-28">
+      <section className="bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
             initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 20 }}
@@ -268,7 +268,7 @@ export function About() {
           >
             <a
               href={a.ctaBtnLink}
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#042142] px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-white text-[#111111] px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors"
             >
               {a.ctaBtnText}
             </a>

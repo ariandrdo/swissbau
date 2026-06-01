@@ -3,8 +3,6 @@ import { Wind, Flame, Wrench, Calendar, Zap, Shield, Clock, Home, Building2, The
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
 import { uploadImage } from "../../utils/uploadImage";
-import { AdminLangTabs } from "./AdminLangTabs";
-import { translateSection } from "../../utils/translate";
 
 const serviceIcons: Record<string, React.ElementType> = {
   cooling: Wind,
@@ -14,7 +12,7 @@ const serviceIcons: Record<string, React.ElementType> = {
 };
 
 const serviceColors: Record<string, string> = {
-  cooling: "#2db5d5",
+  cooling: "#d91422",
   heating: "#f97316",
   repair: "#8b5cf6",
   maintenance: "#10b981",
@@ -65,7 +63,7 @@ const lbl = (text: string) => (
 const inputStyle: React.CSSProperties = {
   width: "100%",
   background: "rgba(4, 33, 66, 0.6)",
-  border: "1px solid rgba(45, 181, 213, 0.2)",
+  border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px",
   padding: "0.625rem 0.875rem",
   color: "#fff",
@@ -99,7 +97,7 @@ function SectionCard({
     <div
       style={{
         background: "#0d2840",
-        border: "1px solid rgba(45, 181, 213, 0.12)",
+        border: "1px solid rgba(217, 20, 34, 0.12)",
         borderRadius: "16px",
         overflow: "hidden",
         marginBottom: "0.875rem",
@@ -120,7 +118,7 @@ function SectionCard({
         <div
           style={{
             padding: "0 1.25rem 1.25rem",
-            borderTop: "1px solid rgba(45, 181, 213, 0.1)",
+            borderTop: "1px solid rgba(217, 20, 34, 0.1)",
             paddingTop: "1rem",
           }}
         >
@@ -149,7 +147,7 @@ function ServiceCard({
   const imageRef = useRef<HTMLInputElement>(null);
   const currentIconName = svc.icon ?? DEFAULT_ICON_BY_ID[svc.id] ?? "Wrench";
   const Icon = ICON_MAP[currentIconName] ?? Wrench;
-  const accent = serviceColors[svc.id] ?? "#2db5d5";
+  const accent = serviceColors[svc.id] ?? "#d91422";
 
   const set = (field: keyof DetailedService, value: string | string[]) =>
     onChange({ ...svc, [field]: value });
@@ -178,7 +176,7 @@ function ServiceCard({
     <div
       style={{
         background: "#0d2840",
-        border: `1px solid ${open ? `${accent}44` : "rgba(45, 181, 213, 0.12)"}`,
+        border: `1px solid ${open ? `${accent}44` : "rgba(217, 20, 34, 0.12)"}`,
         borderRadius: "16px",
         overflow: "hidden",
         transition: "border-color 0.2s",
@@ -239,7 +237,7 @@ function ServiceCard({
         <div
           style={{
             padding: "0 1.25rem 1.25rem",
-            borderTop: "1px solid rgba(45, 181, 213, 0.1)",
+            borderTop: "1px solid rgba(217, 20, 34, 0.1)",
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
@@ -256,9 +254,9 @@ function ServiceCard({
                     key={name}
                     onClick={() => set("icon", name)}
                     title={name}
-                    style={{ width: "38px", height: "38px", borderRadius: "8px", background: isSelected ? "rgba(45,181,213,0.2)" : "rgba(10,42,53,0.6)", border: isSelected ? "1px solid rgba(45,181,213,0.7)" : "1px solid rgba(45,181,213,0.15)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" }}
+                    style={{ width: "38px", height: "38px", borderRadius: "8px", background: isSelected ? "rgba(217,20,34,0.2)" : "rgba(10,42,53,0.6)", border: isSelected ? "1px solid rgba(217,20,34,0.7)" : "1px solid rgba(217,20,34,0.15)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" }}
                   >
-                    <IconComp size={16} color={isSelected ? "#2db5d5" : "#7a9ba8"} />
+                    <IconComp size={16} color={isSelected ? "#d91422" : "#7a9ba8"} />
                   </button>
                 );
               })}
@@ -301,7 +299,7 @@ function ServiceCard({
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); e.target.value = ""; }}
             />
             {svc.image ? (
-              <div style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(45,181,213,0.2)" }}>
+              <div style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(217,20,34,0.2)" }}>
                 <img src={svc.image} alt="Service preview" style={{ width: "100%", height: "160px", objectFit: "cover", display: "block" }} />
                 <button
                   onClick={() => onChange({ ...svc, image: "" })}
@@ -313,15 +311,15 @@ function ServiceCard({
             ) : (
               <button
                 onClick={() => imageRef.current?.click()}
-                style={{ width: "100%", padding: "0.875rem", background: "rgba(4, 33, 66, 0.6)", border: "2px dashed rgba(45,181,213,0.3)", borderRadius: "10px", color: "#4a6670", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", fontSize: "0.875rem", transition: "all 0.2s" }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.6)"; e.currentTarget.style.color = "#2db5d5"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.3)"; e.currentTarget.style.color = "#4a6670"; }}
+                style={{ width: "100%", padding: "0.875rem", background: "rgba(4, 33, 66, 0.6)", border: "2px dashed rgba(217,20,34,0.3)", borderRadius: "10px", color: "#4a6670", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", fontSize: "0.875rem", transition: "all 0.2s" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.6)"; e.currentTarget.style.color = "#d91422"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.3)"; e.currentTarget.style.color = "#4a6670"; }}
               >
                 <Upload size={16} /> Upload Image
               </button>
             )}
             <p style={{ color: "#4a6670", fontSize: "0.7rem", marginTop: "0.35rem", lineHeight: 1.5 }}>
-              Recommended: <span style={{ color: "#2db5d5" }}>1200 × 1000 px (6:5 portrait-ish)</span> — images display at ~570 × 500 px on the Services page. If not uploaded, a default image is used.
+              Recommended: <span style={{ color: "#d91422" }}>1200 × 1000 px (6:5 portrait-ish)</span> — images display at ~570 × 500 px on the Services page. If not uploaded, a default image is used.
             </p>
           </div>
           <div>
@@ -330,7 +328,7 @@ function ServiceCard({
             {svc.services.length > 0 && (
               <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem", marginBottom: "0.625rem" }}>
                 {svc.services.map((item, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "rgba(10,42,53,0.6)", border: "1px solid rgba(45,181,213,0.12)", borderRadius: "8px", padding: "0.45rem 0.5rem 0.45rem 0.75rem" }}>
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "rgba(10,42,53,0.6)", border: "1px solid rgba(217,20,34,0.12)", borderRadius: "8px", padding: "0.45rem 0.5rem 0.45rem 0.75rem" }}>
                     <span style={{ flex: 1, color: "#e0eef2", fontSize: "0.875rem" }}>{item}</span>
                     <button
                       onClick={() => removeService(i)}
@@ -355,7 +353,7 @@ function ServiceCard({
               />
               <button
                 onClick={addService}
-                style={{ display: "flex", alignItems: "center", gap: "0.375rem", padding: "0.625rem 0.875rem", background: "rgba(45,181,213,0.12)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "10px", color: "#2db5d5", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}
+                style={{ display: "flex", alignItems: "center", gap: "0.375rem", padding: "0.625rem 0.875rem", background: "rgba(217,20,34,0.12)", border: "1px solid rgba(217,20,34,0.25)", borderRadius: "10px", color: "#d91422", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}
               >
                 <Plus size={14} /> Add
               </button>
@@ -380,7 +378,7 @@ function ServiceCard({
 
 export function AdminServices() {
   const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
-  const [adminLang, setAdminLang] = useState<Lang>("en");
+  const [adminLang, setAdminLang] = useState<Lang>("de");
 
   const langServices = langs[adminLang].services;
 
@@ -458,11 +456,7 @@ export function AdminServices() {
 
   const handleSave = async () => {
     const updatedServices = { ...langs[adminLang].services, ...pageFields, detailedServices: services };
-    if (adminLang === "en") {
-      updateLangContent("en", (prev) => ({ ...prev, services: updatedServices }));
-    } else {
-      updateLangContent(adminLang, (prev) => ({ ...prev, services: updatedServices }));
-    }
+    updateLangContent(adminLang, (prev) => ({ ...prev, services: updatedServices }));
     await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -498,19 +492,6 @@ export function AdminServices() {
 
   return (
     <div>
-      {/* Language Tabs */}
-      <AdminLangTabs
-        adminLang={adminLang}
-        setAdminLang={setAdminLang}
-        onCopyFromEn={() => { const en = langs["en"].services; setPageFields({ heroTitle1: en.heroTitle1, heroTitle2: en.heroTitle2, heroSubtitle: en.heroSubtitle, heroBtnText: en.heroBtnText, heroBtnLink: en.heroBtnLink, emergencyPhone: en.emergencyPhone, ctaHeading: en.ctaHeading, ctaSubheading: en.ctaSubheading, ctaPhone: en.ctaPhone, ctaBtnText: en.ctaBtnText, ctaBtnLink: en.ctaBtnLink, showAdditionalServices: en.showAdditionalServices !== false, additionalServicesHeading: en.additionalServicesHeading, showAdvantage: en.showAdvantage !== false, advantageHeading: en.advantageHeading, showEmergencyBanner: en.showEmergencyBanner !== false }); setServices(en.detailedServices); updateLangContent(adminLang, (prev) => ({ ...prev, services: en })); setSaved(false); }}
-        onTranslate={adminLang !== "en" ? async () => {
-          const t = await translateSection(langs["en"].services, adminLang) as typeof langs["en"]["services"];
-          setPageFields({ heroTitle1: t.heroTitle1, heroTitle2: t.heroTitle2, heroSubtitle: t.heroSubtitle, heroBtnText: t.heroBtnText, heroBtnLink: t.heroBtnLink, emergencyPhone: t.emergencyPhone, ctaHeading: t.ctaHeading, ctaSubheading: t.ctaSubheading, ctaPhone: t.ctaPhone, ctaBtnText: t.ctaBtnText, ctaBtnLink: t.ctaBtnLink, showAdditionalServices: t.showAdditionalServices !== false, additionalServicesHeading: t.additionalServicesHeading, showAdvantage: t.showAdvantage !== false, advantageHeading: t.advantageHeading, showEmergencyBanner: t.showEmergencyBanner !== false });
-          setServices(t.detailedServices);
-          updateLangContent(adminLang, (prev) => ({ ...prev, services: t }));
-          setSaved(false);
-        } : undefined}
-      />
 
       {/* Header row */}
       <div
@@ -541,19 +522,19 @@ export function AdminServices() {
               gap: "0.5rem",
               padding: "0.6rem 1.1rem",
               borderRadius: "10px",
-              background: "rgba(10, 42, 53, 0.8)",
-              border: "1px solid rgba(45, 181, 213, 0.2)",
+              background: "rgba(17, 17, 17, 0.8)",
+              border: "1px solid rgba(217, 20, 34, 0.2)",
               color: "#7a9ba8",
               fontSize: "0.875rem",
               cursor: "pointer",
               transition: "all 0.2s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(45, 181, 213, 0.4)";
+              e.currentTarget.style.borderColor = "rgba(217, 20, 34, 0.4)";
               e.currentTarget.style.color = "#fff";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(45, 181, 213, 0.2)";
+              e.currentTarget.style.borderColor = "rgba(217, 20, 34, 0.2)";
               e.currentTarget.style.color = "#7a9ba8";
             }}
           >
@@ -571,7 +552,7 @@ export function AdminServices() {
               borderRadius: "10px",
               background: saved
                 ? "rgba(74, 222, 128, 0.18)"
-                : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                : "linear-gradient(135deg, #d91422, #e8202f)",
               border: saved ? "1px solid rgba(74, 222, 128, 0.4)" : "none",
               color: saved ? "#4ade80" : "#fff",
               fontSize: "0.875rem",
@@ -787,9 +768,9 @@ export function AdminServices() {
       </div>
       <button
         onClick={handleAdd}
-        style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1.25rem", background: "rgba(45,181,213,0.1)", border: "1px dashed rgba(45,181,213,0.35)", borderRadius: "14px", color: "#2db5d5", fontSize: "0.9375rem", fontWeight: 600, cursor: "pointer", width: "100%", justifyContent: "center", marginTop: "0.25rem", transition: "all 0.2s" }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(45,181,213,0.18)"; e.currentTarget.style.borderColor = "rgba(45,181,213,0.6)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(45,181,213,0.1)"; e.currentTarget.style.borderColor = "rgba(45,181,213,0.35)"; }}
+        style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1.25rem", background: "rgba(217,20,34,0.1)", border: "1px dashed rgba(217,20,34,0.35)", borderRadius: "14px", color: "#d91422", fontSize: "0.9375rem", fontWeight: 600, cursor: "pointer", width: "100%", justifyContent: "center", marginTop: "0.25rem", transition: "all 0.2s" }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(217,20,34,0.18)"; e.currentTarget.style.borderColor = "rgba(217,20,34,0.6)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(217,20,34,0.1)"; e.currentTarget.style.borderColor = "rgba(217,20,34,0.35)"; }}
       >
         <Plus size={16} /> Add Service Card
       </button>
@@ -799,15 +780,15 @@ export function AdminServices() {
         style={{
           marginTop: "1.5rem",
           padding: "0.875rem 1.125rem",
-          background: "rgba(45, 181, 213, 0.07)",
-          border: "1px solid rgba(45, 181, 213, 0.15)",
+          background: "rgba(217, 20, 34, 0.07)",
+          border: "1px solid rgba(217, 20, 34, 0.15)",
           borderRadius: "12px",
           color: "#7a9ba8",
           fontSize: "0.8125rem",
           lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: "#2db5d5" }}>Tip:</strong> Click{" "}
+        <strong style={{ color: "#d91422" }}>Tip:</strong> Click{" "}
         <strong style={{ color: "#fff" }}>Save Changes</strong> to apply all edits to the live
         Services page. Service icons are fixed — text content and images are editable here.
       </div>

@@ -3,14 +3,12 @@ import { Plus, Trash2, GripVertical, Upload, X, ChevronUp, ChevronDown, RotateCc
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import { uploadImage } from "../../utils/uploadImage";
 import type { Lang } from "../../context/ContentContext";
-import { AdminLangTabs } from "./AdminLangTabs";
-import { translateSection } from "../../utils/translate";
 
 const fieldStyle: React.CSSProperties = {
   width: "100%",
   padding: "0.7rem 1rem",
   background: "rgba(4, 33, 66, 0.6)",
-  border: "1px solid rgba(45, 181, 213, 0.2)",
+  border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px",
   color: "#fff",
   fontSize: "0.9rem",
@@ -45,14 +43,14 @@ function SectionCard({
     <div
       style={{
         background: "#0d2840",
-        border: "1px solid rgba(45, 181, 213, 0.12)",
+        border: "1px solid rgba(217, 20, 34, 0.12)",
         borderRadius: "16px",
         marginBottom: "0.875rem",
         overflow: "hidden",
       }}
     >
       <div
-        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none" }}
+        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(217,20,34,0.12)" : "none" }}
         onClick={() => setOpen(!open)}
       >
         <span style={{ flex: 1, padding: "1rem 1.25rem", color: "#fff", fontWeight: 600, fontSize: "0.9375rem" }}>{title}</span>
@@ -68,7 +66,7 @@ function SectionCard({
 
 export function AdminFooter() {
   const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
-  const [adminLang, setAdminLang] = useState<Lang>("en");
+  const [adminLang, setAdminLang] = useState<Lang>("de");
   const [footerF, setFooterF] = useState({ ...langs[adminLang].footer });
   const [saved, setSaved] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -114,11 +112,7 @@ export function AdminFooter() {
     setF("services", footerF.services.filter((_, i) => i !== index));
 
   const handleSave = async () => {
-    if (adminLang === "en") {
-      updateLangContent("en", (prev) => ({ ...prev, footer: footerF }));
-    } else {
-      updateLangContent(adminLang, (prev) => ({ ...prev, footer: footerF }));
-    }
+    updateLangContent(adminLang, (prev) => ({ ...prev, footer: footerF }));
     await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -134,18 +128,6 @@ export function AdminFooter() {
 
   return (
     <div>
-      {/* Language Tabs */}
-      <AdminLangTabs
-        adminLang={adminLang}
-        setAdminLang={setAdminLang}
-        onCopyFromEn={() => { const en = langs["en"].footer; setFooterF({ ...en }); updateLangContent(adminLang, (prev) => ({ ...prev, footer: en })); setSaved(false); }}
-        onTranslate={adminLang !== "en" ? async () => {
-          const translated = await translateSection(langs["en"].footer, adminLang) as typeof footerF;
-          setFooterF(translated);
-          updateLangContent(adminLang, (prev) => ({ ...prev, footer: translated }));
-          setSaved(false);
-        } : undefined}
-      />
 
       {/* Page Header */}
       <div
@@ -168,9 +150,9 @@ export function AdminFooter() {
         </div>
         <div style={{ display: "flex", gap: "0.625rem" }}>
           <button onClick={handleReset}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(45,181,213,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.4)"; e.currentTarget.style.color = "#fff"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(217,20,34,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.4)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
           >
             <RotateCcw size={14} /> Reset to Default
           </button>
@@ -179,7 +161,7 @@ export function AdminFooter() {
             style={{
               display: "flex", alignItems: "center", gap: "0.5rem",
               padding: "0.625rem 1.5rem",
-              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #d91422, #e8202f)",
               border: saved ? "1px solid rgba(74,222,128,0.4)" : "none",
               borderRadius: "10px",
               color: saved ? "#4ade80" : "#fff",
@@ -198,7 +180,7 @@ export function AdminFooter() {
       <SectionCard title="Logo">
         <p style={{ color: "#4a6670", fontSize: "0.75rem", marginBottom: "0.75rem" }}>
           Displays in the footer. Recommended:{" "}
-          <span style={{ color: "#2db5d5" }}>400 × 120 px (transparent PNG)</span>
+          <span style={{ color: "#d91422" }}>400 × 120 px (transparent PNG)</span>
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
           {footerF.logo ? (
@@ -207,7 +189,7 @@ export function AdminFooter() {
                 width: "120px",
                 height: "50px",
                 borderRadius: "10px",
-                border: "1px solid rgba(45, 181, 213, 0.25)",
+                border: "1px solid rgba(217, 20, 34, 0.25)",
                 background: "rgba(15,58,74,0.5)",
                 display: "flex",
                 alignItems: "center",
@@ -227,7 +209,7 @@ export function AdminFooter() {
                 width: "120px",
                 height: "50px",
                 borderRadius: "10px",
-                border: "1px dashed rgba(45, 181, 213, 0.3)",
+                border: "1px dashed rgba(217, 20, 34, 0.3)",
                 background: "rgba(15,58,74,0.3)",
                 display: "flex",
                 alignItems: "center",
@@ -253,10 +235,10 @@ export function AdminFooter() {
               alignItems: "center",
               gap: "0.4rem",
               padding: "0.5rem 1rem",
-              background: "rgba(45, 181, 213, 0.15)",
-              border: "1px solid rgba(45, 181, 213, 0.3)",
+              background: "rgba(217, 20, 34, 0.15)",
+              border: "1px solid rgba(217, 20, 34, 0.3)",
               borderRadius: "8px",
-              color: "#2db5d5",
+              color: "#d91422",
               fontSize: "0.8125rem",
               fontWeight: 600,
               cursor: "pointer",
@@ -303,8 +285,8 @@ export function AdminFooter() {
             minHeight: "80px",
             lineHeight: 1.6,
           }}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
         />
       </SectionCard>
 
@@ -322,7 +304,7 @@ export function AdminFooter() {
                 alignItems: "center",
                 gap: "0.6rem",
                 background: "rgba(15, 58, 74, 0.4)",
-                border: "1px solid rgba(45, 181, 213, 0.12)",
+                border: "1px solid rgba(217, 20, 34, 0.12)",
                 borderRadius: "10px",
                 padding: "0.6rem 0.75rem",
               }}
@@ -337,8 +319,8 @@ export function AdminFooter() {
                     onChange={(e) => updateQuickLink(index, "label", e.target.value)}
                     placeholder="Home"
                     style={{ ...fieldStyle, padding: "0.4rem 0.6rem", fontSize: "0.85rem" }}
-                    onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-                    onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+                    onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+                    onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
                   />
                 </div>
                 <div>
@@ -349,8 +331,8 @@ export function AdminFooter() {
                     onChange={(e) => updateQuickLink(index, "path", e.target.value)}
                     placeholder="/services"
                     style={{ ...fieldStyle, padding: "0.4rem 0.6rem", fontSize: "0.85rem" }}
-                    onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-                    onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+                    onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+                    onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
                   />
                 </div>
               </div>
@@ -380,10 +362,10 @@ export function AdminFooter() {
             alignItems: "center",
             gap: "0.4rem",
             padding: "0.5rem 1.1rem",
-            background: "rgba(45, 181, 213, 0.12)",
-            border: "1px dashed rgba(45, 181, 213, 0.35)",
+            background: "rgba(217, 20, 34, 0.12)",
+            border: "1px dashed rgba(217, 20, 34, 0.35)",
             borderRadius: "8px",
-            color: "#2db5d5",
+            color: "#d91422",
             fontSize: "0.8125rem",
             fontWeight: 600,
             cursor: "pointer",
@@ -416,8 +398,8 @@ export function AdminFooter() {
                 onChange={(e) => updateService(index, e.target.value)}
                 placeholder="Service name"
                 style={{ ...fieldStyle, flex: 1 }}
-                onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+                onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+                onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
               />
               <button
                 onClick={() => removeService(index)}
@@ -445,10 +427,10 @@ export function AdminFooter() {
             alignItems: "center",
             gap: "0.4rem",
             padding: "0.5rem 1.1rem",
-            background: "rgba(45, 181, 213, 0.12)",
-            border: "1px dashed rgba(45, 181, 213, 0.35)",
+            background: "rgba(217, 20, 34, 0.12)",
+            border: "1px dashed rgba(217, 20, 34, 0.35)",
             borderRadius: "8px",
-            color: "#2db5d5",
+            color: "#d91422",
             fontSize: "0.8125rem",
             fontWeight: 600,
             cursor: "pointer",
@@ -473,8 +455,8 @@ export function AdminFooter() {
               onChange={(e) => setF("phone", e.target.value)}
               placeholder="+389 70 777 888"
               style={fieldStyle}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+              onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
             />
           </div>
           <div>
@@ -485,8 +467,8 @@ export function AdminFooter() {
               onChange={(e) => setF("email", e.target.value)}
               placeholder="info@jubea-energy.com"
               style={fieldStyle}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+              onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
             />
           </div>
         </div>
@@ -498,8 +480,8 @@ export function AdminFooter() {
             onChange={(e) => setF("address", e.target.value)}
             placeholder="Gostivar, North Macedonia"
             style={fieldStyle}
-            onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-            onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+            onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+            onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
           />
         </div>
       </SectionCard>
@@ -513,8 +495,8 @@ export function AdminFooter() {
         </p>
         {/* How-to hint */}
         <div style={{
-          background: "rgba(45, 181, 213, 0.06)",
-          border: "1px solid rgba(45, 181, 213, 0.18)",
+          background: "rgba(217, 20, 34, 0.06)",
+          border: "1px solid rgba(217, 20, 34, 0.18)",
           borderRadius: "10px",
           padding: "0.75rem 1rem",
           marginBottom: "1rem",
@@ -522,7 +504,7 @@ export function AdminFooter() {
           color: "#7a9ba8",
           lineHeight: 1.7,
         }}>
-          <strong style={{ color: "#2db5d5" }}>How to get a Google Maps link:</strong><br />
+          <strong style={{ color: "#d91422" }}>How to get a Google Maps link:</strong><br />
           1. Open <span style={{ color: "#fff" }}>google.com/maps</span> and search your address<br />
           2. Click <strong style={{ color: "#fff" }}>Share → Copy link</strong><br />
           3. Paste the URL below
@@ -534,8 +516,8 @@ export function AdminFooter() {
           onChange={(e) => setF("mapDirectionsUrl", e.target.value || undefined)}
           placeholder="https://maps.google.com/... (leave blank to use address)"
           style={fieldStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
         />
         {footerF.mapDirectionsUrl && (
           <a
@@ -548,7 +530,7 @@ export function AdminFooter() {
               gap: "0.35rem",
               marginTop: "0.6rem",
               fontSize: "0.75rem",
-              color: "#2db5d5",
+              color: "#d91422",
               textDecoration: "none",
             }}
           >

@@ -119,7 +119,7 @@ export function AdminMessages() {
           {unreadCount > 0 && (
             <span
               style={{
-                background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                background: "linear-gradient(135deg, #d91422, #e8202f)",
                 color: "#fff",
                 fontSize: "0.75rem",
                 fontWeight: 700,
@@ -148,7 +148,7 @@ export function AdminMessages() {
         <div
           style={{
             background: "#0d2840",
-            border: "1px solid rgba(45, 181, 213, 0.12)",
+            border: "1px solid rgba(217, 20, 34, 0.12)",
             borderRadius: "18px",
             overflow: "hidden",
           }}
@@ -157,7 +157,7 @@ export function AdminMessages() {
           <div
             style={{
               padding: "1rem 1.25rem",
-              borderBottom: "1px solid rgba(45, 181, 213, 0.12)",
+              borderBottom: "1px solid rgba(217, 20, 34, 0.12)",
             }}
           >
             <div style={{ position: "relative" }}>
@@ -179,7 +179,7 @@ export function AdminMessages() {
                   width: "100%",
                   padding: "0.65rem 1rem 0.65rem 2.375rem",
                   background: "rgba(4, 33, 66, 0.5)",
-                  border: "1px solid rgba(45, 181, 213, 0.18)",
+                  border: "1px solid rgba(217, 20, 34, 0.18)",
                   borderRadius: "10px",
                   color: "#fff",
                   fontSize: "0.875rem",
@@ -215,7 +215,7 @@ export function AdminMessages() {
                   padding: "1rem 1.25rem",
                   borderBottom:
                     i < filtered.length - 1
-                      ? "1px solid rgba(45, 181, 213, 0.07)"
+                      ? "1px solid rgba(217, 20, 34, 0.07)"
                       : "none",
                   display: "flex",
                   alignItems: "center",
@@ -223,14 +223,14 @@ export function AdminMessages() {
                   cursor: "pointer",
                   background:
                     selected === msg.id
-                      ? "rgba(45, 181, 213, 0.07)"
+                      ? "rgba(217, 20, 34, 0.07)"
                       : "transparent",
                   transition: "background 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
                   if (selected !== msg.id)
                     (e.currentTarget as HTMLElement).style.background =
-                      "rgba(45, 181, 213, 0.04)";
+                      "rgba(217, 20, 34, 0.04)";
                 }}
                 onMouseLeave={(e) => {
                   if (selected !== msg.id)
@@ -244,7 +244,7 @@ export function AdminMessages() {
                     width: "42px",
                     height: "42px",
                     borderRadius: "50%",
-                    background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                    background: "linear-gradient(135deg, #d91422, #e8202f)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -282,7 +282,7 @@ export function AdminMessages() {
                   </div>
                   <div
                     style={{
-                      color: msg.status === "unread" ? "#2db5d5" : "#7a9ba8",
+                      color: msg.status === "unread" ? "#d91422" : "#7a9ba8",
                       fontSize: "0.875rem",
                       fontWeight: msg.status === "unread" ? 600 : 400,
                       overflow: "hidden",
@@ -312,9 +312,9 @@ export function AdminMessages() {
                       width: "9px",
                       height: "9px",
                       borderRadius: "50%",
-                      background: "#2db5d5",
+                      background: "#d91422",
                       flexShrink: 0,
-                      boxShadow: "0 0 8px rgba(45, 181, 213, 0.6)",
+                      boxShadow: "0 0 8px rgba(217, 20, 34, 0.6)",
                     }}
                   />
                 )}
@@ -328,7 +328,7 @@ export function AdminMessages() {
           <div
             style={{
               background: "#0d2840",
-              border: "1px solid rgba(45, 181, 213, 0.12)",
+              border: "1px solid rgba(217, 20, 34, 0.12)",
               borderRadius: "18px",
               overflow: "hidden",
               position: isMobile ? "relative" : "sticky",
@@ -340,7 +340,7 @@ export function AdminMessages() {
             <div
               style={{
                 padding: "1.25rem",
-                borderBottom: "1px solid rgba(45, 181, 213, 0.12)",
+                borderBottom: "1px solid rgba(217, 20, 34, 0.12)",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
@@ -350,7 +350,7 @@ export function AdminMessages() {
               <button
                 onClick={() => setSelected(null)}
                 style={{
-                  background: "rgba(45, 181, 213, 0.1)",
+                  background: "rgba(217, 20, 34, 0.1)",
                   border: "none",
                   borderRadius: "8px",
                   color: "#a0b4bc",
@@ -372,7 +372,7 @@ export function AdminMessages() {
                     width: "52px",
                     height: "52px",
                     borderRadius: "50%",
-                    background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                    background: "linear-gradient(135deg, #d91422, #e8202f)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -398,14 +398,14 @@ export function AdminMessages() {
               {/* Subject */}
               <div
                 style={{
-                  background: "rgba(45, 181, 213, 0.08)",
-                  border: "1px solid rgba(45, 181, 213, 0.18)",
+                  background: "rgba(217, 20, 34, 0.08)",
+                  border: "1px solid rgba(217, 20, 34, 0.18)",
                   borderRadius: "10px",
                   padding: "0.75rem 1rem",
                   marginBottom: "1rem",
                 }}
               >
-                <span style={{ color: "#2db5d5", fontSize: "0.8125rem", fontWeight: 600 }}>
+                <span style={{ color: "#d91422", fontSize: "0.8125rem", fontWeight: 600 }}>
                   Subject:
                 </span>{" "}
                 <span style={{ color: "#fff", fontSize: "0.9375rem" }}>{selectedMsg.subject}</span>
@@ -440,7 +440,7 @@ export function AdminMessages() {
                     marginBottom: "0.5rem",
                   }}
                 >
-                  <Mail size={14} color="#2db5d5" />
+                  <Mail size={14} color="#d91422" />
                   <a
                     href={`mailto:${selectedMsg.email}`}
                     style={{ color: "#c8d8de", fontSize: "0.875rem", textDecoration: "none" }}
@@ -449,7 +449,7 @@ export function AdminMessages() {
                   </a>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                  <Phone size={14} color="#2db5d5" />
+                  <Phone size={14} color="#d91422" />
                   <a
                     href={`tel:${selectedMsg.phone}`}
                     style={{ color: "#c8d8de", fontSize: "0.875rem", textDecoration: "none" }}
@@ -466,7 +466,7 @@ export function AdminMessages() {
                   style={{
                     flex: 1,
                     padding: "0.8rem",
-                    background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                    background: "linear-gradient(135deg, #d91422, #e8202f)",
                     border: "none",
                     borderRadius: "12px",
                     color: "white",
@@ -476,7 +476,7 @@ export function AdminMessages() {
                     textAlign: "center",
                     textDecoration: "none",
                     display: "block",
-                    boxShadow: "0 5px 15px rgba(45, 181, 213, 0.3)",
+                    boxShadow: "0 5px 15px rgba(217, 20, 34, 0.3)",
                   }}
                 >
                   Reply via Email

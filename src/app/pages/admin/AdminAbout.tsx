@@ -3,12 +3,10 @@ import { Save, RotateCcw, ChevronDown, ChevronUp, Plus, Trash2, Upload } from "l
 import { uploadImage } from "../../utils/uploadImage";
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
-import { AdminLangTabs } from "./AdminLangTabs";
-import { translateSection } from "../../utils/translate";
 
 const fieldStyle: React.CSSProperties = {
   width: "100%", padding: "0.7rem 1rem",
-  background: "rgba(4, 33, 66, 0.6)", border: "1px solid rgba(45, 181, 213, 0.2)",
+  background: "rgba(4, 33, 66, 0.6)", border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px", color: "#fff", fontSize: "0.9rem",
   outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
 };
@@ -23,10 +21,10 @@ const lblStyle: React.CSSProperties = {
 function SectionCard({ title, children, defaultOpen = false, headerExtra }: { title: string; children: React.ReactNode; defaultOpen?: boolean; headerExtra?: React.ReactNode }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{ background: "#0d2840", border: "1px solid rgba(45,181,213,0.12)", borderRadius: "16px", overflow: "hidden", marginBottom: "0.875rem" }}>
+    <div style={{ background: "#0d2840", border: "1px solid rgba(217,20,34,0.12)", borderRadius: "16px", overflow: "hidden", marginBottom: "0.875rem" }}>
       <button
         onClick={() => setOpen((o) => !o)}
-        style={{ width: "100%", padding: "1rem 1.25rem", background: "none", border: "none", borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", color: "#fff", fontWeight: 600, fontSize: "0.9375rem", textAlign: "left" }}
+        style={{ width: "100%", padding: "1rem 1.25rem", background: "none", border: "none", borderBottom: open ? "1px solid rgba(217,20,34,0.12)" : "none", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", color: "#fff", fontWeight: 600, fontSize: "0.9375rem", textAlign: "left" }}
       >
         {title}
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -45,12 +43,12 @@ function Field({ label, value, onChange, multiline = false, placeholder }: { lab
       <label style={lblStyle}>{label}</label>
       {multiline ? (
         <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} style={taStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")} />
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")} />
       ) : (
         <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} style={fieldStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")} />
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")} />
       )}
     </div>
   );
@@ -58,7 +56,7 @@ function Field({ label, value, onChange, multiline = false, placeholder }: { lab
 
 export function AdminAbout() {
   const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
-  const [adminLang, setAdminLang] = useState<Lang>("en");
+  const [adminLang, setAdminLang] = useState<Lang>("de");
   const [aboutF, setAboutF] = useState({ ...langs[adminLang].about });
   const [saved, setSaved] = useState(false);
 
@@ -88,11 +86,7 @@ export function AdminAbout() {
     setAboutF((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
-    if (adminLang === "en") {
-      updateLangContent("en", (prev) => ({ ...prev, about: aboutF }));
-    } else {
-      updateLangContent(adminLang, (prev) => ({ ...prev, about: aboutF }));
-    }
+    updateLangContent(adminLang, (prev) => ({ ...prev, about: aboutF }));
     await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -107,18 +101,6 @@ export function AdminAbout() {
 
   return (
     <div>
-      {/* Language Tabs */}
-      <AdminLangTabs
-        adminLang={adminLang}
-        setAdminLang={setAdminLang}
-        onCopyFromEn={() => { const en = langs["en"].about; setAboutF({ ...en }); updateLangContent(adminLang, (prev) => ({ ...prev, about: en })); setSaved(false); }}
-        onTranslate={adminLang !== "en" ? async () => {
-          const translated = await translateSection(langs["en"].about, adminLang) as typeof aboutF;
-          setAboutF(translated);
-          updateLangContent(adminLang, (prev) => ({ ...prev, about: translated }));
-          setSaved(false);
-        } : undefined}
-      />
 
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
@@ -128,14 +110,14 @@ export function AdminAbout() {
         </div>
         <div style={{ display: "flex", gap: "0.625rem" }}>
           <button onClick={handleReset}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(45,181,213,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer", transition: "all 0.2s" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.4)"; e.currentTarget.style.color = "#fff"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(217,20,34,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer", transition: "all 0.2s" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.4)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
           >
             <RotateCcw size={14} /> Reset to Default
           </button>
           <button onClick={handleSave}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.25rem", borderRadius: "10px", background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: saved ? "1px solid rgba(74,222,128,0.4)" : "none", color: saved ? "#4ade80" : "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.25rem", borderRadius: "10px", background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #d91422, #e8202f)", border: saved ? "1px solid rgba(74,222,128,0.4)" : "none", color: saved ? "#4ade80" : "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}
           >
             <Save size={14} /> {saved ? "Saved!" : "Save Changes"}
           </button>
@@ -174,7 +156,7 @@ export function AdminAbout() {
             style={{
               paddingBottom: "1rem",
               marginBottom: "1rem",
-              borderBottom: "1px solid rgba(45,181,213,0.08)",
+              borderBottom: "1px solid rgba(217,20,34,0.08)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
@@ -205,11 +187,11 @@ export function AdminAbout() {
               <label style={lblStyle}>Photo</label>
               {member.image ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                  <img src={member.image} alt="" style={{ width: "64px", height: "64px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(45,181,213,0.3)" }} />
+                  <img src={member.image} alt="" style={{ width: "64px", height: "64px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(217,20,34,0.3)" }} />
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
                     <button
                       onClick={() => { setTeamImgIdx(i); teamImageRef.current?.click(); }}
-                      style={{ padding: "0.3rem 0.75rem", borderRadius: "8px", background: "rgba(45,181,213,0.12)", border: "1px solid rgba(45,181,213,0.3)", color: "#2db5d5", fontSize: "0.75rem", cursor: "pointer" }}
+                      style={{ padding: "0.3rem 0.75rem", borderRadius: "8px", background: "rgba(217,20,34,0.12)", border: "1px solid rgba(217,20,34,0.3)", color: "#d91422", fontSize: "0.75rem", cursor: "pointer" }}
                     >
                       Change
                     </button>
@@ -225,12 +207,12 @@ export function AdminAbout() {
                 <div>
                   <button
                     onClick={() => { setTeamImgIdx(i); teamImageRef.current?.click(); }}
-                    style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", borderRadius: "8px", background: "rgba(45,181,213,0.08)", border: "1px dashed rgba(45,181,213,0.35)", color: "#2db5d5", fontSize: "0.8125rem", cursor: "pointer" }}
+                    style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", borderRadius: "8px", background: "rgba(217,20,34,0.08)", border: "1px dashed rgba(217,20,34,0.35)", color: "#d91422", fontSize: "0.8125rem", cursor: "pointer" }}
                   >
                     <Upload size={14} /> Upload Photo
                   </button>
                   <p style={{ color: "#4a6670", margin: "0.375rem 0 0", fontSize: "0.8125rem" }}>
-                    Recommended: <span style={{ color: "#2db5d5" }}>800 × 640 px (5:4 landscape)</span> — photos display at ~320 × 256 px on the About page.
+                    Recommended: <span style={{ color: "#d91422" }}>800 × 640 px (5:4 landscape)</span> — photos display at ~320 × 256 px on the About page.
                   </p>
                 </div>
               )}
@@ -239,7 +221,7 @@ export function AdminAbout() {
         ))}
         <button
           onClick={() => set("team", [...aboutF.team, { name: "", role: "", experience: "" }])}
-          style={{ width: "100%", padding: "0.7rem", borderRadius: "10px", background: "none", border: "1px dashed rgba(45,181,213,0.35)", color: "#2db5d5", fontSize: "0.875rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginTop: "0.25rem" }}
+          style={{ width: "100%", padding: "0.7rem", borderRadius: "10px", background: "none", border: "1px dashed rgba(217,20,34,0.35)", color: "#d91422", fontSize: "0.875rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginTop: "0.25rem" }}
         >
           <Plus size={15} /> Add Team Member
         </button>
@@ -257,7 +239,7 @@ export function AdminAbout() {
         <Field label="Section Heading" value={aboutF.certsHeading} onChange={(v) => set("certsHeading", v)} placeholder="Certifications & Credentials" />
         <Field label="Section Subtitle" value={aboutF.certsSubtitle} onChange={(v) => set("certsSubtitle", v)} placeholder="Fully licensed, insured, and certified" />
         {aboutF.certs.map((cert, i) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 1rem", paddingBottom: i < aboutF.certs.length - 1 ? "0.75rem" : 0, marginBottom: i < aboutF.certs.length - 1 ? "0.75rem" : 0, borderBottom: i < aboutF.certs.length - 1 ? "1px solid rgba(45,181,213,0.08)" : "none" }}>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 1rem", paddingBottom: i < aboutF.certs.length - 1 ? "0.75rem" : 0, marginBottom: i < aboutF.certs.length - 1 ? "0.75rem" : 0, borderBottom: i < aboutF.certs.length - 1 ? "1px solid rgba(217,20,34,0.08)" : "none" }}>
             <Field label={`Cert ${i + 1} Title`} value={cert.title} onChange={(v) => { const next = aboutF.certs.map((c, j) => j === i ? { ...c, title: v } : c); set("certs", next); }} />
             <Field label={`Cert ${i + 1} Description`} value={cert.desc} onChange={(v) => { const next = aboutF.certs.map((c, j) => j === i ? { ...c, desc: v } : c); set("certs", next); }} />
           </div>
@@ -280,7 +262,7 @@ export function AdminAbout() {
               display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 1rem",
               paddingBottom: i < aboutF.stats.length - 1 ? "0.75rem" : 0,
               marginBottom: i < aboutF.stats.length - 1 ? "0.75rem" : 0,
-              borderBottom: i < aboutF.stats.length - 1 ? "1px solid rgba(45,181,213,0.08)" : "none",
+              borderBottom: i < aboutF.stats.length - 1 ? "1px solid rgba(217,20,34,0.08)" : "none",
             }}
           >
             <Field

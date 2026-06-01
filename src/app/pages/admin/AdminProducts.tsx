@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, Edit2, Trash2, Search, X, Save, Upload, Images, ChevronDown, ChevronUp, Tag } from "lucide-react";
 import { supabase } from "../../../lib/supabase";
-import { AdminLangTabs } from "./AdminLangTabs";
 import { uploadImage } from "../../utils/uploadImage";
 import { useContent, type Lang } from "../../context/ContentContext";
-import { translateSection } from "../../utils/translate";
 
-const CATEGORIES_KEY = (lang: string) => `beqiri_project_categories_${lang}`;
+const CATEGORIES_KEY = (lang: string) => `swissbau_project_categories_${lang}`;
 
 function loadCategories(lang: string): string[] {
   try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY(lang)) || "[]"); } catch { return []; }
@@ -45,7 +43,7 @@ const fieldStyle: React.CSSProperties = {
   width: "100%",
   padding: "0.7rem 1rem",
   background: "rgba(4, 33, 66, 0.6)",
-  border: "1px solid rgba(45, 181, 213, 0.2)",
+  border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px",
   color: "#fff",
   fontSize: "0.9rem",
@@ -72,9 +70,9 @@ function SectionCard({ title, children, defaultOpen = false, headerExtra }: {
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{ background: "#0d2840", border: "1px solid rgba(45,181,213,0.12)", borderRadius: "16px", marginBottom: "0.875rem", overflow: "hidden" }}>
+    <div style={{ background: "#0d2840", border: "1px solid rgba(217,20,34,0.12)", borderRadius: "16px", marginBottom: "0.875rem", overflow: "hidden" }}>
       <div
-        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none" }}
+        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(217,20,34,0.12)" : "none" }}
         onClick={() => setOpen((o) => !o)}
       >
         <span style={{ flex: 1, padding: "1rem 1.25rem", color: "#fff", fontWeight: 600, fontSize: "0.9375rem" }}>{title}</span>
@@ -91,8 +89,8 @@ function SectionCard({ title, children, defaultOpen = false, headerExtra }: {
 function Field({ label, value, onChange, placeholder, multiline }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string; multiline?: boolean;
 }) {
-  const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.target.style.borderColor = "rgba(45,181,213,0.6)");
-  const blur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.target.style.borderColor = "rgba(45,181,213,0.2)");
+  const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.target.style.borderColor = "rgba(217,20,34,0.6)");
+  const blur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => (e.target.style.borderColor = "rgba(217,20,34,0.2)");
   return (
     <div style={{ marginBottom: "1rem" }}>
       <label style={lblStyle}>{label}</label>
@@ -124,7 +122,7 @@ export function AdminProducts() {
 
   const [categories, setCategories] = useState<string[]>(() => loadCategories("en"));
   const [catInput, setCatInput] = useState("");
-  const [adminLang, setAdminLang] = useState<Lang>("en");
+  const [adminLang, setAdminLang] = useState<Lang>("de");
 
   // Hero section state
   const [heroF, setHeroF] = useState({ ...langs[adminLang].products });
@@ -211,13 +209,14 @@ export function AdminProducts() {
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploading(true);
+    setSaveMsg("");
     const newUrls: string[] = [];
     for (const file of Array.from(files)) {
       try {
         const url = await uploadImage(file, "projects", 1200, 0.78);
         newUrls.push(url);
       } catch (err) {
-        console.error("Image upload failed:", err);
+        setSaveMsg("Error: " + (err instanceof Error ? err.message : "Upload failed"));
       }
     }
     setUploading(false);
@@ -256,40 +255,9 @@ export function AdminProducts() {
       const { error } = await supabase.from("projects").upsert({ id: editId, ...payload });
       if (error) { setSaving(false); setSaveMsg("Error: " + error.message); return; }
 
-      // If editing English, re-translate and update all linked translations
-      if (adminLang === "en") {
-        setSaveMsg("Updating translations...");
-        const { data: linked } = await supabase.from("projects").select("id, lang").eq("group_id", editId);
-        for (const row of linked || []) {
-          try {
-            const translated = await translateSection(textFields, row.lang) as typeof textFields;
-            await supabase.from("projects").upsert({ id: row.id, ...payload, ...translated, lang: row.lang, group_id: editId });
-          } catch (err) {
-            console.error(`Failed to update ${row.lang} translation:`, err);
-          }
-        }
-      }
     } else {
-      // Insert new English project, get its ID to use as group_id
-      const { data: inserted, error } = await supabase.from("projects").insert({ ...payload, group_id: null }).select("id").single();
-      if (error || !inserted) { setSaving(false); setSaveMsg("Error: " + (error?.message ?? "Insert failed")); return; }
-
-      const groupId = inserted.id;
-      // Set group_id on the English row to its own id
-      await supabase.from("projects").update({ group_id: groupId }).eq("id", groupId);
-
-      // Auto-translate and insert for other languages
-      if (adminLang === "en") {
-        setSaveMsg("Translating to other languages...");
-        for (const lang of ["de", "sq", "mk"] as Lang[]) {
-          try {
-            const translated = await translateSection(textFields, lang) as typeof textFields;
-            await supabase.from("projects").insert({ ...payload, ...translated, lang, group_id: groupId });
-          } catch (err) {
-            console.error(`Failed to translate to ${lang}:`, err);
-          }
-        }
-      }
+      const { error: insertError } = await supabase.from("projects").insert({ ...payload });
+      if (insertError) { setSaving(false); setSaveMsg("Error: " + insertError.message); return; }
     }
 
     setSaving(false);
@@ -300,16 +268,11 @@ export function AdminProducts() {
 
   const handleDelete = async (id: number) => {
     await supabase.from("projects").delete().eq("id", id);
-    // If deleting from English, also delete all linked translations
-    if (adminLang === "en") {
-      await supabase.from("projects").delete().eq("group_id", id);
-    }
     setDeleteConfirm(null);
     fetchProjects();
   };
 
   const filtered = projects
-    .filter((p) => (p.lang || "en") === adminLang)
     .filter((p) =>
       p.title?.toLowerCase().includes(search.toLowerCase()) ||
       p.category?.toLowerCase().includes(search.toLowerCase())
@@ -317,13 +280,6 @@ export function AdminProducts() {
 
   return (
     <div>
-      {/* Language Tabs */}
-      <AdminLangTabs
-        adminLang={adminLang}
-        setAdminLang={setAdminLang}
-        onCopyFromEn={adminLang !== "en" ? handleCopyFromEn : undefined}
-        onTranslate={adminLang !== "en" ? handleAutoTranslate : undefined}
-      />
 
       {/* Page Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
@@ -334,7 +290,7 @@ export function AdminProducts() {
         <div style={{ display: "flex", gap: "0.625rem" }}>
           <button
             onClick={handleHeroSave}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.25rem", borderRadius: "10px", background: heroSaved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: heroSaved ? "1px solid rgba(74,222,128,0.4)" : "none", color: heroSaved ? "#4ade80" : "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.25rem", borderRadius: "10px", background: heroSaved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #d91422, #e8202f)", border: heroSaved ? "1px solid rgba(74,222,128,0.4)" : "none", color: heroSaved ? "#4ade80" : "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}
           >
             <Save size={14} /> {heroSaved ? "Saved!" : "Save Changes"}
           </button>
@@ -352,7 +308,7 @@ export function AdminProducts() {
 
       {/* Categories Section */}
       <SectionCard title="Categories" headerExtra={
-        <span style={{ background: "rgba(45,181,213,0.12)", color: "#2db5d5", fontSize: "0.7rem", fontWeight: 700, padding: "2px 10px", borderRadius: "20px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <span style={{ background: "rgba(217,20,34,0.12)", color: "#d91422", fontSize: "0.7rem", fontWeight: 700, padding: "2px 10px", borderRadius: "20px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           {categories.length}
         </span>
       }>
@@ -364,12 +320,12 @@ export function AdminProducts() {
               onKeyDown={(e) => e.key === "Enter" && addCategory()}
               placeholder="New category name..."
               style={{ ...fieldStyle, margin: 0 }}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+              onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
             />
             <button
               onClick={addCategory}
-              style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "0.4rem", background: "linear-gradient(135deg, #2db5d5, #1a9ab8)", color: "#fff", border: "none", borderRadius: "10px", padding: "0 1.1rem", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer", whiteSpace: "nowrap" }}
+              style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "0.4rem", background: "linear-gradient(135deg, #d91422, #1a9ab8)", color: "#fff", border: "none", borderRadius: "10px", padding: "0 1.1rem", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer", whiteSpace: "nowrap" }}
             >
               <Plus size={15} /> Add
             </button>
@@ -379,9 +335,9 @@ export function AdminProducts() {
           ) : (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {categories.map((cat) => (
-                <div key={cat} style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "20px", padding: "0.3rem 0.75rem 0.3rem 0.9rem" }}>
-                  <Tag size={11} color="#2db5d5" />
-                  <span style={{ color: "#2db5d5", fontSize: "0.8rem", fontWeight: 600 }}>{cat}</span>
+                <div key={cat} style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "rgba(217,20,34,0.1)", border: "1px solid rgba(217,20,34,0.2)", borderRadius: "20px", padding: "0.3rem 0.75rem 0.3rem 0.9rem" }}>
+                  <Tag size={11} color="#d91422" />
+                  <span style={{ color: "#d91422", fontSize: "0.8rem", fontWeight: 600 }}>{cat}</span>
                   <button onClick={() => removeCategory(cat)} style={{ background: "none", border: "none", color: "#4a6670", cursor: "pointer", padding: "0", display: "flex", alignItems: "center" }}>
                     <X size={13} />
                   </button>
@@ -410,7 +366,7 @@ export function AdminProducts() {
             </div>
             <button
               onClick={openAdd}
-              style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.4rem 0.9rem", borderRadius: "8px", background: "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: "none", color: "#fff", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+              style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.4rem 0.9rem", borderRadius: "8px", background: "linear-gradient(135deg, #d91422, #e8202f)", border: "none", color: "#fff", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
             >
               <Plus size={13} /> Add Project
             </button>
@@ -430,14 +386,14 @@ export function AdminProducts() {
                 const imgs = project.images ? project.images.split("|||").filter(Boolean) : [];
                 const isExpanded = expandedId === project.id;
                 return (
-                  <div key={project.id} style={{ background: "rgba(10,42,53,0.6)", border: "1px solid rgba(45,181,213,0.1)", borderRadius: "12px", overflow: "hidden" }}>
+                  <div key={project.id} style={{ background: "rgba(10,42,53,0.6)", border: "1px solid rgba(217,20,34,0.1)", borderRadius: "12px", overflow: "hidden" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", padding: "0.75rem 1rem" }}>
                       <div style={{ width: "48px", height: "48px", borderRadius: "8px", overflow: "hidden", background: "#071e27", flexShrink: 0 }}>
                         {imgs[0] ? (
                           <img src={imgs[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                         ) : (
                           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <Images size={16} color="#2db5d5" />
+                            <Images size={16} color="#d91422" />
                           </div>
                         )}
                       </div>
@@ -447,7 +403,7 @@ export function AdminProducts() {
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", marginTop: "0.2rem" }}>
                           {project.category && (
-                            <span style={{ background: "rgba(45,181,213,0.12)", color: "#2db5d5", fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: "20px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                            <span style={{ background: "rgba(217,20,34,0.12)", color: "#d91422", fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: "20px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                               {project.category}
                             </span>
                           )}
@@ -457,10 +413,10 @@ export function AdminProducts() {
                         </div>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", flexShrink: 0 }}>
-                        <button onClick={() => setExpandedId(isExpanded ? null : project.id)} style={{ background: "rgba(45,181,213,0.08)", border: "1px solid rgba(45,181,213,0.15)", borderRadius: "8px", color: "#2db5d5", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
+                        <button onClick={() => setExpandedId(isExpanded ? null : project.id)} style={{ background: "rgba(217,20,34,0.08)", border: "1px solid rgba(217,20,34,0.15)", borderRadius: "8px", color: "#d91422", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
                           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </button>
-                        <button onClick={() => openEdit(project)} style={{ background: "rgba(45,181,213,0.08)", border: "1px solid rgba(45,181,213,0.15)", borderRadius: "8px", color: "#2db5d5", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
+                        <button onClick={() => openEdit(project)} style={{ background: "rgba(217,20,34,0.08)", border: "1px solid rgba(217,20,34,0.15)", borderRadius: "8px", color: "#d91422", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
                           <Edit2 size={14} />
                         </button>
                         <button onClick={() => setDeleteConfirm(project.id)} style={{ background: "rgba(229,62,62,0.08)", border: "1px solid rgba(229,62,62,0.15)", borderRadius: "8px", color: "#fc8181", cursor: "pointer", padding: "0.4rem", display: "flex", alignItems: "center" }}>
@@ -469,7 +425,7 @@ export function AdminProducts() {
                       </div>
                     </div>
                     {isExpanded && (
-                      <div style={{ borderTop: "1px solid rgba(45,181,213,0.08)", padding: "0.75rem 1rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                      <div style={{ borderTop: "1px solid rgba(217,20,34,0.08)", padding: "0.75rem 1rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                         {project.description && <p style={{ color: "#7a9ba8", fontSize: "0.875rem", margin: 0 }}>{project.description}</p>}
                         <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
                           {project.location && <span style={{ color: "#4a6670", fontSize: "0.8rem" }}>📍 {project.location}</span>}
@@ -478,7 +434,7 @@ export function AdminProducts() {
                         {imgs.length > 0 && (
                           <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.25rem" }}>
                             {imgs.map((url, i) => (
-                              <img key={i} src={url} alt="" style={{ width: "52px", height: "52px", objectFit: "cover", borderRadius: "7px", border: i === 0 ? "2px solid #2db5d5" : "1px solid rgba(45,181,213,0.15)" }} />
+                              <img key={i} src={url} alt="" style={{ width: "52px", height: "52px", objectFit: "cover", borderRadius: "7px", border: i === 0 ? "2px solid #d91422" : "1px solid rgba(217,20,34,0.15)" }} />
                             ))}
                           </div>
                         )}
@@ -495,7 +451,7 @@ export function AdminProducts() {
       {/* Add / Edit Modal */}
       {showForm && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-          <div style={{ background: "#091e38", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "18px", width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto", padding: "1.75rem" }}>
+          <div style={{ background: "#091e38", border: "1px solid rgba(217,20,34,0.2)", borderRadius: "18px", width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto", padding: "1.75rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
               <h3 style={{ color: "#fff", fontWeight: 700, fontSize: "1.125rem", margin: 0 }}>
                 {editId !== null ? "Edit Project" : "Add Project"}
@@ -515,8 +471,8 @@ export function AdminProducts() {
                   value={form.category}
                   onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                   style={{ ...fieldStyle, appearance: "none", cursor: "pointer" }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
                 >
                   <option value="">— Select category —</option>
                   {categories.map((cat) => (
@@ -524,8 +480,8 @@ export function AdminProducts() {
                   ))}
                 </select>
               ) : (
-                <div style={{ padding: "0.7rem 1rem", background: "rgba(4, 33, 66, 0.6)", border: "1px solid rgba(45,181,213,0.12)", borderRadius: "10px", color: "#4a6670", fontSize: "0.875rem" }}>
-                  No categories yet — open the <strong style={{ color: "#2db5d5" }}>Categories</strong> section above to add some.
+                <div style={{ padding: "0.7rem 1rem", background: "rgba(4, 33, 66, 0.6)", border: "1px solid rgba(217,20,34,0.12)", borderRadius: "10px", color: "#4a6670", fontSize: "0.875rem" }}>
+                  No categories yet — open the <strong style={{ color: "#d91422" }}>Categories</strong> section above to add some.
                 </div>
               )}
             </div>
@@ -544,7 +500,7 @@ export function AdminProducts() {
               <button
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.65rem 1.25rem", background: "rgba(45,181,213,0.08)", border: "1px dashed rgba(45,181,213,0.4)", borderRadius: "10px", color: "#2db5d5", fontSize: "0.875rem", fontWeight: 600, cursor: uploading ? "not-allowed" : "pointer", opacity: uploading ? 0.6 : 1, marginBottom: "0.75rem" }}
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.65rem 1.25rem", background: "rgba(217,20,34,0.08)", border: "1px dashed rgba(217,20,34,0.4)", borderRadius: "10px", color: "#d91422", fontSize: "0.875rem", fontWeight: 600, cursor: uploading ? "not-allowed" : "pointer", opacity: uploading ? 0.6 : 1, marginBottom: "0.75rem" }}
               >
                 <Upload size={15} />
                 {uploading ? "Uploading..." : "Upload Images"}
@@ -554,7 +510,7 @@ export function AdminProducts() {
                   {imageList.map((url, i) => (
                     <div key={i} style={{ position: "relative", borderRadius: "8px", overflow: "hidden", aspectRatio: "1", background: "#0d2840" }}>
                       <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      {i === 0 && <span style={{ position: "absolute", top: "4px", left: "4px", background: "rgba(45,181,213,0.9)", color: "#fff", fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Cover</span>}
+                      {i === 0 && <span style={{ position: "absolute", top: "4px", left: "4px", background: "rgba(217,20,34,0.9)", color: "#fff", fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Cover</span>}
                       <button onClick={() => removeImage(i)} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.6)", border: "none", borderRadius: "50%", color: "#fff", cursor: "pointer", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <X size={12} />
                       </button>
@@ -569,13 +525,13 @@ export function AdminProducts() {
             )}
 
             <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
-              <button onClick={() => setShowForm(false)} style={{ padding: "0.625rem 1.5rem", background: "transparent", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "10px", color: "#7a9ba8", cursor: "pointer", fontWeight: 600, fontSize: "0.875rem" }}>
+              <button onClick={() => setShowForm(false)} style={{ padding: "0.625rem 1.5rem", background: "transparent", border: "1px solid rgba(217,20,34,0.2)", borderRadius: "10px", color: "#7a9ba8", cursor: "pointer", fontWeight: 600, fontSize: "0.875rem" }}>
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.5rem", background: saving ? "rgba(45,181,213,0.4)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)", border: "none", borderRadius: "10px", color: "#fff", cursor: saving ? "not-allowed" : "pointer", fontWeight: 600, fontSize: "0.875rem" }}
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.5rem", background: saving ? "rgba(217,20,34,0.4)" : "linear-gradient(135deg, #d91422, #e8202f)", border: "none", borderRadius: "10px", color: "#fff", cursor: saving ? "not-allowed" : "pointer", fontWeight: 600, fontSize: "0.875rem" }}
               >
                 <Save size={15} />
                 {saving ? "Saving..." : "Save Project"}
@@ -593,7 +549,7 @@ export function AdminProducts() {
             <h3 style={{ color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>Delete Project?</h3>
             <p style={{ color: "#7a9ba8", fontSize: "0.875rem", marginBottom: "1.5rem" }}>This action cannot be undone.</p>
             <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
-              <button onClick={() => setDeleteConfirm(null)} style={{ padding: "0.625rem 1.25rem", background: "transparent", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "10px", color: "#7a9ba8", cursor: "pointer", fontWeight: 600 }}>
+              <button onClick={() => setDeleteConfirm(null)} style={{ padding: "0.625rem 1.25rem", background: "transparent", border: "1px solid rgba(217,20,34,0.2)", borderRadius: "10px", color: "#7a9ba8", cursor: "pointer", fontWeight: 600 }}>
                 Cancel
               </button>
               <button onClick={() => handleDelete(deleteConfirm)} style={{ padding: "0.625rem 1.25rem", background: "linear-gradient(135deg, #e53e3e, #fc8181)", border: "none", borderRadius: "10px", color: "#fff", cursor: "pointer", fontWeight: 600 }}>

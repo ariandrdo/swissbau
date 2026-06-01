@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(convert --version)",
+      "Bash(python3 -)",
+      "Bash(ls /opt/homebrew/bin/gh 2>/dev/null || ls /usr/local/bin/gh 2>/dev/null || brew list gh 2>/dev/null | head -5)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(ssh -T git@github.com)",
+      "Bash(sed -i '' '/^import { AdminLangTabs } from \".\\\\/AdminLangTabs\";$/d' /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminHeader.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminAbout.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminFooter.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminContact.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminServices.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminProducts.tsx)",
+      "Bash(sed -i '' '/import { translateSection }/d' /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminHeader.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminAbout.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminFooter.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminContact.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminServices.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminProducts.tsx)"
+    ]
+  }
+}

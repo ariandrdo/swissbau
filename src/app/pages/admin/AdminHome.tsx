@@ -2,10 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Save, RotateCcw, ChevronDown, ChevronUp, Upload, Plus, Trash2 } from "lucide-react";
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import type { Lang } from "../../context/ContentContext";
-import { translateSection } from "../../utils/translate";
 import { uploadImage } from "../../utils/uploadImage";
 import { supabase } from "../../../lib/supabase";
-import { AdminLangTabs } from "./AdminLangTabs";
 
 // ── shared styles ─────────────────────────────────────────────────────────────
 
@@ -13,7 +11,7 @@ const fieldStyle: React.CSSProperties = {
   width: "100%",
   padding: "0.7rem 1rem",
   background: "rgba(4, 33, 66, 0.6)",
-  border: "1px solid rgba(45, 181, 213, 0.2)",
+  border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px",
   color: "#fff",
   fontSize: "0.9rem",
@@ -56,7 +54,7 @@ function SectionCard({
     <div
       style={{
         background: "#0d2840",
-        border: "1px solid rgba(45, 181, 213, 0.12)",
+        border: "1px solid rgba(217, 20, 34, 0.12)",
         borderRadius: "16px",
         overflow: "hidden",
         marginBottom: "0.875rem",
@@ -65,7 +63,7 @@ function SectionCard({
       <div
         style={{
           padding: "0 1.25rem",
-          borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none",
+          borderBottom: open ? "1px solid rgba(217,20,34,0.12)" : "none",
           display: "flex",
           alignItems: "center",
           cursor: "pointer",
@@ -110,8 +108,8 @@ function Field({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           style={taStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
         />
       ) : (
         <input
@@ -119,8 +117,8 @@ function Field({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           style={fieldStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
         />
       )}
     </div>
@@ -131,7 +129,7 @@ function Field({
 
 export function AdminHome() {
   const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
-  const [adminLang, setAdminLang] = useState<Lang>("en");
+  const [adminLang, setAdminLang] = useState<Lang>("de");
 
   const langContent = langs[adminLang];
 
@@ -200,11 +198,7 @@ export function AdminHome() {
     setHomeF((prev) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
-    if (adminLang === "en") {
-      updateLangContent("en", (prev) => ({ ...prev, global: globalF, home: homeF }));
-    } else {
-      updateLangContent(adminLang, (prev) => ({ ...prev, global: globalF, home: homeF }));
-    }
+    updateLangContent(adminLang, (prev) => ({ ...prev, global: globalF, home: homeF }));
     await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -224,22 +218,6 @@ export function AdminHome() {
 
   return (
     <div>
-      {/* Language Tabs */}
-      <AdminLangTabs
-        adminLang={adminLang}
-        setAdminLang={setAdminLang}
-        onCopyFromEn={() => { const en = langs["en"]; setGlobalF({ ...en.global }); setHomeF({ ...en.home }); updateLangContent(adminLang, (prev) => ({ ...prev, global: en.global, home: en.home })); setSaved(false); }}
-        onTranslate={adminLang !== "en" ? async () => {
-          const [tGlobal, tHome] = await Promise.all([
-            translateSection(langs["en"].global, adminLang),
-            translateSection(langs["en"].home, adminLang),
-          ]) as [typeof globalF, typeof homeF];
-          setGlobalF(tGlobal);
-          setHomeF(tHome);
-          updateLangContent(adminLang, (prev) => ({ ...prev, global: tGlobal, home: tHome }));
-          setSaved(false);
-        } : undefined}
-      />
 
       {/* Header */}
       <div
@@ -266,11 +244,11 @@ export function AdminHome() {
             style={{
               display: "flex", alignItems: "center", gap: "0.5rem",
               padding: "0.6rem 1.1rem", borderRadius: "10px",
-              background: "rgba(10, 42, 53, 0.8)", border: "1px solid rgba(45, 181, 213, 0.2)",
+              background: "rgba(17, 17, 17, 0.8)", border: "1px solid rgba(217, 20, 34, 0.2)",
               color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer", transition: "all 0.2s",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.4)"; e.currentTarget.style.color = "#fff"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.4)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
           >
             <RotateCcw size={14} /> Reset to Default
           </button>
@@ -279,7 +257,7 @@ export function AdminHome() {
             style={{
               display: "flex", alignItems: "center", gap: "0.5rem",
               padding: "0.6rem 1.25rem", borderRadius: "10px",
-              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #d91422, #e8202f)",
               border: saved ? "1px solid rgba(74,222,128,0.4)" : "none",
               color: saved ? "#4ade80" : "#fff",
               fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", transition: "all 0.3s",
@@ -303,15 +281,15 @@ export function AdminHome() {
         <div style={{ marginTop: "0.5rem" }}>
           <label style={lblStyle}>Company Logo</label>
           <p style={{ color: "#4a6670", fontSize: "0.75rem", marginBottom: "0.5rem" }}>
-            Displays in the admin sidebar. Recommended: <span style={{ color: "#2db5d5" }}>400 × 120 px (transparent PNG)</span>
+            Displays in the admin sidebar. Recommended: <span style={{ color: "#d91422" }}>400 × 120 px (transparent PNG)</span>
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", flexWrap: "wrap" }}>
             {globalF.logo ? (
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <div style={{ width: "80px", height: "44px", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(45,181,213,0.2)", background: "rgba(10,42,53,0.6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: "80px", height: "44px", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(217,20,34,0.2)", background: "rgba(10,42,53,0.6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <img src={globalF.logo} alt="Logo preview" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
                 </div>
-                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "8px", color: "#2db5d5", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer" }}>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(217,20,34,0.1)", border: "1px solid rgba(217,20,34,0.25)", borderRadius: "8px", color: "#d91422", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer" }}>
                   <Upload size={13} /> Change
                   <input ref={logoInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handleLogoUpload(f); e.target.value = ""; }} />
                 </label>
@@ -320,7 +298,7 @@ export function AdminHome() {
                 </button>
               </div>
             ) : (
-              <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.55rem 1rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "10px", color: "#2db5d5", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer" }}>
+              <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.55rem 1rem", background: "rgba(217,20,34,0.1)", border: "1px solid rgba(217,20,34,0.25)", borderRadius: "10px", color: "#d91422", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer" }}>
                 <Upload size={14} /> Upload Logo
                 <input ref={logoInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handleLogoUpload(f); e.target.value = ""; }} />
               </label>
@@ -344,7 +322,7 @@ export function AdminHome() {
           </p>
           {/* Upload button */}
           <label
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.55rem 1rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "10px", color: "#2db5d5", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", marginBottom: "0.625rem" }}
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.55rem 1rem", background: "rgba(217,20,34,0.1)", border: "1px solid rgba(217,20,34,0.25)", borderRadius: "10px", color: "#d91422", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", marginBottom: "0.625rem" }}
           >
             <Upload size={14} /> Upload Image
             <input
@@ -364,14 +342,14 @@ export function AdminHome() {
             onChange={(e) => setH("heroImage", e.target.value)}
             placeholder="https://..."
             style={fieldStyle}
-            onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-            onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+            onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+            onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
           />
         </div>
         {homeF.heroImage && (
           <div style={{ marginBottom: "1rem" }}>
             <p style={lblStyle}>Preview</p>
-            <div style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(45,181,213,0.2)" }}>
+            <div style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(217,20,34,0.2)" }}>
               <img
                 src={homeF.heroImage}
                 alt="Hero preview"
@@ -441,7 +419,7 @@ export function AdminHome() {
               display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 1rem",
               paddingBottom: i < homeF.stats.length - 1 ? "0.75rem" : 0,
               marginBottom: i < homeF.stats.length - 1 ? "0.75rem" : 0,
-              borderBottom: i < homeF.stats.length - 1 ? "1px solid rgba(45,181,213,0.08)" : "none",
+              borderBottom: i < homeF.stats.length - 1 ? "1px solid rgba(217,20,34,0.08)" : "none",
             }}
           >
             <Field
@@ -472,10 +450,10 @@ export function AdminHome() {
             style={{
               paddingBottom: i < homeF.homeServices.length - 1 ? "1rem" : 0,
               marginBottom: i < homeF.homeServices.length - 1 ? "1rem" : 0,
-              borderBottom: i < homeF.homeServices.length - 1 ? "1px solid rgba(45,181,213,0.08)" : "none",
+              borderBottom: i < homeF.homeServices.length - 1 ? "1px solid rgba(217,20,34,0.08)" : "none",
             }}
           >
-            <p style={{ color: "#2db5d5", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.75rem" }}>
+            <p style={{ color: "#d91422", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.75rem" }}>
               Card {i + 1}
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "0 1rem" }}>
@@ -496,8 +474,8 @@ export function AdminHome() {
                     setH("homeServices", next);
                   }}
                   style={{ ...fieldStyle, cursor: "pointer" }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
                 >
                   <option value="Flame">🔥 Flame (Heating)</option>
                   <option value="Wind">💨 Wind (AC)</option>
@@ -530,9 +508,9 @@ export function AdminHome() {
         <Field label="Badge Label" value={homeF.ourProcessLabel} onChange={(v) => setH("ourProcessLabel", v)} placeholder="Our Process" />
         <Field label="Heading" value={homeF.howItWorksHeading} onChange={(v) => setH("howItWorksHeading", v)} placeholder="How It Works" />
         <Field label="Subtitle" value={homeF.howItWorksSubtitle} onChange={(v) => setH("howItWorksSubtitle", v)} multiline placeholder="From the first consultation..." />
-        <div style={{ borderTop: "1px solid rgba(45,181,213,0.08)", paddingTop: "1rem", marginTop: "0.25rem" }}>
+        <div style={{ borderTop: "1px solid rgba(217,20,34,0.08)", paddingTop: "1rem", marginTop: "0.25rem" }}>
           {homeF.howItWorksSteps.map((step, i) => (
-            <div key={i} style={{ paddingBottom: "1rem", marginBottom: "1rem", borderBottom: i < homeF.howItWorksSteps.length - 1 ? "1px solid rgba(45,181,213,0.08)" : "none" }}>
+            <div key={i} style={{ paddingBottom: "1rem", marginBottom: "1rem", borderBottom: i < homeF.howItWorksSteps.length - 1 ? "1px solid rgba(217,20,34,0.08)" : "none" }}>
               <p style={{ color: "#7a9ba8", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.75rem" }}>Step {i + 1}</p>
               <Field label="Title" value={step.title} onChange={(v) => { const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, title: v } : s); setH("howItWorksSteps", next); }} />
               <Field label="Description" value={step.desc} onChange={(v) => { const next = homeF.howItWorksSteps.map((s, j) => j === i ? { ...s, desc: v } : s); setH("howItWorksSteps", next); }} multiline />
@@ -540,10 +518,10 @@ export function AdminHome() {
                 <label style={lblStyle}>Step Image</label>
                 {step.image && (
                   <div style={{ marginBottom: "0.5rem" }}>
-                    <img src={step.image} alt="" style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(45,181,213,0.3)" }} />
+                    <img src={step.image} alt="" style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(217,20,34,0.3)" }} />
                   </div>
                 )}
-                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "8px", color: "#2db5d5", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer" }}>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(217,20,34,0.1)", border: "1px solid rgba(217,20,34,0.25)", borderRadius: "8px", color: "#d91422", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer" }}>
                   <Upload size={13} /> {step.image ? "Change Image" : "Upload Image"}
                   <input
                     type="file"
@@ -569,107 +547,15 @@ export function AdminHome() {
         </div>
       </SectionCard>
 
-      {/* ── Project Gallery ── */}
-      <SectionCard title="Project Gallery Section (max 5)" defaultOpen={false}>
-        <Field label="Section Label" value={homeF.ourWorkLabel} onChange={(v) => setH("ourWorkLabel", v)} placeholder="Our Work" />
-        <Field label="Section Heading" value={homeF.projectGalleryHeading} onChange={(v) => setH("projectGalleryHeading", v)} placeholder="Project Gallery" />
-        <Field label='"View All" Button Text' value={homeF.viewAllBtn} onChange={(v) => setH("viewAllBtn", v)} placeholder="View All" />
-        <div style={{ borderTop: "1px solid rgba(45,181,213,0.08)", paddingTop: "1rem", marginTop: "0.25rem" }}>
-        <div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }}>
-            <p style={{ color: "#7a9ba8", fontSize: "0.8125rem", margin: 0 }}>
-              Upload or select images to show on the Home page.{" "}
-              <span style={{ color: homeF.homeGallery.length >= 5 ? "#ff6b8a" : "#2db5d5", fontWeight: 600 }}>
-                {homeF.homeGallery.length}/5 selected
-              </span>
-            </p>
-            <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", background: "linear-gradient(135deg, #2db5d5, #3dc5e5)", borderRadius: "10px", color: "#fff", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", flexShrink: 0 }}>
-              <Upload size={14} /> Upload Images
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                style={{ display: "none" }}
-                onChange={(e) => { handleGalleryUpload(e.target.files); e.target.value = ""; }}
-              />
-            </label>
-          </div>
-
-          {galleryImages.length === 0 ? (
-            <div style={{ background: "rgba(10,42,53,0.5)", border: "1px dashed rgba(45,181,213,0.2)", borderRadius: "12px", padding: "2rem", textAlign: "center", color: "#4a6670", fontSize: "0.875rem" }}>
-              No images yet. Upload images above to get started.
-            </div>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "0.75rem" }}>
-              {galleryImages.map((img) => {
-                const sel = homeF.homeGallery.some((s) => s.image === img.url);
-                return (
-                  <div
-                    key={img.id}
-                    onClick={() => {
-                      if (sel) {
-                        setH("homeGallery", homeF.homeGallery.filter((s) => s.image !== img.url));
-                      } else if (homeF.homeGallery.length < 5) {
-                        setH("homeGallery", [...homeF.homeGallery, { image: img.url, title: img.name }]);
-                      }
-                    }}
-                    style={{
-                      position: "relative",
-                      borderRadius: "10px",
-                      overflow: "hidden",
-                      border: sel ? "2px solid #2db5d5" : "2px solid transparent",
-                      cursor: homeF.homeGallery.length >= 5 && !sel ? "not-allowed" : "pointer",
-                      opacity: homeF.homeGallery.length >= 5 && !sel ? 0.4 : 1,
-                      transition: "border-color 0.2s, opacity 0.2s",
-                    }}
-                  >
-                    <img
-                      src={img.url}
-                      alt={img.name}
-                      style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", display: "block" }}
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                    />
-                    {sel && (
-                      <div style={{ position: "absolute", top: "0.35rem", right: "0.35rem", background: "#2db5d5", borderRadius: "50%", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", color: "#fff", fontWeight: 700 }}>
-                        {homeF.homeGallery.findIndex((s) => s.image === img.url) + 1}
-                      </div>
-                    )}
-                    <div style={{ padding: "0.4rem 0.5rem", background: "rgba(10,42,53,0.85)", fontSize: "0.7rem", color: "#a0b4bc", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {img.name}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {homeF.homeGallery.length > 0 && (
-            <div style={{ marginTop: "1rem", borderTop: "1px solid rgba(45,181,213,0.08)", paddingTop: "1rem" }}>
-              <p style={{ color: "#7a9ba8", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.75rem" }}>
-                Selected order
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                {homeF.homeGallery.map((item, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "rgba(45,181,213,0.08)", border: "1px solid rgba(45,181,213,0.2)", borderRadius: "8px", padding: "0.3rem 0.6rem" }}>
-                    <span style={{ color: "#2db5d5", fontWeight: 700, fontSize: "0.75rem" }}>{i + 1}.</span>
-                    <span style={{ color: "#a0b4bc", fontSize: "0.8125rem" }}>{item.title}</span>
-                    <button
-                      onClick={() => setH("homeGallery", homeF.homeGallery.filter((_, j) => j !== i))}
-                      style={{ background: "none", border: "none", color: "#ff6b8a", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        </div>
-      </SectionCard>
 
       {/* ── Featured Products ── */}
-      <SectionCard title="Featured Products Section" defaultOpen={false}>
+      <SectionCard title="Reference Projects Section" defaultOpen={false}>
+        <Field
+          label="Section Label"
+          value={homeF.ourWorkLabel}
+          onChange={(v) => setH("ourWorkLabel", v)}
+          placeholder="Our Work"
+        />
         <Field
           label="Section Title"
           value={homeF.featuredProductsTitle}
@@ -682,21 +568,21 @@ export function AdminHome() {
           onChange={(v) => setH("viewAllProductsBtn", v)}
           placeholder="View All Products"
         />
-        <div style={{ borderTop: "1px solid rgba(45,181,213,0.08)", paddingTop: "1rem", marginTop: "0.25rem" }}>
+        <div style={{ borderTop: "1px solid rgba(217,20,34,0.08)", paddingTop: "1rem", marginTop: "0.25rem" }}>
           {homeF.featuredProducts.map((product, i) => (
             <div
               key={i}
               style={{
                 background: "rgba(10,42,53,0.5)",
-                border: "1px solid rgba(45,181,213,0.12)",
+                border: "1px solid rgba(217,20,34,0.12)",
                 borderRadius: "12px",
                 padding: "1rem",
                 marginBottom: "0.75rem",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-                <span style={{ color: "#2db5d5", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em" }}>
-                  Product {i + 1}
+                <span style={{ color: "#d91422", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em" }}>
+                  Project {i + 1}
                 </span>
                 <button
                   onClick={() => {
@@ -709,7 +595,7 @@ export function AdminHome() {
                 </button>
               </div>
               <Field
-                label="Product Name"
+                label="Project Name"
                 value={product.name}
                 onChange={(v) => {
                   const next = homeF.featuredProducts.map((p, j) => j === i ? { ...p, name: v } : p);
@@ -718,9 +604,9 @@ export function AdminHome() {
                 placeholder="e.g. Heating System"
               />
               <div style={{ marginBottom: "0.5rem" }}>
-                <label style={lblStyle}>Product Image</label>
+                <label style={lblStyle}>Project Image</label>
                 <p style={{ color: "#4a6670", fontSize: "0.75rem", marginBottom: "0.4rem" }}>Upload a file or paste an image URL.</p>
-                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(45,181,213,0.1)", border: "1px solid rgba(45,181,213,0.25)", borderRadius: "8px", color: "#2db5d5", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer", marginBottom: "0.5rem" }}>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.875rem", background: "rgba(217,20,34,0.1)", border: "1px solid rgba(217,20,34,0.25)", borderRadius: "8px", color: "#d91422", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer", marginBottom: "0.5rem" }}>
                   <Upload size={13} /> Upload Image
                   <input
                     type="file"
@@ -748,11 +634,11 @@ export function AdminHome() {
                   }}
                   placeholder="https://..."
                   style={fieldStyle}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+                  onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
                 />
                 {product.image && (
-                  <div style={{ marginTop: "0.5rem", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(45,181,213,0.15)" }}>
+                  <div style={{ marginTop: "0.5rem", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(217,20,34,0.15)" }}>
                     <img
                       src={product.image}
                       alt="Preview"
@@ -769,7 +655,7 @@ export function AdminHome() {
               const next = [...homeF.featuredProducts, { name: "New Product", image: "" }];
               setH("featuredProducts", next);
             }}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1rem", background: "rgba(45,181,213,0.08)", border: "1px dashed rgba(45,181,213,0.3)", borderRadius: "10px", color: "#2db5d5", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", width: "100%" }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1rem", background: "rgba(217,20,34,0.08)", border: "1px dashed rgba(217,20,34,0.3)", borderRadius: "10px", color: "#d91422", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", width: "100%" }}
           >
             <Plus size={15} /> Add Product
           </button>

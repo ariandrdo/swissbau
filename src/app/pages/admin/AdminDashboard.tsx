@@ -58,8 +58,8 @@ export function AdminDashboard() {
       value: String(msgCount),
       icon: MessageSquare,
       change: unread > 0 ? `${unread} unread` : "All read",
-      color: "#2db5d5",
-      bg: "rgba(45, 181, 213, 0.12)",
+      color: "#d91422",
+      bg: "rgba(217, 20, 34, 0.12)",
       link: "/admin/messages",
     },
     {
@@ -67,7 +67,7 @@ export function AdminDashboard() {
       value: String(productCount),
       icon: Package,
       change: "in catalog",
-      color: "#3dc5e5",
+      color: "#e8202f",
       bg: "rgba(61, 197, 229, 0.12)",
       link: "/admin/products",
     },
@@ -76,7 +76,7 @@ export function AdminDashboard() {
       value: String(galleryCount),
       icon: Image,
       change: "uploaded",
-      color: "#1a8ab4",
+      color: "#a50f1a",
       bg: "rgba(26, 138, 180, 0.12)",
       link: "/admin/gallery",
     },
@@ -112,14 +112,14 @@ export function AdminDashboard() {
             alignItems: "center",
             gap: "0.5rem",
             padding: "0.6rem 1.25rem",
-            background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+            background: "linear-gradient(135deg, #d91422, #e8202f)",
             border: "none",
             borderRadius: "12px",
             color: "#fff",
             fontSize: "0.875rem",
             fontWeight: 600,
             textDecoration: "none",
-            boxShadow: "0 6px 18px rgba(45, 181, 213, 0.35)",
+            boxShadow: "0 6px 18px rgba(217, 20, 34, 0.35)",
             transition: "opacity 0.2s ease",
           }}
           onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; }}
@@ -145,7 +145,7 @@ export function AdminDashboard() {
             to={stat.link}
             style={{
               background: "#0d2840",
-              border: "1px solid rgba(45, 181, 213, 0.12)",
+              border: "1px solid rgba(217, 20, 34, 0.12)",
               borderRadius: "18px",
               padding: "1.375rem",
               position: "relative",
@@ -156,12 +156,12 @@ export function AdminDashboard() {
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget;
-              el.style.borderColor = "rgba(45, 181, 213, 0.3)";
+              el.style.borderColor = "rgba(217, 20, 34, 0.3)";
               el.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget;
-              el.style.borderColor = "rgba(45, 181, 213, 0.12)";
+              el.style.borderColor = "rgba(217, 20, 34, 0.12)";
               el.style.transform = "translateY(0)";
             }}
           >
@@ -221,7 +221,7 @@ export function AdminDashboard() {
         <div
           style={{
             background: "#0d2840",
-            border: "1px solid rgba(45, 181, 213, 0.12)",
+            border: "1px solid rgba(217, 20, 34, 0.12)",
             borderRadius: "18px",
             overflow: "hidden",
           }}
@@ -229,7 +229,7 @@ export function AdminDashboard() {
           <div
             style={{
               padding: "1.25rem 1.5rem",
-              borderBottom: "1px solid rgba(45, 181, 213, 0.12)",
+              borderBottom: "1px solid rgba(217, 20, 34, 0.12)",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -241,7 +241,7 @@ export function AdminDashboard() {
             <Link
               to="/admin/messages"
               style={{
-                color: "#2db5d5",
+                color: "#d91422",
                 fontSize: "0.8125rem",
                 textDecoration: "none",
                 display: "flex",
@@ -259,7 +259,7 @@ export function AdminDashboard() {
               style={{
                 padding: "1rem 1.5rem",
                 borderBottom:
-                  i < recentMessages.length - 1 ? "1px solid rgba(45, 181, 213, 0.07)" : "none",
+                  i < recentMessages.length - 1 ? "1px solid rgba(217, 20, 34, 0.07)" : "none",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.875rem",
@@ -270,7 +270,7 @@ export function AdminDashboard() {
                   width: "38px",
                   height: "38px",
                   borderRadius: "50%",
-                  background: "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                  background: "linear-gradient(135deg, #d91422, #e8202f)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -319,8 +319,8 @@ export function AdminDashboard() {
                 {msg.status === "unread" ? (
                   <span
                     style={{
-                      background: "rgba(45, 181, 213, 0.18)",
-                      color: "#2db5d5",
+                      background: "rgba(217, 20, 34, 0.18)",
+                      color: "#d91422",
                       fontSize: "0.6875rem",
                       padding: "0.2rem 0.6rem",
                       borderRadius: "20px",
@@ -351,7 +351,7 @@ export function AdminDashboard() {
         <div
           style={{
             background: "#0d2840",
-            border: "1px solid rgba(45, 181, 213, 0.12)",
+            border: "1px solid rgba(217, 20, 34, 0.12)",
             borderRadius: "18px",
             overflow: "hidden",
           }}
@@ -359,7 +359,7 @@ export function AdminDashboard() {
           <div
             style={{
               padding: "1.25rem 1.5rem",
-              borderBottom: "1px solid rgba(45, 181, 213, 0.12)",
+              borderBottom: "1px solid rgba(217, 20, 34, 0.12)",
             }}
           >
             <h3 style={{ color: "#fff", fontWeight: 600, margin: 0, fontSize: "1rem" }}>
@@ -369,10 +369,10 @@ export function AdminDashboard() {
 
           <div style={{ padding: "1rem" }}>
             {[
-              { label: "Edit Home", to: "/admin/home-editor", icon: Home, color: "#2db5d5" },
+              { label: "Edit Home", to: "/admin/home-editor", icon: Home, color: "#d91422" },
               { label: "Edit Services", to: "/admin/services-editor", icon: Wrench, color: "#8b5cf6" },
-              { label: "Add New Product", to: "/admin/products", icon: Package, color: "#3dc5e5" },
-              { label: "View Messages", to: "/admin/messages", icon: MessageSquare, color: "#1a8ab4" },
+              { label: "Add New Product", to: "/admin/products", icon: Package, color: "#e8202f" },
+              { label: "View Messages", to: "/admin/messages", icon: MessageSquare, color: "#a50f1a" },
             ].map((action) => (
               <Link
                 key={action.label}
@@ -385,19 +385,19 @@ export function AdminDashboard() {
                   borderRadius: "12px",
                   marginBottom: "0.5rem",
                   textDecoration: "none",
-                  background: "rgba(10, 42, 53, 0.5)",
-                  border: "1px solid rgba(45, 181, 213, 0.1)",
+                  background: "rgba(17, 17, 17, 0.5)",
+                  border: "1px solid rgba(217, 20, 34, 0.1)",
                   transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget;
-                  el.style.borderColor = "rgba(45, 181, 213, 0.3)";
-                  el.style.background = "rgba(45, 181, 213, 0.08)";
+                  el.style.borderColor = "rgba(217, 20, 34, 0.3)";
+                  el.style.background = "rgba(217, 20, 34, 0.08)";
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget;
-                  el.style.borderColor = "rgba(45, 181, 213, 0.1)";
-                  el.style.background = "rgba(10, 42, 53, 0.5)";
+                  el.style.borderColor = "rgba(217, 20, 34, 0.1)";
+                  el.style.background = "rgba(17, 17, 17, 0.5)";
                 }}
               >
                 <div
@@ -405,7 +405,7 @@ export function AdminDashboard() {
                     width: "36px",
                     height: "36px",
                     borderRadius: "10px",
-                    background: `rgba(45, 181, 213, 0.15)`,
+                    background: `rgba(217, 20, 34, 0.15)`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -426,7 +426,7 @@ export function AdminDashboard() {
           <div
             style={{
               padding: "1rem 1.5rem",
-              borderTop: "1px solid rgba(45, 181, 213, 0.1)",
+              borderTop: "1px solid rgba(217, 20, 34, 0.1)",
             }}
           >
             <div
@@ -438,7 +438,7 @@ export function AdminDashboard() {
                 fontSize: "0.8125rem",
               }}
             >
-              <Clock size={13} color="#2db5d5" />
+              <Clock size={13} color="#d91422" />
               Admin Dashboard
             </div>
           </div>

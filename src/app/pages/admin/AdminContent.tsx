@@ -42,7 +42,7 @@ const fieldStyle: React.CSSProperties = {
   width: "100%",
   padding: "0.7rem 1rem",
   background: "rgba(4, 33, 66, 0.6)",
-  border: "1px solid rgba(45, 181, 213, 0.2)",
+  border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px",
   color: "#fff",
   fontSize: "0.9rem",
@@ -69,7 +69,7 @@ const labelStyle: React.CSSProperties = {
 
 const sectionCardStyle: React.CSSProperties = {
   background: "#0d2840",
-  border: "1px solid rgba(45, 181, 213, 0.12)",
+  border: "1px solid rgba(217, 20, 34, 0.12)",
   borderRadius: "16px",
   overflow: "hidden",
   marginBottom: "1rem",
@@ -102,8 +102,8 @@ function Field({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           style={textareaStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
         />
       ) : (
         <input
@@ -111,8 +111,8 @@ function Field({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           style={fieldStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
         />
       )}
     </div>
@@ -138,7 +138,7 @@ function SectionCard({
           padding: "1rem 1.25rem",
           background: "none",
           border: "none",
-          borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none",
+          borderBottom: open ? "1px solid rgba(217,20,34,0.12)" : "none",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -206,18 +206,18 @@ function ServiceAreaPicker({
               fontSize: "0.875rem",
               padding: "0.55rem 0.875rem 0.55rem 2.1rem",
             }}
-            onFocus={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.6)")}
-            onBlur={(e) => (e.target.style.borderColor = "rgba(45,181,213,0.2)")}
+            onFocus={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.6)")}
+            onBlur={(e) => (e.target.style.borderColor = "rgba(217,20,34,0.2)")}
           />
         </div>
         <button
           onClick={selectAll}
           style={{
             padding: "0.5rem 0.875rem",
-            background: "rgba(45,181,213,0.1)",
-            border: "1px solid rgba(45,181,213,0.2)",
+            background: "rgba(217,20,34,0.1)",
+            border: "1px solid rgba(217,20,34,0.2)",
             borderRadius: "8px",
-            color: "#2db5d5",
+            color: "#d91422",
             fontSize: "0.75rem",
             fontWeight: 600,
             cursor: "pointer",
@@ -267,8 +267,8 @@ function ServiceAreaPicker({
                 padding: "0.45rem 0.625rem",
                 borderRadius: "8px",
                 cursor: "pointer",
-                background: checked ? "rgba(45,181,213,0.12)" : "rgba(10,42,53,0.5)",
-                border: `1px solid ${checked ? "rgba(45,181,213,0.35)" : "rgba(45,181,213,0.08)"}`,
+                background: checked ? "rgba(217,20,34,0.12)" : "rgba(10,42,53,0.5)",
+                border: `1px solid ${checked ? "rgba(217,20,34,0.35)" : "rgba(217,20,34,0.08)"}`,
                 transition: "all 0.15s ease",
               }}
             >
@@ -276,7 +276,7 @@ function ServiceAreaPicker({
                 type="checkbox"
                 checked={checked}
                 onChange={() => toggle(city)}
-                style={{ accentColor: "#2db5d5", width: "14px", height: "14px", flexShrink: 0 }}
+                style={{ accentColor: "#d91422", width: "14px", height: "14px", flexShrink: 0 }}
               />
               <span style={{ color: checked ? "#fff" : "#7a9ba8", fontSize: "0.8125rem", fontWeight: checked ? 500 : 400 }}>
                 {city}
@@ -293,7 +293,7 @@ function ServiceAreaPicker({
 
       {/* Selected badges */}
       {selected.length > 0 && (
-        <div style={{ marginTop: "0.875rem", borderTop: "1px solid rgba(45,181,213,0.1)", paddingTop: "0.875rem" }}>
+        <div style={{ marginTop: "0.875rem", borderTop: "1px solid rgba(217,20,34,0.1)", paddingTop: "0.875rem" }}>
           <p style={labelStyle}>Selected ({selected.length})</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
             {selected.map((area) => (
@@ -303,9 +303,9 @@ function ServiceAreaPicker({
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "0.3rem",
-                  background: "rgba(45,181,213,0.12)",
-                  border: "1px solid rgba(45,181,213,0.25)",
-                  color: "#2db5d5",
+                  background: "rgba(217,20,34,0.12)",
+                  border: "1px solid rgba(217,20,34,0.25)",
+                  color: "#d91422",
                   padding: "0.2rem 0.5rem 0.2rem 0.625rem",
                   borderRadius: "20px",
                   fontSize: "0.8rem",
@@ -315,7 +315,7 @@ function ServiceAreaPicker({
                 {area}
                 <button
                   onClick={() => toggle(area)}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", color: "#2db5d5", opacity: 0.7 }}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", color: "#d91422", opacity: 0.7 }}
                 >
                   <X size={11} />
                 </button>
@@ -435,14 +435,14 @@ export function AdminContent() {
               padding: "0.7rem 1.25rem",
               background: saved
                 ? "rgba(74, 222, 128, 0.2)"
-                : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+                : "linear-gradient(135deg, #d91422, #e8202f)",
               border: saved ? "1px solid rgba(74,222,128,0.4)" : "none",
               borderRadius: "12px",
               color: saved ? "#4ade80" : "white",
               fontWeight: 600,
               cursor: "pointer",
               fontSize: "0.875rem",
-              boxShadow: saved ? "none" : "0 5px 15px rgba(45,181,213,0.3)",
+              boxShadow: saved ? "none" : "0 5px 15px rgba(217,20,34,0.3)",
               transition: "all 0.3s ease",
             }}
           >
@@ -459,7 +459,7 @@ export function AdminContent() {
           gap: "0.375rem",
           marginBottom: "1.5rem",
           background: "#0d2840",
-          border: "1px solid rgba(45,181,213,0.12)",
+          border: "1px solid rgba(217,20,34,0.12)",
           borderRadius: "14px",
           padding: "0.375rem",
           flexWrap: "wrap",
@@ -478,17 +478,17 @@ export function AdminContent() {
               border: "none",
               background:
                 activeTab === key
-                  ? "linear-gradient(135deg, rgba(45,181,213,0.2), rgba(45,181,213,0.1))"
+                  ? "linear-gradient(135deg, rgba(217,20,34,0.2), rgba(217,20,34,0.1))"
                   : "transparent",
               color: activeTab === key ? "#fff" : "#7a9ba8",
               fontWeight: activeTab === key ? 600 : 400,
               cursor: "pointer",
               fontSize: "0.875rem",
-              outline: activeTab === key ? "1px solid rgba(45,181,213,0.3)" : "none",
+              outline: activeTab === key ? "1px solid rgba(217,20,34,0.3)" : "none",
               transition: "all 0.2s ease",
             }}
           >
-            <Icon size={15} color={activeTab === key ? "#2db5d5" : "currentColor"} />
+            <Icon size={15} color={activeTab === key ? "#d91422" : "currentColor"} />
             {label}
           </button>
         ))}
@@ -571,7 +571,7 @@ export function AdminContent() {
                     height: "160px",
                     objectFit: "cover",
                     borderRadius: "10px",
-                    border: "1px solid rgba(45,181,213,0.2)",
+                    border: "1px solid rgba(217,20,34,0.2)",
                   }}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
@@ -620,7 +620,7 @@ export function AdminContent() {
                   marginBottom: i < content.home.stats.length - 1 ? "0.75rem" : 0,
                   borderBottom:
                     i < content.home.stats.length - 1
-                      ? "1px solid rgba(45,181,213,0.08)"
+                      ? "1px solid rgba(217,20,34,0.08)"
                       : "none",
                 }}
               >
@@ -709,7 +709,7 @@ export function AdminContent() {
                   marginBottom: i < content.about.team.length - 1 ? "1rem" : 0,
                   borderBottom:
                     i < content.about.team.length - 1
-                      ? "1px solid rgba(45,181,213,0.08)"
+                      ? "1px solid rgba(217,20,34,0.08)"
                       : "none",
                 }}
               >
@@ -762,7 +762,7 @@ export function AdminContent() {
                   marginBottom: i < content.about.stats.length - 1 ? "0.75rem" : 0,
                   borderBottom:
                     i < content.about.stats.length - 1
-                      ? "1px solid rgba(45,181,213,0.08)"
+                      ? "1px solid rgba(217,20,34,0.08)"
                       : "none",
                 }}
               >
@@ -870,7 +870,7 @@ export function AdminContent() {
                 <p style={{ color: "#7a9ba8", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.5rem" }}>
                   Map Preview
                 </p>
-                <div style={{ borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(45,181,213,0.2)", height: "220px" }}>
+                <div style={{ borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(217,20,34,0.2)", height: "220px" }}>
                   <iframe
                     title="Map preview"
                     src={content.contact.mapEmbedUrl}

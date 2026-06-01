@@ -52,8 +52,8 @@ export function Contact() {
   return (
     <div className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] text-white py-36 flex items-center overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 100% 0%, rgba(45,181,213,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 0% 100%, rgba(61,197,229,0.10) 0%, transparent 70%)" }} />
+      <section className="relative bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white py-36 flex items-center overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 55% 45% at 100% 0%, rgba(217,20,34,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 0% 100%, rgba(61,197,229,0.10) 0%, transparent 70%)" }} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -61,7 +61,7 @@ export function Contact() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="text-4xl lg:text-[72px] font-bold mb-6"
           >
-            {c.heroTitle1} <span className="text-[#042142]">{c.heroTitle2}</span>
+            {c.heroTitle1} <span className="text-[#111111]">{c.heroTitle2}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -81,7 +81,7 @@ export function Contact() {
             <div className="grid lg:grid-cols-5">
 
               {/* Left: Dark info panel */}
-              <div className="lg:col-span-2 bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] p-6 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+              <div className="lg:col-span-2 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] p-6 sm:p-10 flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute -bottom-16 -right-16 w-56 h-56 bg-[#22a9d2]/15 rounded-full" />
                 <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#22a9d2]/20 rounded-full" />
 
@@ -94,7 +94,7 @@ export function Contact() {
                     className="text-2xl font-bold text-white mb-3"
                   >
                     {c.contactInfoHeading.split(" ").slice(0, -1).join(" ")}{" "}
-                    <span className="text-[#042142]">{c.contactInfoHeading.split(" ").slice(-1)[0]}</span>
+                    <span className="text-[#111111]">{c.contactInfoHeading.split(" ").slice(-1)[0]}</span>
                   </motion.h2>
                   <motion.p
                     initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
@@ -122,7 +122,7 @@ export function Contact() {
                         className="flex items-start gap-4"
                       >
                         <div className="w-10 h-10 bg-[#22a9d2]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <item.icon className="w-4 h-4 text-[#042142]" />
+                          <item.icon className="w-4 h-4 text-[#111111]" />
                         </div>
                         <div>
                           <p className="text-white font-semibold text-sm">{item.label}</p>
@@ -148,7 +148,7 @@ export function Contact() {
                   >
                     <a
                       href={`tel:${c.phone.replace(/\s/g, "")}`}
-                      className="inline-flex items-center gap-2 bg-[#22a9d2] text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-[#1a8ab4] transition-colors"
+                      className="inline-flex items-center gap-2 bg-[#22a9d2] text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-[#a50f1a] transition-colors"
                     >
                       <Phone className="w-4 h-4" />
                       {c.callNowBtn}
@@ -168,7 +168,7 @@ export function Contact() {
                   className="text-2xl font-bold text-gray-900 mb-1"
                 >
                   {c.sendMessageHeading.split(" ").slice(0, -1).join(" ")}{" "}
-                  <span className="text-[#042142]">{c.sendMessageHeading.split(" ").slice(-1)[0]}</span>
+                  <span className="text-[#111111]">{c.sendMessageHeading.split(" ").slice(-1)[0]}</span>
                 </motion.h2>
                 <motion.p
                   initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
@@ -221,7 +221,7 @@ export function Contact() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                     whileHover={isMobile ? undefined : { scale: 1.02, transition: spring }}
                     whileTap={isMobile ? undefined : { scale: 0.98, transition: spring }}
-                    className="w-full bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142] hover:opacity-90 text-white py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors text-base cursor-pointer"
+                    className="w-full bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111] hover:opacity-90 text-white py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors text-base cursor-pointer"
                   >
                     <Send className="w-5 h-5" />
                     {c.sendBtn}
@@ -239,10 +239,10 @@ export function Contact() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-100 flex flex-col lg:flex-row" style={{ minHeight: 420 }}>
             {/* Left info panel */}
-            <div className="bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] lg:w-72 flex-shrink-0 p-8 flex flex-col justify-between gap-8">
+            <div className="bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] lg:w-72 flex-shrink-0 p-8 flex flex-col justify-between gap-8">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
-                  <MapPin className="w-6 h-6 text-[#042142]" />
+                  <MapPin className="w-6 h-6 text-[#111111]" />
                 </div>
                 <h3 className="text-white text-xl font-bold mb-3">{c.findUsHeading}</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">{c.address}</p>
@@ -251,7 +251,7 @@ export function Contact() {
                 href={c.mapDirectionsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-[#2db5d5] hover:bg-[#3dc5e5] text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-[#2db5d5]/20"
+                className="flex items-center justify-center gap-2 bg-[#d91422] hover:bg-[#e8202f] text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors shadow-lg shadow-[#d91422]/20"
               >
                 <ArrowRight className="w-4 h-4" />
                 Get Directions
@@ -276,7 +276,7 @@ export function Contact() {
       </section>
 
       {/* Service Area */}
-      <section className="py-20 bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142]">
+      <section className="py-20 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
             initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 20 }}
@@ -286,7 +286,7 @@ export function Contact() {
             className="text-4xl lg:text-5xl font-bold mb-6 text-white"
           >
             {c.serviceAreaHeading.split(" ").slice(0, -1).join(" ")}{" "}
-            <span className="text-[#042142]">{c.serviceAreaHeading.split(" ").slice(-1)[0]}</span>
+            <span className="text-[#111111]">{c.serviceAreaHeading.split(" ").slice(-1)[0]}</span>
           </motion.h2>
           <motion.p
             initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}

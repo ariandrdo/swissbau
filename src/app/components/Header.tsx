@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Phone, Globe } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
 import { useContent } from "../context/ContentContext";
 import type { Lang } from "../context/ContentContext";
 
-const LANGS: Lang[] = ["en", "de", "sq", "mk"];
+const LANGS: Lang[] = ["en", "de"];
 const LANG_NAMES: Record<Lang, string> = {
   en: "English",
   de: "Deutsch",
@@ -127,8 +127,8 @@ export function Header() {
           <Link to="/" className="flex-shrink-0 justify-self-start flex items-center">
             <img
               src={logo}
-              alt="Jubea Energy Systems"
-              className="h-12 w-auto"
+              alt="SwissBau GmbH"
+              className="h-16 w-auto"
             />
           </Link>
 
@@ -140,7 +140,7 @@ export function Header() {
                 to={link.path}
                 className={`relative px-4 py-2 rounded-full transition-all text-sm whitespace-nowrap ${
                   isActive(link.path)
-                    ? "text-white bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142]"
+                    ? "text-white bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111]"
                     : isScrolled ? "text-black hover:text-black hover:bg-black/10" : "text-white hover:text-white hover:bg-white/10"
                 }`}
               >
@@ -151,74 +151,13 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-2 justify-self-end">
-            {/* Language Switcher Dropdown */}
-            <div ref={langRef} style={{ position: "relative" }}>
-              <button
-                onClick={() => setLangOpen((o) => !o)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${isScrolled ? "text-black hover:bg-black/10" : "text-white hover:bg-white/10"}`}
-              >
-                <Globe className="w-4 h-4 text-[#3d6b9e]" />
-                <span className="uppercase tracking-wide text-xs">{currentLang}</span>
-              </button>
-              <AnimatePresence>
-                {langOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                    transition={{ duration: 0.15 }}
-                    style={{
-                      position: "absolute",
-                      top: "calc(100% + 6px)",
-                      right: 0,
-                      background: "#143348",
-                      border: "1px solid rgba(61,107,158,0.3)",
-                      borderRadius: "12px",
-                      padding: "0.375rem",
-                      minWidth: "150px",
-                      boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
-                      zIndex: 200,
-                    }}
-                  >
-                    {LANGS.map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => { setLang(lang); setLangOpen(false); }}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.625rem",
-                          width: "100%",
-                          padding: "0.5rem 0.75rem",
-                          borderRadius: "8px",
-                          border: "none",
-                          background: currentLang === lang ? "rgba(61,107,158,0.3)" : "transparent",
-                          color: currentLang === lang ? "#fff" : "#a0b4bc",
-                          fontSize: "0.875rem",
-                          fontWeight: currentLang === lang ? 600 : 400,
-                          cursor: "pointer",
-                          textAlign: "left",
-                          transition: "all 0.15s",
-                        }}
-                        onMouseEnter={(e) => { if (currentLang !== lang) { e.currentTarget.style.background = "rgba(61,107,158,0.15)"; e.currentTarget.style.color = "#fff"; } }}
-                        onMouseLeave={(e) => { if (currentLang !== lang) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#a0b4bc"; } }}
-                      >
-                        <span style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: currentLang === lang ? "#3d6b9e" : "#4a6670", minWidth: "24px" }}>{lang}</span>
-                        {LANG_NAMES[lang]}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
             {/* Phone Number */}
             <motion.a
               href={`tel:${h.phone.replace(/\s/g, "")}`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="flex items-center gap-1.5 bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142] text-white px-4 py-2 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-[#2db5d5]/40 transition-all"
+              className="flex items-center gap-1.5 bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white px-4 py-2 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-[#d91422]/40 transition-all"
             >
               <Phone className="w-4 h-4" />
               {h.phone}
@@ -227,67 +166,6 @@ export function Header() {
 
           {/* Mobile: lang + menu buttons */}
           <div className="lg:hidden flex items-center gap-1">
-            {/* Mobile Language Dropdown */}
-            <div ref={mobileLangRef} style={{ position: "relative" }}>
-              <button
-                onClick={() => setMobileLangOpen((o) => !o)}
-                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg transition-colors ${isScrolled ? "text-black hover:bg-black/10" : "text-white hover:bg-white/10"}`}
-              >
-                <Globe className="w-5 h-5 text-[#3d6b9e]" />
-                <span className="text-sm font-bold uppercase tracking-wide">{currentLang}</span>
-              </button>
-              <AnimatePresence>
-                {mobileLangOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                    transition={{ duration: 0.15 }}
-                    style={{
-                      position: "absolute",
-                      top: "calc(100% + 6px)",
-                      right: 0,
-                      background: "#143348",
-                      border: "1px solid rgba(61,107,158,0.3)",
-                      borderRadius: "12px",
-                      padding: "0.375rem",
-                      minWidth: "150px",
-                      boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
-                      zIndex: 200,
-                    }}
-                  >
-                    {LANGS.map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => { setLang(lang); setMobileLangOpen(false); }}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.625rem",
-                          width: "100%",
-                          padding: "0.5rem 0.75rem",
-                          borderRadius: "8px",
-                          border: "none",
-                          background: currentLang === lang ? "rgba(61,107,158,0.3)" : "transparent",
-                          color: currentLang === lang ? "#fff" : "#a0b4bc",
-                          fontSize: "0.875rem",
-                          fontWeight: currentLang === lang ? 600 : 400,
-                          cursor: "pointer",
-                          textAlign: "left",
-                          transition: "all 0.15s",
-                        }}
-                        onMouseEnter={(e) => { if (currentLang !== lang) { e.currentTarget.style.background = "rgba(61,107,158,0.15)"; e.currentTarget.style.color = "#fff"; } }}
-                        onMouseLeave={(e) => { if (currentLang !== lang) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#a0b4bc"; } }}
-                      >
-                        <span style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: currentLang === lang ? "#3d6b9e" : "#4a6670", minWidth: "24px" }}>{lang}</span>
-                        {LANG_NAMES[lang]}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
             {/* Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -309,17 +187,17 @@ export function Header() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="lg:hidden fixed inset-0 z-[999] bg-[#0c1e2b] flex flex-col overflow-hidden"
+          className="lg:hidden fixed inset-0 z-[999] bg-[#111111] flex flex-col overflow-hidden"
         >
           {/* Top bar — mirrors header layout exactly */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="flex justify-between items-center py-1">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex-shrink-0 flex items-center">
-                <img src={logo} alt="Jubea Energy Systems" className="h-12 w-auto" />
+                <img src={logo} alt="SwissBau GmbH" className="h-16 w-auto" />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-lg text-white hover:bg-[#0f3a4a] transition-colors"
+                className="p-2 rounded-lg text-white hover:bg-[#1a1a1a] transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -342,8 +220,8 @@ export function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`block w-full py-3 text-sm font-semibold tracking-[0.2em] uppercase transition-colors ${
                       isActive(link.path)
-                        ? "text-[#2db5d5]"
-                        : "text-white hover:text-[#2db5d5]"
+                        ? "text-[#d91422]"
+                        : "text-white hover:text-[#d91422]"
                     }`}
                   >
                     {link.label}
@@ -360,7 +238,7 @@ export function Header() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="w-full max-w-xs text-center flex items-center justify-center gap-2 bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142] text-white px-8 py-3 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-[#2db5d5]/40 transition-all"
+              className="w-full max-w-xs text-center flex items-center justify-center gap-2 bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white px-8 py-3 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-[#d91422]/40 transition-all"
             >
               <Phone className="w-4 h-4" />
               {h.phone}

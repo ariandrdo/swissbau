@@ -10,7 +10,7 @@ const servicesMeta: Record<string, { icon: React.ElementType; image: string; col
   cooling: {
     icon: Wind,
     image: "/img1.png",
-    color: "#2db5d5",
+    color: "#d91422",
   },
   heating: {
     icon: Flame,
@@ -40,14 +40,14 @@ export function Services() {
   const isMobile = useIsMobile();
   const s = content.services;
   const detailedServices = s.detailedServices.map((svc) => {
-    const meta = servicesMeta[svc.id] ?? { icon: Wrench, image: "", color: "#2db5d5" };
+    const meta = servicesMeta[svc.id] ?? { icon: Wrench, image: "", color: "#d91422" };
     return { ...svc, ...meta, image: svc.image || meta.image };
   });
   return (
     <div className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] min-h-[420px] flex items-center overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 45% at 100% 0%, rgba(45,181,213,0.12) 0%, transparent 70%)" }} />
+      <section className="relative bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] min-h-[420px] flex items-center overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 50% 45% at 100% 0%, rgba(217,20,34,0.12) 0%, transparent 70%)" }} />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-white mb-20 pt-28">
@@ -57,7 +57,7 @@ export function Services() {
               transition={{ duration: 0.7, ease: "easeOut" }}
               className="text-4xl lg:text-[72px] font-bold mb-6"
             >
-              {s.heroTitle1} <span className="text-[#042142]">{s.heroTitle2}</span>
+              {s.heroTitle1} <span className="text-[#111111]">{s.heroTitle2}</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -76,7 +76,7 @@ export function Services() {
               <motion.div whileHover={isMobile ? undefined : { scale: 1.04, transition: spring }} whileTap={isMobile ? undefined : { scale: 0.97, transition: spring }}>
                 <Link
                   to={s.heroBtnLink || "/contact"}
-                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142] text-white px-8 py-4 rounded-full text-base font-bold shadow-2xl hover:shadow-[#2db5d5]/50 transition-all"
+                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white px-8 py-4 rounded-full text-base font-bold shadow-2xl hover:shadow-[#d91422]/50 transition-all"
                 >
                   {s.heroBtnText || "Get Free Quote"}
                   <ArrowRight className="w-5 h-5" />
@@ -110,7 +110,7 @@ export function Services() {
 
               {/* Text side */}
               <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                <h2 className="text-4xl lg:text-5xl font-bold text-[#042142] mb-5 leading-tight">
+                <h2 className="text-4xl lg:text-5xl font-bold text-[#111111] mb-5 leading-tight">
                   {service.title}
                 </h2>
                 <p className="text-gray-500 leading-relaxed mb-8 text-lg">
@@ -119,8 +119,8 @@ export function Services() {
                 <div className="grid sm:grid-cols-2 gap-3 mb-10">
                   {service.services.map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#042142]/10 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle2 className="w-3 h-3 text-[#042142]" />
+                      <div className="w-5 h-5 rounded-full bg-[#111111]/10 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle2 className="w-3 h-3 text-[#111111]" />
                       </div>
                       <span className="text-sm text-gray-700">{item}</span>
                     </div>
@@ -128,7 +128,7 @@ export function Services() {
                 </div>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142] text-white px-7 py-3.5 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white px-7 py-3.5 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
                 >
                   {s.requestServiceBtn}
                   <ArrowRight className="w-4 h-4" />
@@ -151,7 +151,7 @@ export function Services() {
               className="text-4xl lg:text-5xl font-bold mb-4"
             >
               {s.additionalServicesHeading.split(" ").slice(0, -1).join(" ")}{" "}
-              <span className="text-[#042142]">{s.additionalServicesHeading.split(" ").slice(-1)[0]}</span>
+              <span className="text-[#111111]">{s.additionalServicesHeading.split(" ").slice(-1)[0]}</span>
             </motion.h2>
             <motion.p
               initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 15 }}
@@ -176,7 +176,7 @@ export function Services() {
                 transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
                 className="bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all border border-gray-100"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <IconComp className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">{service.title}</h3>
@@ -184,7 +184,7 @@ export function Services() {
                 <ul className="space-y-2">
                   {service.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#2db5d5]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#d91422]" />
                       {feature}
                     </li>
                   ))}
@@ -247,7 +247,7 @@ export function Services() {
       </section>}
 
       {/* Final CTA */}
-      <section className="py-28 bg-gradient-to-br from-[#3d6b9e] via-[#143348] to-[#042142] text-white">
+      <section className="py-28 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
             initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 20 }}
@@ -278,7 +278,7 @@ export function Services() {
             >
               <Link
                 to={s.ctaBtnLink || "/contact"}
-                className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#3d6b9e] via-[#143348] to-[#042142] text-white px-8 py-4 rounded-full text-base font-bold hover:shadow-2xl hover:shadow-[#2db5d5]/50 transition-all w-full sm:w-auto sm:min-w-[220px]"
+                className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#8b0c15] via-[#1a1a1a] to-[#111111] text-white px-8 py-4 rounded-full text-base font-bold hover:shadow-2xl hover:shadow-[#d91422]/50 transition-all w-full sm:w-auto sm:min-w-[220px]"
               >
                 <span className="whitespace-nowrap">{s.ctaBtnText || "Schedule Service Now"}</span>
                 <ArrowRight className="w-6 h-6 flex-shrink-0" />
@@ -295,7 +295,7 @@ export function Services() {
               >
                 <a
                   href={`tel:${s.ctaPhone}`}
-                  className="inline-flex items-center justify-center gap-3 border border-white text-white px-8 py-4 rounded-full text-base font-bold hover:bg-white hover:text-[#0a2a35] transition-all w-full sm:w-auto sm:min-w-[220px]"
+                  className="inline-flex items-center justify-center gap-3 border border-white text-white px-8 py-4 rounded-full text-base font-bold hover:bg-white hover:text-[#111111] transition-all w-full sm:w-auto sm:min-w-[220px]"
                 >
                   <Phone className="w-6 h-6" />
                   {s.ctaPhone}

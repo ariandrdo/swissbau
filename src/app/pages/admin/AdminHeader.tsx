@@ -3,14 +3,12 @@ import { Plus, Trash2, GripVertical, Upload, X, ChevronUp, ChevronDown, RotateCc
 import { useContent, defaultMultiLangContent } from "../../context/ContentContext";
 import { uploadImage } from "../../utils/uploadImage";
 import type { Lang } from "../../context/ContentContext";
-import { AdminLangTabs } from "./AdminLangTabs";
-import { translateSection } from "../../utils/translate";
 
 const fieldStyle: React.CSSProperties = {
   width: "100%",
   padding: "0.7rem 1rem",
   background: "rgba(4, 33, 66, 0.6)",
-  border: "1px solid rgba(45, 181, 213, 0.2)",
+  border: "1px solid rgba(217, 20, 34, 0.2)",
   borderRadius: "10px",
   color: "#fff",
   fontSize: "0.9rem",
@@ -45,14 +43,14 @@ function SectionCard({
     <div
       style={{
         background: "#0d2840",
-        border: "1px solid rgba(45, 181, 213, 0.12)",
+        border: "1px solid rgba(217, 20, 34, 0.12)",
         borderRadius: "16px",
         marginBottom: "0.875rem",
         overflow: "hidden",
       }}
     >
       <div
-        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(45,181,213,0.12)" : "none" }}
+        style={{ display: "flex", alignItems: "center", cursor: "pointer", borderBottom: open ? "1px solid rgba(217,20,34,0.12)" : "none" }}
         onClick={() => setOpen(!open)}
       >
         <span style={{ flex: 1, padding: "1rem 1.25rem", color: "#fff", fontWeight: 600, fontSize: "0.9375rem" }}>{title}</span>
@@ -68,7 +66,7 @@ function SectionCard({
 
 export function AdminHeader() {
   const { langs, isLoaded, updateLangContent, updateAllLangs, saveNow } = useContent();
-  const [adminLang, setAdminLang] = useState<Lang>("en");
+  const [adminLang, setAdminLang] = useState<Lang>("de");
   const [headerF, setHeaderF] = useState({ ...langs[adminLang].header });
   const [saved, setSaved] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
@@ -106,11 +104,7 @@ export function AdminHeader() {
     setH("navLinks", headerF.navLinks.filter((_, i) => i !== index));
 
   const handleSave = async () => {
-    if (adminLang === "en") {
-      updateLangContent("en", (prev) => ({ ...prev, header: headerF }));
-    } else {
-      updateLangContent(adminLang, (prev) => ({ ...prev, header: headerF }));
-    }
+    updateLangContent(adminLang, (prev) => ({ ...prev, header: headerF }));
     await saveNow();
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -126,18 +120,6 @@ export function AdminHeader() {
 
   return (
     <div>
-      {/* Language Tabs */}
-      <AdminLangTabs
-        adminLang={adminLang}
-        setAdminLang={setAdminLang}
-        onCopyFromEn={() => { const en = langs["en"].header; setHeaderF({ ...en }); updateLangContent(adminLang, (prev) => ({ ...prev, header: en })); setSaved(false); }}
-        onTranslate={adminLang !== "en" ? async () => {
-          const translated = await translateSection(langs["en"].header, adminLang) as typeof headerF;
-          setHeaderF(translated);
-          updateLangContent(adminLang, (prev) => ({ ...prev, header: translated }));
-          setSaved(false);
-        } : undefined}
-      />
 
       {/* Page Header */}
       <div
@@ -160,9 +142,9 @@ export function AdminHeader() {
         </div>
         <div style={{ display: "flex", gap: "0.625rem" }}>
           <button onClick={handleReset}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(45,181,213,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer" }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.4)"; e.currentTarget.style.color = "#fff"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(45,181,213,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1.1rem", borderRadius: "10px", background: "rgba(10,42,53,0.8)", border: "1px solid rgba(217,20,34,0.2)", color: "#7a9ba8", fontSize: "0.875rem", cursor: "pointer" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.4)"; e.currentTarget.style.color = "#fff"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(217,20,34,0.2)"; e.currentTarget.style.color = "#7a9ba8"; }}
           >
             <RotateCcw size={14} /> Reset to Default
           </button>
@@ -171,7 +153,7 @@ export function AdminHeader() {
             style={{
               display: "flex", alignItems: "center", gap: "0.5rem",
               padding: "0.625rem 1.5rem",
-              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #2db5d5, #3dc5e5)",
+              background: saved ? "rgba(74,222,128,0.18)" : "linear-gradient(135deg, #d91422, #e8202f)",
               border: saved ? "1px solid rgba(74,222,128,0.4)" : "none",
               borderRadius: "10px",
               color: saved ? "#4ade80" : "#fff",
@@ -190,7 +172,7 @@ export function AdminHeader() {
       <SectionCard title="Logo">
         <p style={{ color: "#4a6670", fontSize: "0.75rem", marginBottom: "0.75rem" }}>
           Displays in the site header. Recommended:{" "}
-          <span style={{ color: "#2db5d5" }}>400 × 120 px (transparent PNG)</span>
+          <span style={{ color: "#d91422" }}>400 × 120 px (transparent PNG)</span>
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
           {headerF.logo ? (
@@ -199,7 +181,7 @@ export function AdminHeader() {
                 width: "120px",
                 height: "50px",
                 borderRadius: "10px",
-                border: "1px solid rgba(45, 181, 213, 0.25)",
+                border: "1px solid rgba(217, 20, 34, 0.25)",
                 background: "rgba(15,58,74,0.5)",
                 display: "flex",
                 alignItems: "center",
@@ -219,7 +201,7 @@ export function AdminHeader() {
                 width: "120px",
                 height: "50px",
                 borderRadius: "10px",
-                border: "1px dashed rgba(45, 181, 213, 0.3)",
+                border: "1px dashed rgba(217, 20, 34, 0.3)",
                 background: "rgba(15,58,74,0.3)",
                 display: "flex",
                 alignItems: "center",
@@ -245,10 +227,10 @@ export function AdminHeader() {
               alignItems: "center",
               gap: "0.4rem",
               padding: "0.5rem 1rem",
-              background: "rgba(45, 181, 213, 0.15)",
-              border: "1px solid rgba(45, 181, 213, 0.3)",
+              background: "rgba(217, 20, 34, 0.15)",
+              border: "1px solid rgba(217, 20, 34, 0.3)",
               borderRadius: "8px",
-              color: "#2db5d5",
+              color: "#d91422",
               fontSize: "0.8125rem",
               fontWeight: 600,
               cursor: "pointer",
@@ -290,8 +272,8 @@ export function AdminHeader() {
           onChange={(e) => setH("phone", e.target.value)}
           placeholder="+389 70 777 888"
           style={fieldStyle}
-          onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-          onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+          onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
         />
         <p style={{ color: "#4a6670", fontSize: "0.75rem", marginTop: "0.4rem" }}>
           Shown in the top-right header button and mobile menu.
@@ -313,7 +295,7 @@ export function AdminHeader() {
                 alignItems: "center",
                 gap: "0.6rem",
                 background: "rgba(15, 58, 74, 0.4)",
-                border: "1px solid rgba(45, 181, 213, 0.12)",
+                border: "1px solid rgba(217, 20, 34, 0.12)",
                 borderRadius: "10px",
                 padding: "0.6rem 0.75rem",
               }}
@@ -328,8 +310,8 @@ export function AdminHeader() {
                     onChange={(e) => updateNavLink(index, "label", e.target.value)}
                     placeholder="Home"
                     style={{ ...fieldStyle, padding: "0.4rem 0.6rem", fontSize: "0.85rem" }}
-                    onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-                    onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+                    onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+                    onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
                   />
                 </div>
                 <div>
@@ -340,8 +322,8 @@ export function AdminHeader() {
                     onChange={(e) => updateNavLink(index, "path", e.target.value)}
                     placeholder="/services"
                     style={{ ...fieldStyle, padding: "0.4rem 0.6rem", fontSize: "0.85rem" }}
-                    onFocus={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.55)")}
-                    onBlur={(e) => (e.target.style.borderColor = "rgba(45, 181, 213, 0.2)")}
+                    onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+                    onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
                   />
                 </div>
               </div>
@@ -372,10 +354,10 @@ export function AdminHeader() {
             alignItems: "center",
             gap: "0.4rem",
             padding: "0.5rem 1.1rem",
-            background: "rgba(45, 181, 213, 0.12)",
-            border: "1px dashed rgba(45, 181, 213, 0.35)",
+            background: "rgba(217, 20, 34, 0.12)",
+            border: "1px dashed rgba(217, 20, 34, 0.35)",
             borderRadius: "8px",
-            color: "#2db5d5",
+            color: "#d91422",
             fontSize: "0.8125rem",
             fontWeight: 600,
             cursor: "pointer",
