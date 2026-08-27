@@ -5,12 +5,37 @@ on:
     - cron: '0 12 */3 * *'  # every 3 days at noon UTC
   workflow_dispatch:         # allow manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Ping Supabase
         run: |
-          curl -s -o /dev/null -w "Status: %{http_code}" \
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
             "https://drqtflytigvfikevsghf.supabase.co/rest/v1/" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" || true
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "Status: $status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 500 ]; then
+            echo "::error::Supabase ping failed with status $status"
+            exit 1
+          fi
+
+      # Commits a heartbeat file so the repo always has recent push activity.
+      # GitHub auto-disables scheduled workflows after 60 days without a push —
+      # this keeps the schedule itself alive even if nothing else touches the repo.
+      - name: Record heartbeat
+        if: always()
+        run: |
+          mkdir -p .github/keep-alive
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .github/keep-alive/last-ping.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/keep-alive/last-ping.txt
+          git diff --cached --quiet || git commit -m "chore: keep-alive heartbeat"
+          git push
