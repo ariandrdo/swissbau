@@ -188,7 +188,7 @@ export function About() {
             </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-8 max-w-5xl mx-auto">
             {a.team.map((member, index) => (
               <motion.div
                 key={index}
@@ -196,11 +196,11 @@ export function About() {
                 whileInView={isMobile ? { opacity: 1 } : { opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow-lg overflow-hidden"
+                className="bg-white rounded-lg shadow-lg overflow-hidden w-full sm:w-72"
               >
-                <div className="h-64 bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] flex items-center justify-center overflow-hidden">
+                <div className="aspect-square bg-gradient-to-br from-[#8b0c15] via-[#1a1a1a] to-[#111111] flex items-center justify-center overflow-hidden">
                   {member.image ? (
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                    <img src={member.image} alt={member.name} className="w-full h-full object-cover object-top" />
                   ) : (
                     <Users className="w-24 h-24 text-white/50" />
                   )}

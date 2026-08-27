@@ -187,7 +187,7 @@ export function AdminAbout() {
               <label style={lblStyle}>Photo</label>
               {member.image ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                  <img src={member.image} alt="" style={{ width: "64px", height: "64px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(217,20,34,0.3)" }} />
+                  <img src={member.image} alt="" style={{ width: "64px", height: "64px", objectFit: "cover", objectPosition: "top", borderRadius: "8px", border: "1px solid rgba(217,20,34,0.3)" }} />
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
                     <button
                       onClick={() => { setTeamImgIdx(i); teamImageRef.current?.click(); }}
