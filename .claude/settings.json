@@ -47,7 +47,16 @@
       "Bash(python3 -m json.tool)",
       "Bash(python3 -c ' *)",
       "Bash(curl -s -o n_aliji.webp \"https://drqtflytigvfikevsghf.supabase.co/storage/v1/object/public/site-images/team/1787845985234-st7mm309qw.webp\")",
-      "Bash(curl -s -o m_aliji.webp \"https://drqtflytigvfikevsghf.supabase.co/storage/v1/object/public/site-images/team/1787846030259-scknkiwafpi.webp\")"
+      "Bash(curl -s -o m_aliji.webp \"https://drqtflytigvfikevsghf.supabase.co/storage/v1/object/public/site-images/team/1787846030259-scknkiwafpi.webp\")",
+      "Bash(security dump-keychain *)",
+      "Bash(security delete-internet-password *)",
+      "Bash(security delete-generic-password *)",
+      "Bash(security find-generic-password *)",
+      "Bash(brew --version)",
+      "Bash(gh --version)",
+      "Bash(brew --prefix gh)",
+      "Bash(/usr/local/Cellar/gh/2.98.0/bin/gh --version)",
+      "Bash(ln -sf /usr/local/Cellar/gh/2.98.0/bin/gh /usr/local/bin/gh)"
     ],
     "additionalDirectories": [
       "/tmp"

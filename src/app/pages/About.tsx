@@ -57,8 +57,8 @@ export function About() {
               {/* Image shown only on mobile, between title and text */}
               <div className="lg:hidden mb-6 self-stretch">
                 <ImageWithFallback
-                  src="/fullimg.png"
-                  alt="HVAC Technician"
+                  src="/logo.png"
+                  alt="SwissBau GmbH"
                   className="rounded-lg shadow-xl w-full object-cover"
                 />
               </div>
@@ -104,8 +104,8 @@ export function About() {
             {/* Image shown only on desktop (right column) */}
             <div className="hidden lg:flex self-stretch">
               <ImageWithFallback
-                src="/fullimg.png"
-                alt="HVAC Technician"
+                src="/logo.png"
+                alt="SwissBau GmbH"
                 className="rounded-lg shadow-xl w-full h-full object-cover"
               />
             </div>

@@ -416,9 +416,10 @@ export function Home() {
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#d91422]/5 rounded-tl-full pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-block bg-[#d91422]/10 border border-[#d91422]/20 text-[#d91422] font-semibold text-sm px-5 py-1.5 rounded-full mb-5">
-              {h.ourProcessLabel}
-            </span>
+            <div className="inline-flex items-center gap-2 bg-[#d91422]/10 border border-[#d91422]/30 px-6 py-2 rounded-full mb-5">
+              <CheckCircle2 className="w-5 h-5 text-[#111111]" />
+              <span className="text-[#111111] font-semibold">{h.ourProcessLabel}</span>
+            </div>
             <motion.h2
               initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 20 }}
               whileInView={isMobile ? { opacity: 1 } : { opacity: 1, y: 0 }}
