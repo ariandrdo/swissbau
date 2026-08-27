@@ -26,7 +26,7 @@ export function Header() {
   const location = useLocation();
   const { content, langs, currentLang, setLang } = useContent();
   const h = content.header;
-  const logo = h.logo || "/logo.png";
+  const logo = h.logo || (isScrolled ? "/logo.png" : "/logo-white.png");
 
   const lastYRef = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -193,7 +193,7 @@ export function Header() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="flex justify-between items-center py-1">
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex-shrink-0 flex items-center">
-                <img src={logo} alt="SwissBau GmbH" className="h-16 w-auto" />
+                <img src={h.logo || "/logo-white.png"} alt="SwissBau GmbH" className="h-16 w-auto" />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}

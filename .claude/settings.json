@@ -7,7 +7,42 @@
       "Read(//opt/homebrew/bin/**)",
       "Bash(ssh -T git@github.com)",
       "Bash(sed -i '' '/^import { AdminLangTabs } from \".\\\\/AdminLangTabs\";$/d' /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminHeader.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminAbout.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminFooter.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminContact.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminServices.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminProducts.tsx)",
-      "Bash(sed -i '' '/import { translateSection }/d' /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminHeader.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminAbout.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminFooter.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminContact.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminServices.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminProducts.tsx)"
+      "Bash(sed -i '' '/import { translateSection }/d' /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminHeader.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminAbout.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminFooter.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminContact.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminServices.tsx /Users/ariandrdo/Desktop/SwissBau/src/app/pages/admin/AdminProducts.tsx)",
+      "WebFetch(domain:www.zefix.admin.ch)",
+      "Bash(curl -s \"https://www.zefix.admin.ch/ZefixREST/api/v1/company/search\" -H \"Content-Type: application/json\" -d '{\"name\":\"Swiss Bau\",\"languageKey\":\"de\",\"maxEntries\":20}')",
+      "Bash(curl -sv \"https://www.zefix.admin.ch/ZefixREST/api/v1/company/search\" -H \"Content-Type: application/json\" -d '{\"name\":\"Swiss Bau\",\"languageKey\":\"de\",\"maxEntries\":20}')",
+      "Bash(curl -s \"https://www.zefix.admin.ch/ZefixREST/api/v1/company/search\" -H \"Content-Type: application/json\" -H \"Referer: https://www.zefix.admin.ch/\" -H \"Origin: https://www.zefix.admin.ch\" -d '{\"name\":\"Swiss Bau\",\"languageKey\":\"de\",\"maxEntries\":20}')",
+      "Bash(curl -sv \"https://www.zefix.admin.ch/ZefixREST/api/v1/company/search\" -H \"Content-Type: application/json\" -H \"Referer: https://www.zefix.admin.ch/\" -H \"Origin: https://www.zefix.admin.ch\" -d '{\"name\":\"Swiss Bau\",\"languageKey\":\"de\",\"maxEntries\":20}')",
+      "Bash(curl -s https://www.zefix.admin.ch/ZefixREST/api/v1/company/search -H 'Content-Type: application/json' -H 'Referer: https://www.zefix.admin.ch/de/search' -H 'Origin: https://www.zefix.admin.ch' -H 'User-Agent: Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -H 'Accept: application/json' -d '{\"name\":\"Swiss Bau\",\"languageKey\":\"de\",\"maxEntries\":20}')",
+      "Bash(curl -sw '\\\\n%{http_code}' https://www.zefix.admin.ch/ZefixREST/api/v1/company/search -H 'Content-Type: application/json' -H 'Referer: https://www.zefix.admin.ch/de/search' -H 'Origin: https://www.zefix.admin.ch' -H 'User-Agent: Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -H 'Accept: application/json' -d '{\"name\":\"Swiss Bau\",\"languageKey\":\"de\",\"maxEntries\":20}')",
+      "WebFetch(domain:www.moneyhouse.ch)",
+      "WebFetch(domain:search.ch)",
+      "WebFetch(domain:www.sauberbau.ch)",
+      "WebFetch(domain:www.north-data.com)",
+      "Bash(npm run dev > /tmp/swissbau-dev.log 2>&1 & *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5176/)",
+      "Bash(python3 -c \"import PIL; print\\(PIL.__version__\\)\")",
+      "Bash(python3)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5176/logo-white.png)",
+      "Bash(xargs -I{} sh -c 'echo \"=== {} ===\"; cat {}')",
+      "Bash(nslookup drqtflytigvfikevsghf.supabase.co 8.8.8.8)",
+      "Bash(nslookup supabase.co 8.8.8.8)",
+      "Read(//private/etc/**)",
+      "Bash(scutil --dns)",
+      "Bash(networksetup -getdnsservers Wi-Fi)",
+      "Bash(dig +short github.com)",
+      "Bash(dig +short anthropic.com)",
+      "Bash(dig +short supabase.co A)",
+      "Bash(gh run *)",
+      "WebSearch",
+      "Bash(git log --oneline --follow -- public/logoo.png *)",
+      "Bash(GIT_CURL_VERBOSE=1 git push origin main)",
+      "Bash(git -c http.version=HTTP/1.1 push origin main)",
+      "Bash(git --version)",
+      "Bash(git -c http.version=HTTP/1.1 -c http.postBuffer=524288000 push origin main)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }

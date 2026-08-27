@@ -7,7 +7,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
   const { content } = useContent();
   const f = content.footer;
-  const logo = f.logo || "/logo.png";
+  const logo = f.logo || "/logo-white.png";
 
   return (
     <footer className="bg-gradient-to-bl from-[#042242] via-[#1a1a1a] to-[#051d3a] text-white relative overflow-hidden">
