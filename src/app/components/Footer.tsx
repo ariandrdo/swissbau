@@ -189,14 +189,14 @@ export function Footer() {
         <div className="border-t border-[#d91422]/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm text-center md:text-left">
-              &copy; {currentYear} SwissBau GmbH. All rights reserved.
+              &copy; {currentYear} SwissBau Renovationen GmbH. All rights reserved.
             </p>
             <p className="text-gray-500 text-xs text-center md:text-left">
               Designed & built by <a href="https://aariand.com" target="_blank" rel="noopener noreferrer" className="text-[#d91422] hover:text-[#e8202f] transition-colors">aariand.com</a>
             </p>
             <div className="flex gap-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-[#d91422] transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-[#d91422] transition-colors">Terms of Service</a>
+              <Link to="/datenschutz" className="hover:text-[#d91422] transition-colors">Datenschutzerklärung</Link>
+              <Link to="/impressum" className="hover:text-[#d91422] transition-colors">Impressum</Link>
             </div>
           </div>
         </div>

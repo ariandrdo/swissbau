@@ -8,6 +8,8 @@ const Services = lazy(() => import("./pages/Services").then(m => ({ default: m.S
 const About = lazy(() => import("./pages/About").then(m => ({ default: m.About })));
 const Contact = lazy(() => import("./pages/Contact").then(m => ({ default: m.Contact })));
 const Products = lazy(() => import("./pages/Products").then(m => ({ default: m.Products })));
+const Datenschutz = lazy(() => import("./pages/Datenschutz").then(m => ({ default: m.Datenschutz })));
+const Impressum = lazy(() => import("./pages/Impressum").then(m => ({ default: m.Impressum })));
 
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin").then(m => ({ default: m.AdminLogin })));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
@@ -33,6 +35,8 @@ export const router = createBrowserRouter([
       { path: "projects", element: <Suspense fallback={fallback}><Products /></Suspense> },
       { path: "about", element: <Suspense fallback={fallback}><About /></Suspense> },
       { path: "contact", element: <Suspense fallback={fallback}><Contact /></Suspense> },
+      { path: "datenschutz", element: <Suspense fallback={fallback}><Datenschutz /></Suspense> },
+      { path: "impressum", element: <Suspense fallback={fallback}><Impressum /></Suspense> },
     ],
   },
   {

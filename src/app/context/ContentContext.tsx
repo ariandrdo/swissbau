@@ -222,6 +222,8 @@ export type SiteContent = {
     phone: string;
     email: string;
     address: string;
+    uid?: string;
+    registryOffice?: string;
     // UI strings
     quickLinksHeading: string;
     ourServicesHeading: string;
@@ -734,6 +736,8 @@ const defaultContentDe: SiteContent = {
     phone: "+49 123 456 789",
     email: "info@swissbau-gmbh.ch",
     address: "Ostschweiz & Zürich",
+    uid: "",
+    registryOffice: "",
     quickLinksHeading: "Schnelllinks",
     ourServicesHeading: "Unsere Dienstleistungen",
     contactUsHeading: "Kontakt",

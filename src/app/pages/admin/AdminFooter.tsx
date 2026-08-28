@@ -486,6 +486,38 @@ export function AdminFooter() {
         </div>
       </SectionCard>
 
+      <SectionCard title="Legal (Impressum)">
+        <p style={{ color: "#4a6670", fontSize: "0.75rem", marginBottom: "1rem" }}>
+          Commercial registry details shown on the Impressum page.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div>
+            <label style={lblStyle}>UID Number</label>
+            <input
+              type="text"
+              value={footerF.uid ?? ""}
+              onChange={(e) => setF("uid", e.target.value)}
+              placeholder="CHE-123.456.789"
+              style={fieldStyle}
+              onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
+            />
+          </div>
+          <div>
+            <label style={lblStyle}>Handelsregisteramt</label>
+            <input
+              type="text"
+              value={footerF.registryOffice ?? ""}
+              onChange={(e) => setF("registryOffice", e.target.value)}
+              placeholder="Handelsregisteramt des Kantons Zürich"
+              style={fieldStyle}
+              onFocus={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.55)")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(217, 20, 34, 0.2)")}
+            />
+          </div>
+        </div>
+      </SectionCard>
+
       {/* Map */}
       <SectionCard title="Map (Location Card)">
         <p style={{ color: "#4a6670", fontSize: "0.75rem", marginBottom: "1rem" }}>

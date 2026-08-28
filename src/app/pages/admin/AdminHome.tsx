@@ -442,6 +442,11 @@ export function AdminHome() {
         ))}
       </SectionCard>
 
+      {/* ── Why Choose Us Section ── */}
+      <SectionCard title="Why Choose Us Section" defaultOpen={false}>
+        <Field label="Heading" value={homeF.whyChooseLabel} onChange={(v) => setH("whyChooseLabel", v)} placeholder="Why Choose SwissBau GmbH" />
+      </SectionCard>
+
       {/* ── Services Section ── */}
       <SectionCard title="Services Section (4 Cards)" defaultOpen={false}>
         {homeF.homeServices.map((svc, i) => (
